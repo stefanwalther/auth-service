@@ -33,5 +33,13 @@
   },
   "winster": {
     "configFile": "./src/config/winster-config.js"
+  },
+  "scripts": {
+    "lint": "yarn run lint:src && yarn run lint:test",
+    "lint:fix": "yarn run lint:src:fix && yarn run lint:test:fix",
+    "lint:src": "eslint src",
+    "lint:src:fix": "eslint src --fix",
+    "lint:test": "eslint test",
+    "lint:test:fix": "eslint test --fix"
   }
 }

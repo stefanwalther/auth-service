@@ -41,7 +41,7 @@ class AppServer {
 
   stop() {
     return new Promise(resolve => {
-      if(this.server) {
+      if (this.server) {
         this.server.close(() => {
           this.logger.info('Server stopped');
           return resolve();

@@ -4,5 +4,5 @@ const config = {
   PORT: 3001
 };
 
-let server = new AppServer(config);
+const server = new AppServer(config);
 server.start();

@@ -14,6 +14,6 @@ describe('Auth-Service', () => {
 
   it('test it', () => {
     expect(true).to.be.true;
-  })
+  });
 
 });
