@@ -1,10 +1,10 @@
-const Server = require('./../../src/app-server');
+const AppServer = require('./../../src/app-server');
 
 describe('Auth-Service', () => {
 
   let server = null;
   beforeEach(() => {
-    server = new Server();
+    server = new AppServer();
     return server.start();
   });
 
