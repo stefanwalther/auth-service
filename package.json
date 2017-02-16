@@ -40,6 +40,9 @@
     "lint:src": "eslint src",
     "lint:src:fix": "eslint src --fix",
     "lint:test": "eslint test",
-    "lint:test:fix": "eslint test --fix"
+    "lint:test:fix": "eslint test --fix",
+    "test": "yarn run lint && yarn test:unit && yarn test:integration",
+    "test:integration": "mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
+    "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'"
   }
 }
