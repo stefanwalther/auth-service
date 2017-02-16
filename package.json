@@ -2,20 +2,34 @@
   "name": "auth-service",
   "version": "0.1.0",
   "description": "Auth service (for sammler).",
+  "keywords": [
+    "auth",
+    "auth0",
+    "authentication",
+    "microservice"
+  ],
+  "license": "MIT",
+  "author": "Stefan Walther",
   "main": "index.js",
   "repository": "htts://github.com/sammler/auth-service",
-  "author": "Stefan Walther",
-  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "compression": "^1.6.2",
+    "cors": "^2.8.1",
+    "express": "^4.14.1",
+    "helmet": "^3.4.0",
+    "morgan": "^1.8.1",
+    "sammler-nodelib-logger": "^0.2.1",
+    "winster": "^0.2.5"
+  },
   "devDependencies": {
     "chai": "^3.5.0",
     "eslint": "^3.15.0",
     "eslint-config-space-single": "^0.0.4",
     "eslint-plugin-mocha": "^4.8.0",
-    "mocha": "^3.2.0"
-  },
-  "dependencies": {
-    "sammler-nodelib-logger": "^0.2.1",
-    "winster": "^0.2.5"
+    "mocha": "^3.2.0",
+    "supertest": "^3.0.0",
+    "supertest-as-promised": "^4.0.2"
   },
   "winster": {
     "configFile": "./src/config/winster-config.js"
