@@ -5,8 +5,11 @@ const compression = require('compression');
 const helmet = require('helmet');
 const logger = require('winster').instance();
 const expressLogger = require('morgan');
+const bluebird = require('bluebird');
 
 const routesConfig = require('./config/routes-config');
+
+global.Promise = bluebird;
 
 class AppServer {
   constructor(config) {
@@ -31,6 +34,8 @@ class AppServer {
     this.app.use(bodyParser.urlencoded({extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(cors());
+
+    this.app.settings.env = process.env;
 
     routesConfig.init(this.app);
   }

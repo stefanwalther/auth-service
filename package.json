@@ -27,6 +27,7 @@
     "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'"
   },
   "dependencies": {
+    "bluebird": "^3.4.7",
     "body-parser": "^1.16.1",
     "chai": "canary",
     "compression": "^1.6.2",
