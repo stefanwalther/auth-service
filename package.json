@@ -12,6 +12,19 @@
   "author": "Stefan Walther",
   "main": "index.js",
   "repository": "htts://github.com/sammler/auth-service",
+  "scripts": {
+    "d-build": "docker build -t sammler/auth-service .",
+    "lint": "yarn run lint:src && yarn run lint:test",
+    "lint:fix": "yarn run lint:src:fix && yarn run lint:test:fix",
+    "lint:src": "eslint src",
+    "lint:src:fix": "eslint src --fix",
+    "lint:test": "eslint test",
+    "lint:test:fix": "eslint test --fix",
+    "start": "node ./src/index.js",
+    "test": "yarn run lint && yarn test:unit && yarn test:integration",
+    "test:integration": "mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
+    "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'"
+  },
   "dependencies": {
     "body-parser": "^1.16.1",
     "compression": "^1.6.2",
@@ -33,16 +46,5 @@
   },
   "winster": {
     "configFile": "./src/config/winster-config.js"
-  },
-  "scripts": {
-    "lint": "yarn run lint:src && yarn run lint:test",
-    "lint:fix": "yarn run lint:src:fix && yarn run lint:test:fix",
-    "lint:src": "eslint src",
-    "lint:src:fix": "eslint src --fix",
-    "lint:test": "eslint test",
-    "lint:test:fix": "eslint test --fix",
-    "test": "yarn run lint && yarn test:unit && yarn test:integration",
-    "test:integration": "mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
-    "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'"
   }
 }
