@@ -23,7 +23,7 @@ function init(app) {
   router.post('/v1/login', UserController.login);
   router.post('/v1/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
   router.get('/v1/status', UserController.status);
-  router.post('/v1/verify', UserController.verifyToken); // Todo: Decide which verb to use (?!)
+  router.post('/v1/verify-token', UserController.verifyToken); // Todo: Decide which verb to use (?!)
 
   // Todo: Nice idea, but figure out how this could be of help?
   // Reference: https://github.com/binocarlos/passport-service
