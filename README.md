@@ -2,7 +2,7 @@
 
 > Auth service (for sammler).
 
-[![CircleCI](https://img.shields.io/circleci/project/github/sammler/log-service.svg)](https://circleci.com/gh/sammler/log-service)
+[![CircleCI](https://img.shields.io/circleci/project/github/sammler/auth-service.svg)](https://circleci.com/gh/sammler/auth-service)
 
 ## Configuration
 _auth-service_ can be configured by the following environment variables:
