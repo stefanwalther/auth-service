@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const logger = require('winster').instance();
 const expressLogger = require('morgan');
 
+const routesConfig = require('./config/routes-config');
+
 class AppServer {
   constructor(config) {
     this.config = config || {};
@@ -16,6 +18,11 @@ class AppServer {
     this._initApp();
   }
 
+  /**
+   * Initialize the express app.
+   *
+   * @private
+   */
   _initApp() {
     this.app = express();
     this.app.use(expressLogger('dev'));
@@ -24,8 +31,15 @@ class AppServer {
     this.app.use(bodyParser.urlencoded({extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(cors());
+
+    routesConfig.init(this.app);
   }
 
+  /**
+   * Start the auth-server.
+   *
+   * @returns {Promise}
+   */
   start() {
     return new Promise((resolve, reject) => {
       this.server = this.app.listen(this.config.PORT, err => {
@@ -39,6 +53,11 @@ class AppServer {
     });
   }
 
+  /**
+   * Stop the auth-server.
+   *
+   * @returns {Promise}
+   */
   stop() {
     return new Promise(resolve => {
       if (this.server) {
@@ -50,7 +69,6 @@ class AppServer {
       return resolve();
     });
   }
-
 }
 
 module.exports = AppServer;

@@ -1,6 +1,6 @@
 const AppServer = require('./../../src/app-server');
 
-describe('Auth-Service', () => {
+describe('auth-service', () => {
 
   let server = null;
   beforeEach(() => {
@@ -10,6 +10,14 @@ describe('Auth-Service', () => {
 
   afterEach(() => {
     return server.stop();
+  });
+
+  it('test it', () => {
+    expect(true).to.be.true;
+  });
+
+  it('test it', () => {
+    expect(true).to.be.true;
   });
 
   it('test it', () => {

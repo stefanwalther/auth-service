@@ -32,6 +32,8 @@
     "cors": "^2.8.1",
     "express": "^4.14.1",
     "helmet": "^3.4.0",
+    "http-status-codes": "^1.1.6",
+    "jsonwebtoken": "^7.3.0",
     "morgan": "^1.8.1",
     "sammler-nodelib-logger": "^0.2.1",
     "winster": "^0.2.5"
