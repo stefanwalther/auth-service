@@ -15,9 +15,6 @@ function init(app) {
   // health-check
   router.get('/health-check', HealthCheckController.get);
 
-  // Todo: Decide whether to combine with health-check or not
-  router.get('/version', HealthCheckController.version);
-
   // user
   router.post('/v1/register', UserController.register);
   router.post('/v1/login', UserController.login);
@@ -28,9 +25,6 @@ function init(app) {
   // Todo: Nice idea, but figure out how this could be of help?
   // Reference: https://github.com/binocarlos/passport-service
   router.post('/v1/details', UserController.details);
-
-
-
 
   app.use(router);
 }
