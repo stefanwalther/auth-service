@@ -5,7 +5,7 @@ const UserController = require('./../modules/user/user.controller');
 
 const ApiDocsController = require('./../modules/api-docs/api-docs.controller');
 const apiDocsRoutes = require('./../modules/api-docs/api-docs.routes');
-const healthCheckRoutes = require('./../modules/health-check/healthcheck.routes');
+const healthCheckRoutes = require('./../modules/health-check/health-check.routes.js');
 const userRoutes = require('./../modules/user/user.routes');
 
 /**

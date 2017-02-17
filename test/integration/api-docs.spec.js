@@ -25,10 +25,21 @@ describe('auth-service => api-docs', () => {
       .get('/api-docs/raw')
       .expect(HttpStatus.OK)
       .then(result => {
+        console.log(result.body);
         expect(result).to.exist;
         expect(result).to.have.a.property('body').to.exist;
         expect(result.body).to.deep.include({swagger: '2.0'});
         expect(result.body).to.deep.include({info: {title: 'auth-service', version: '0.1.0'}});
+      });
+  });
+
+  it('GET /api-docs/raw => contains all routes as defined', () => {
+    return server
+      .get('/api-docs/raw')
+      .expect(HttpStatus.OK)
+      .then(result => {
+        expect(result.body.paths).to.have.property('/api-docs');
+        expect(result.body.paths).to.have.property('/health-check');
       });
   });
 
