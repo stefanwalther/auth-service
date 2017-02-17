@@ -12,10 +12,12 @@ describe('AppServer => unit tests', () => {
   });
 
   it('has a method start', () => {
-    expect(server).to.have.property('start').to.be.a.method;
+    expect(server).to.have.property('start');
+    expect(server.start).to.be.a('function');
   });
   it('has a method stop', () => {
-    expect(server).to.have.property('stop').to.be.a.method;
+    expect(server).to.have.property('stop');
+    expect(server.stop).to.be.a('function');
   });
 
 });

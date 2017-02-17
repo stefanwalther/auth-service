@@ -1,7 +1,12 @@
 const express = require('express');
+const swaggerUi = require('swagger-ui-express');
 
-const HealthCheckController = require('./../modules/health-check/healthcheck.controller');
 const UserController = require('./../modules/user/user.controller');
+
+const ApiDocsController = require('./../modules/api-docs/api-docs.controller');
+const apiDocsRoutes = require('./../modules/api-docs/api-docs.routes');
+const healthCheckRoutes = require('./../modules/health-check/healthcheck.routes');
+const userRoutes = require('./../modules/user/user.routes');
 
 /**
  * Initialize the routes.
@@ -12,8 +17,9 @@ function init(app) {
 
   const router = express.Router();
 
-  // health-check
-  router.get('/health-check', HealthCheckController.get);
+  app.use('/', healthCheckRoutes);
+  app.use('/', apiDocsRoutes);
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(ApiDocsController.getDocs()));
 
   // user
   router.post('/v1/register', UserController.register);
