@@ -13,6 +13,7 @@
   "main": "index.js",
   "repository": "htts://github.com/sammler/auth-service",
   "scripts": {
+    "docs": "verb",
     "d-build": "docker build -t sammler/auth-service .",
     "lint": "yarn run lint:src && yarn run lint:test",
     "lint:fix": "yarn run lint:src:fix && yarn run lint:test:fix",
