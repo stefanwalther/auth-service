@@ -1,25 +1,12 @@
 const HttpStatus = require('http-status-codes');
 const swaggerJsDocs = require('swagger-jsdoc');
 
-
-const pkg = require('./../../../package.json');
-
-const opts = {
-  swaggerDefinition: {
-    info: {
-      title: 'auth-service',
-      version: pkg.version
-    },
-  },
-  apis: [
-    './src/modules/api-docs/api-docs.routes.js'
-  ]
-};
+const swaggerConfig = require('./../../config/swagger-config');
 
 class ApiDocsController {
 
   static getDocs() {
-    return swaggerJsDocs(opts);
+    return swaggerJsDocs(swaggerConfig);
   }
 
   static getRaw(req, res) {
