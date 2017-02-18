@@ -1,3 +1,6 @@
+const HttpStatus = require('http-status-codes');
+const ExpressResult = require('express-result');
+
 class UserController {
 
   /**
@@ -6,8 +9,25 @@ class UserController {
    * @param res
    * @param next
    */
-  static register(req, res, next) {
-    next();
+  static register(req, res) {
+
+    let validationErrors = new ExpressResult.ValidationErrors();
+    if (!req.body.username) {
+      validationErrors.add('Property <username> missing.');
+    }
+    if(!req.body.password) {
+      validationErrors.add('Property <password> missing.');
+    }
+    if (!req.body.email) {
+      validationErrors.add('Property <email> missing.');
+    }
+
+    if (validationErrors.length > 0 ){
+      ExpressResult.error(res, validationErrors);
+    }
+    else {
+      ExpressResult.json(res, {});
+    }
   }
 
   /**

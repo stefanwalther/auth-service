@@ -22,6 +22,7 @@ function init(app) {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(ApiDocsController.getDocs()));
 
   // user
+  app.use('/v1', userRoutes);
   router.post('/v1/register', UserController.register);
   router.post('/v1/login', UserController.login);
   router.post('/v1/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
