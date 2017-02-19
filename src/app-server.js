@@ -8,8 +8,8 @@ const helmet = require('helmet');
 const logger = require('winster').instance();
 const MongooseConnection = require('mongoose-connection-promise');
 
-const routesConfig = require('./config/routes-config');
 const mongooseConfig = require('./config/mongoose-config');
+const routesConfig = require('./config/routes-config');
 
 const mongooseConnection = new MongooseConnection(mongooseConfig);
 
@@ -67,8 +67,8 @@ class AppServer {
         })
         .catch(err => {
           this.logger.fatal('Error creating a mongoose connection', err);
+          throw err;
         });
-
     });
   }
 
@@ -93,6 +93,7 @@ class AppServer {
         })
         .catch(err => {
           this.logger.error('Could not disconnect from MongoDB', err);
+          throw err;
         });
     });
   }
