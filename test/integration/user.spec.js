@@ -24,11 +24,10 @@ describe('auth-service => user', () => {
     const doc = {};
 
     return server
-      .post('/v1/register')
+      .post('/v1/user/register')
       .send(doc)
       .expect(HttpStatus.INTERNAL_SERVER_ERROR)
       .then(result => {
-        console.log(result.body);
         expect(result).to.exist;
         expect(result.body).to.exist;
         expect(result.body).to.have.a.property('ValidationErrors');

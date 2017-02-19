@@ -1,13 +1,17 @@
-const express = require('express');
-const cors = require('cors');
+const bluebird = require('bluebird');
 const bodyParser = require('body-parser');
 const compression = require('compression');
+const cors = require('cors');
+const express = require('express');
+const expressLogger = require('morgan');
 const helmet = require('helmet');
 const logger = require('winster').instance();
-const expressLogger = require('morgan');
-const bluebird = require('bluebird');
+const MongooseConnection = require('mongoose-connection-promise');
 
 const routesConfig = require('./config/routes-config');
+const mongooseConfig = require('./config/mongoose-config');
+
+const mongooseConnection = new MongooseConnection(mongooseConfig);
 
 global.Promise = bluebird;
 
@@ -46,15 +50,25 @@ class AppServer {
    * @returns {Promise}
    */
   start() {
+
     return new Promise((resolve, reject) => {
-      this.server = this.app.listen(this.config.PORT, err => {
-        if (err) {
-          this.logger.error('Cannot start express server', err);
-          return reject(err);
-        }
-        this.logger.info('Express server listening on port %d in "%s" mode', this.config.PORT, this.app.settings.env);
-        return resolve();
-      });
+      mongooseConnection.connect()
+        .then(connection => {
+          this.app.db = connection;
+          const port = 3003;
+          this.server = this.app.listen(this.config.PORT, err => {
+            if (err) {
+              this.logger.error('Cannot start express server', err);
+              return reject(err);
+            }
+            this.logger.info('Express server listening on port %d in "%s" mode', this.config.PORT, this.app.settings.env);
+            return resolve();
+          });
+        })
+        .catch(err => {
+          this.logger.fatal('Error creating a mongoose connection', err);
+        });
+
     });
   }
 
@@ -65,13 +79,21 @@ class AppServer {
    */
   stop() {
     return new Promise(resolve => {
-      if (this.server) {
-        this.server.close(() => {
-          this.logger.info('Server stopped');
+      mongooseConnection.disconnect()
+        .then(() => {
+
+          if (this.server) {
+            this.server.close(() => {
+              this.logger.info('Server stopped');
+              return resolve();
+            });
+          }
           return resolve();
+
+        })
+        .catch(err => {
+          this.logger.error('Could not disconnect from MongoDB', err);
         });
-      }
-      return resolve();
     });
   }
 }

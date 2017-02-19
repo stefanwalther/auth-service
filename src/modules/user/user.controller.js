@@ -8,6 +8,7 @@ class UserController {
    * @param req
    * @param res
    * @param next
+   * @Todo: Validation could be generalized and probably broken out.
    */
   static register(req, res) {
 

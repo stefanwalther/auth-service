@@ -9,7 +9,8 @@ const swaggerConfig =  {
   },
   apis: [
     './src/modules/api-docs/api-docs.routes.js',
-    './src/modules/health-check/health-check.routes.js'
+    './src/modules/health-check/health-check.routes.js',
+    './src/modules/user/user.routes.js'
   ]
 };
 

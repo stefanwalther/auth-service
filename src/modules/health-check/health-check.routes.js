@@ -8,7 +8,7 @@ const HealthCheckController = require('./health-check.controller.js');
  *   get:
  *     description: Get the service' status.
  *     produces:
- *        - application/json
+ *       - application/json
  *     responses:
  *       200:
  *         description: Returned health-check status.
