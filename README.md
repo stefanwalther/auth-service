@@ -4,10 +4,15 @@
 
 [![CircleCI](https://img.shields.io/circleci/project/github/sammler/auth-service.svg)](https://circleci.com/gh/sammler/auth-service)
 
+---
+NOTHING TO SHOW, YET. WORK IN PROGRESS.
+---
+
 ## Configuration
 _auth-service_ can be configured by the following environment variables:
 
 - `PORT` - The port to run the REST API (defaults to `3010`).
+- `JWT_SECRET` - The secret uses for JWT.
 
 ## Usage
 

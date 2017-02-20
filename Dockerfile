@@ -1,4 +1,4 @@
-FROM kkarczmarczyk/node-yarn:7.2-slim
+FROM kkarczmarczyk/node-yarn:latest
 
 RUN yarn global add nodemon
 
