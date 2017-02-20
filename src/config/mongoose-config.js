@@ -1,4 +1,5 @@
 
+// Todo: expose to environment variables
 module.exports = {
   debug: false,
   host: 'localhost',
