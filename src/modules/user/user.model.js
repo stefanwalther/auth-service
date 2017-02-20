@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
+const timeStamps = require('mongoose-timestamp');
 
 mongoose.Promise = global.Promise; // Todo: How to centralize this guy ...
 
@@ -29,6 +30,9 @@ const schema = new Schema({
   strict: true
 });
 /* eslint-enable camelcase */
+
+schema.index({username: 1, email: 1});
+schema.plugin(timeStamps, {createdAt: 'created_at', updatedAt: 'updated_at'});
 
 schema.methods.setPassword = function(password){
   this.salt = crypto.randomBytes(16).toString('hex');
