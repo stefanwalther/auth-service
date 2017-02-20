@@ -1,17 +1,12 @@
-const HttpStatus = require('http-status-codes');
 const ExpressResult = require('express-result');
+const HttpStatus = require('http-status-codes');
+const passport = require('passport');
 
 const UserModel = require('./user.model').Model;
 
 class UserController {
 
-  /**
-   *
-   * @param req
-   * @param res
-   * @param next
-   * @Todo: Validation could be generalized and probably broken out.
-   */
+  // Todo: Validation could be generalized and probably broken out.
   static register(req, res, next) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
@@ -51,6 +46,45 @@ class UserController {
     }
   }
 
+  // Todo: What should a failed login return, 400
+  // Todo: Investigate how to properly use next() here
+  static login(req, res) {
+
+    const validationErrors = new ExpressResult.ValidationErrors();
+    if (!req.body.username) {
+      validationErrors.add('Property <username> missing.');
+    }
+
+    if (!req.body.password) {
+      validationErrors.add('Property <password> missing.');
+    }
+
+    if (validationErrors.length > 0) {
+      return ExpressResult.error(res, validationErrors);
+    }
+
+    passport.authenticate('local', (err, user, info) => {
+
+      // If Passport throws/catches an error
+      if (err) {
+        res.status(404).json(err);
+        return;
+      }
+
+      // If a user is found
+      if (user) {
+        const token = user.generateJwt();
+        res.status(HttpStatus.OK);
+        res.json({
+          token
+        });
+      } else {
+        // If user is not found
+        res.status(HttpStatus.UNAUTHORIZED).json(info);
+      }
+    })(req, res);
+  }
+
   /**
    * Removes the session token and redirects the user to /
    *
@@ -61,10 +95,6 @@ class UserController {
    * @param next
    */
   static logout(req, res, next) {
-    next();
-  }
-
-  static login(req, res, next) {
     next();
   }
 

@@ -9,13 +9,26 @@ const UserController = require('./user.controller.js');
  *     required:
  *       - username
  *       - password
+ *       - email
  *     properties:
  *       username:
  *         type: String
- *         example: "Max Mustermann"
+ *         example: "foo-user"
  *       email:
  *         type: String
  *         example: "foo@bar.com"
+ *       password:
+ *         type: String
+ *         example: "passw0rd"
+ *
+ *   Login:
+ *     required:
+ *       - username
+ *       - password
+ *     properties:
+ *       username:
+ *         type: String
+ *         example: "foo-user"
  *       password:
  *         type: String
  *         example: "passw0rd"
@@ -53,6 +66,12 @@ router.post('/v1/user/register', UserController.register);
  *     description: Login
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: Login
+ *         in: body
+ *         description: The login information.
+ *         schema:
+ *           $ref: "#/definitions/Login"
  *     responses:
  *       200:
  *         description: Successfully logged in.

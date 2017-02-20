@@ -48,6 +48,7 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
+    "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",
     "sammler-nodelib-logger": "^0.2.1",
     "swagger-jsdoc": "^1.9.1",

@@ -1,5 +1,6 @@
 const UserModel = require('./../../src/modules/user/user.model').Model;
 
+// Todo: Get more out of it: https://codeutopia.net/blog/2016/06/10/mongoose-models-and-unit-tests-the-definitive-guide/
 describe('UserModel => unit tests', () => {
 
   // Todo: Use promises: http://stackoverflow.com/questions/9222376/testing-mongoosejs-validations
