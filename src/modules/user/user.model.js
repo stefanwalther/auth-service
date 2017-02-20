@@ -14,7 +14,8 @@ const schema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    minlength: [6, 'Username too short, 6 characters required.']
   },
   email: {
     type: String,

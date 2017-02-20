@@ -41,7 +41,7 @@ describe('auth-service => user', () => {
 
   it('POST /register => created a new user', () => {
     const doc = {
-      username: 'foo',
+      username: 'foofoo',
       email: 'foo@bar.com',
       password: 'bar'
     };

@@ -11,6 +11,22 @@ describe('UserModel => unit tests', () => {
       expect(err.errors).to.have.a.property('email');
       done();
     })
+  });
+
+  it('returns an error if username is too short', (done) => {
+
+    let doc = {
+      username: 'foo',
+      email: 'foo@bar.com',
+      password: 'foobarbaz'
+    };
+
+    let userModel = new UserModel(doc);
+    userModel.validate(err => {
+      expect(err.errors).to.have.a.property('username');
+      expect(err.errors.username).to.deep.include({message: 'Username too short, 6 characters required.'});
+      done();
+    });
   })
 
 });
