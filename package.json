@@ -28,7 +28,7 @@
     "test-coverage": "export JWT_SECRET='My Secret' && istanbul cover node_modules/.bin/_mocha  --require ./test/mocha.conf.js -- -- -u exports -R spec test/**/* && codecov",
     "test:integration": "export JWT_SECRET='My Secret' && mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
     "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'",
-    "precommit": "yarn run lint --quiet && yarn run docs"
+    "precommit": "yarn run lint --quiet"
   },
   "dependencies": {
     "bluebird": "^3.4.7",

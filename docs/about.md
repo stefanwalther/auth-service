@@ -1,4 +1,4 @@
-{%= name%} is a tiny, re-usable authentication service to be used in any microservices environment.
+_{%= name%}_ is a tiny, re-usable authentication service to be used in any microservices environment.
 
 It is built on top of [express](https://expressjs.com/) , [passport](http://passportjs.org/) and [JWT](https://jwt.io/), therefore easy to extend and integrate.
 

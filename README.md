@@ -5,11 +5,16 @@
 [![CircleCI](https://img.shields.io/circleci/project/github/sammler/auth-service.svg)](https://circleci.com/gh/sammler/auth-service)
 
 ---
+!!!  
+!!!  
 NOTHING TO SHOW, YET. WORK IN PROGRESS.
+!!!  
+!!!  
+  
 ---
 
 ## About
-auth-service is a tiny, re-usable authentication service to be used in any microservices environment.
+_auth-service_ is a tiny, re-usable authentication service to be used in any microservices environment.
 
 It is built on top of [express](https://expressjs.com/) , [passport](http://passportjs.org/) and [JWT](https://jwt.io/), therefore easy to extend and integrate.
 
