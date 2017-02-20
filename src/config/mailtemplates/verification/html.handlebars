@@ -1,0 +1,55 @@
+<html>
+<head>
+    <style type="text/css">
+        body {
+            padding-left: 20px;
+            padding-top: 20px;
+            font-family: Arial;
+            font-size: 13px;
+            color: #444;
+        }
+
+        .container {
+            margin-left: auto;
+            margin-right: auto;
+            width: 70%;
+            background-color: #efefef;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            border-top: #ccc solid 3px;
+            border-bottom: #ccc solid 3px;
+        }
+
+        .content {
+            padding-left: 10px;
+            padding-top: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<table class="container" align="center" width="80%">
+    <tr>
+        <td width="20px;">&nbsp;</td>
+        <td width="99%" class="content">
+
+            Hello {{user.first_name}},<br/><br/>
+
+            thanks for being interested in {{application.name}}.<br/>
+            You have successfully registered a new account using the username "{{user.sso_id}}"<br/><br/>
+
+            Please click here to activate your account:<br/>
+            {{verificationUrl}}<br/><br/>
+
+            <br/>
+
+        </td>
+        <td width="20px;">&nbsp;</td>
+    <tr/>
+</table>
+</body>
+</html>
+
+

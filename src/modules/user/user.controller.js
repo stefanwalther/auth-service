@@ -21,29 +21,28 @@ class UserController {
     }
 
     if (validationErrors.length > 0) {
-      ExpressResult.error(res, validationErrors);
-    } else {
-
-      const user = new UserModel();
-      user.username = req.body.username;
-      user.email = req.body.email;
-      user.setPassword(req.body.password);
-
-      // Todo: as promise
-      user.save(err => {
-
-        // Todo: Test error handling
-        if (err) {
-          return next(err);
-        }
-
-        const token = user.generateJwt();
-        res.status(HttpStatus.CREATED);
-        res.json({
-          token
-        });
-      });
+      return ExpressResult.error(res, validationErrors);
     }
+
+    const user = new UserModel();
+    user.username = req.body.username;
+    user.email = req.body.email;
+    user.setPassword(req.body.password);
+
+    // Todo: as promise
+    user.save(err => {
+
+      // Todo: Test error handling
+      if (err) {
+        return next(err);
+      }
+
+      const token = user.generateJwt();
+      res.status(HttpStatus.CREATED);
+      res.json({
+        token
+      });
+    });
   }
 
   // Todo: What should a failed login return, 400

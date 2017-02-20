@@ -75,6 +75,8 @@ router.post('/v1/user/register', UserController.register);
  *     responses:
  *       200:
  *         description: Successfully logged in.
+ *       401:
+ *         description: Unauthorized, wrong user/password combination.
  */
 router.post('/v1/user/login', UserController.login);
 
