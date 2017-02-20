@@ -22,7 +22,7 @@ function init(app) {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(ApiDocsController.getDocs()));
 
   // user
-  app.use('/v1', userRoutes);
+  app.use('/', userRoutes);
   router.post('/v1/verify-token', UserController.verifyToken); // Todo: Decide which verb to use (?!)
 
   // Todo: Nice idea, but figure out how this could be of help?

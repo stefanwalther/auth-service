@@ -4,21 +4,27 @@ const UserController = require('./user.controller.js');
 
 /**
  * @swagger
- * /user/register:
+ * /v1/user/register:
  *   post:
  *     description: Register a new user.
  *     produces:
  *       - application/json
+ *     parameters:
+ *       - name: User
+ *         in: body
+ *         description: The user to create.
+ *         schema:
+ *         $ref: "#/definitions/User"
  *     responses:
  *       201:
  *         description: Confirmation that the user has been created successfully.
  *
  */
-router.post('/user/register', UserController.register);
+router.post('/v1/user/register', UserController.register);
 
 /**
  * @swagger
- * /user/login:
+ * /v1/user/login:
  *   post:
  *     description: Login
  *     produces:
@@ -27,11 +33,11 @@ router.post('/user/register', UserController.register);
  *       200:
  *         description: Successfully logged in.
  */
-router.post('/user/login', UserController.login);
+router.post('/v1/user/login', UserController.login);
 
 /**
  * @swagger
- * /user/logout:
+ * /v1/user/logout:
  *   post:
  *     description: Logout
  *   produces:
@@ -40,7 +46,7 @@ router.post('/user/login', UserController.login);
  *     200:
  *       description: Successfully logged out.
  */
-router.post('/user/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
+router.post('/v1/user/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
 
 router.get('/user/status', UserController.status);
 

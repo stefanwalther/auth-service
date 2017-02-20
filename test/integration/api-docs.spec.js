@@ -29,7 +29,21 @@ describe('auth-service => api-docs', () => {
         expect(result).to.exist;
         expect(result).to.have.a.property('body').to.exist;
         expect(result.body).to.deep.include({swagger: '2.0'});
-        expect(result.body).to.deep.include({info: {title: 'auth-service', version: '0.1.0'}});
+        expect(result.body).to.have.a.property('info');
+        expect(result.body.info).to.include({title: 'auth-service'});
+        expect(result.body.info).to.include({version: '0.1.0'});
+      });
+  });
+
+  it('GET /api-docs/raw => contains the definitions', () => {
+    return server
+      .get('/api-docs/raw')
+      .expect(HttpStatus.OK)
+      .then(result => {
+        console.log(result.body);
+        expect(result).to.exist;
+        expect(result).to.have.a.property('body').to.exist;
+        expect(result.body).to.have.a.property('definitions');
       });
   });
 
@@ -40,6 +54,9 @@ describe('auth-service => api-docs', () => {
       .then(result => {
         expect(result.body.paths).to.have.property('/api-docs');
         expect(result.body.paths).to.have.property('/health-check');
+        expect(result.body.paths).to.have.property('/v1/user/login');
+        expect(result.body.paths).to.have.property('/v1/user/logout');
+        expect(result.body.paths).to.have.property('/v1/user/register');
       });
   });
 
