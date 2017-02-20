@@ -789,9 +789,9 @@ exit-hook@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/exit-hook/-/exit-hook-1.1.1.tgz#f05ca233b48c05d54fff07765df8507e95c02ff8"
 
-express-result@^0.1.0:
+express-result@stefanwalther/express-result:
   version "0.1.0"
-  resolved "https://registry.yarnpkg.com/express-result/-/express-result-0.1.0.tgz#3b65daeaffbc7c1478734ff2b3b724561ccc9e61"
+  resolved "https://codeload.github.com/stefanwalther/express-result/tar.gz/318f2f00361276212f02dfa5b7870f970100ade8"
   dependencies:
     eslint-config-space-single "^0.0.4"
     express "^4.14.1"
@@ -1569,7 +1569,7 @@ mongodb@2.2.24:
     mongodb-core "2.1.8"
     readable-stream "2.1.5"
 
-mongoose-connection-promise@^0.1.3:
+mongoose-connection-promise@*:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/mongoose-connection-promise/-/mongoose-connection-promise-0.1.3.tgz#afdf095c7963cf0a41caa458b787ee9f0a5b38d2"
   dependencies:
@@ -1983,13 +1983,9 @@ resolve-from@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-2.0.0.tgz#9480ab20e94ffa1d9e80a804c7ea147611966b57"
 
-resolve@1.1.x:
+resolve@1.1.x, resolve@^1.1.6:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b"
-
-resolve@^1.1.6:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.2.0.tgz#9589c3f2f6149d1417a40becc1663db6ec6bc26c"
 
 restore-cursor@^1.0.1:
   version "1.0.1"
