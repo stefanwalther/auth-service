@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const timeStamps = require('mongoose-timestamp');
+const moment = require('moment');
 
 mongoose.Promise = global.Promise; // Todo: How to centralize this guy ...
 
@@ -55,14 +56,12 @@ schema.methods.validPassword = function (password) {
 };
 
 schema.methods.generateJwt = function () {
-  const expiry = new Date();
-  expiry.setDate(expiry.getDate() + 7);
 
   return jwt.sign({
     _id: this._id,
     email: this.email,
     username: this.username,
-    exp: parseInt(expiry.getTime() / 1000) // eslint-disable-line radix
+    exp: moment().add('days', 7).valueOf()
   }, jwtConfig.JWT_SECRET);
 };
 
