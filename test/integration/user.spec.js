@@ -2,6 +2,7 @@ const superTest = require('supertest-as-promised');
 const HttpStatus = require('http-status-codes');
 const AppServer = require('./../../src/app-server');
 
+const UserModel = require('./../../src/modules/user/user.model').Model;
 const defaultConfig = require('./../test-lib/default-config');
 
 describe('auth-service => user', () => {
@@ -12,6 +13,7 @@ describe('auth-service => user', () => {
     return appServer.start()
       .then(() => {
         server = superTest(appServer.server);
+        return UserModel.remove({}).exec();
       });
   });
 
@@ -19,7 +21,7 @@ describe('auth-service => user', () => {
     return appServer.stop();
   });
 
-  it('POST /register => requires a username', () => {
+  it('POST /register => throws validation errors for required fields', () => {
 
     const doc = {};
 
@@ -35,6 +37,19 @@ describe('auth-service => user', () => {
         expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
         expect(result.body.ValidationErrors).to.contain('Property <email> missing.');
       })
+  });
+
+  it('POST /register => created a new user', () => {
+    const doc = {
+      username: 'foo',
+      email: 'foo@bar.com',
+      password: 'bar'
+    };
+
+    return server
+      .post('/v1/user/register')
+      .send(doc)
+      .expect(HttpStatus.CREATED)
   })
 
 });

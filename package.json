@@ -25,7 +25,7 @@
     "lint:test:fix": "eslint test --fix",
     "start": "node ./src/index.js",
     "test": "yarn run lint && yarn test:unit && yarn test:integration",
-    "test:integration": "mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
+    "test:integration": "export JWT_SECRET='My Secret' && mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
     "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'"
   },
   "dependencies": {

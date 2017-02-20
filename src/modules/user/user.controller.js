@@ -35,9 +35,10 @@ class UserController {
       user.email = req.body.email;
       user.setPassword(req.body.password);
 
+      // Todo: as promise
       user.save(err => {
 
-        // Todo: Text error handling
+        // Todo: Test error handling
         if (err) {
           return next(err);
         }
@@ -48,8 +49,6 @@ class UserController {
           token: token
         });
       });
-
-      ExpressResult.json(res, {});
     }
   }
 
