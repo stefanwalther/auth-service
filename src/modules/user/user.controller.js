@@ -76,6 +76,7 @@ class UserController {
         return ExpressResult.ok(res, {token});
       }
 
+      // No user found
       return ExpressResult.unauthorized(res, info);
 
     })(req, res);
