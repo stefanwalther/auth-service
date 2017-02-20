@@ -67,21 +67,17 @@ class UserController {
 
       // If Passport throws/catches an error
       if (err) {
-        res.status(404).json(err);
-        return;
+        return ExpressResult.err(err);
       }
 
       // If a user is found
       if (user) {
         const token = user.generateJwt();
-        res.status(HttpStatus.OK);
-        res.json({
-          token
-        });
-      } else {
-        // If user is not found
-        res.status(HttpStatus.UNAUTHORIZED).json(info);
+        return ExpressResult.ok(res, {token});
       }
+
+      return ExpressResult.unauthorized(res, info);
+
     })(req, res);
   }
 
