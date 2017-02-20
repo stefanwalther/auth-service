@@ -15,7 +15,7 @@ const userRoutes = require('./../modules/user/user.routes');
  */
 function init(app) {
 
-  const router = express.Router();
+  const router = express.Router(); // eslint-disable-line new-cap
 
   app.use('/', healthCheckRoutes);
   app.use('/', apiDocsRoutes);

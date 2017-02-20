@@ -36,7 +36,7 @@ describe('auth-service => user', () => {
         expect(result.body.ValidationErrors).to.contain('Property <username> missing.');
         expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
         expect(result.body.ValidationErrors).to.contain('Property <email> missing.');
-      })
+      });
   });
 
   it('POST /register => created a new user', () => {
@@ -49,7 +49,7 @@ describe('auth-service => user', () => {
     return server
       .post('/v1/user/register')
       .send(doc)
-      .expect(HttpStatus.CREATED)
-  })
+      .expect(HttpStatus.CREATED);
+  });
 
 });

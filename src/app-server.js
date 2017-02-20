@@ -55,7 +55,6 @@ class AppServer {
       mongooseConnection.connect()
         .then(connection => {
           this.app.db = connection;
-          const port = 3003;
           this.server = this.app.listen(this.config.PORT, err => {
             if (err) {
               this.logger.error('Cannot start express server', err);

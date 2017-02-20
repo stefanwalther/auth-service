@@ -46,6 +46,6 @@ describe('auth-service => api-docs', () => {
   it('GET /api-docs => returns the swagger docs', () => {
     return server
       .get('/api-docs')
-      .expect(HttpStatus.MOVED_PERMANENTLY)
-  })
+      .expect(HttpStatus.MOVED_PERMANENTLY);
+  });
 });

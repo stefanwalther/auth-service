@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router(); // eslint-disable-line new-cap
 const HealthCheckController = require('./health-check.controller.js');
 
 /**

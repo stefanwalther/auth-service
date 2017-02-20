@@ -14,23 +14,22 @@ class UserController {
    */
   static register(req, res, next) {
 
-    let validationErrors = new ExpressResult.ValidationErrors();
+    const validationErrors = new ExpressResult.ValidationErrors();
     if (!req.body.username) {
       validationErrors.add('Property <username> missing.');
     }
-    if(!req.body.password) {
+    if (!req.body.password) {
       validationErrors.add('Property <password> missing.');
     }
     if (!req.body.email) {
       validationErrors.add('Property <email> missing.');
     }
 
-    if (validationErrors.length > 0 ){
+    if (validationErrors.length > 0) {
       ExpressResult.error(res, validationErrors);
-    }
-    else {
+    } else {
 
-      let user = new UserModel();
+      const user = new UserModel();
       user.username = req.body.username;
       user.email = req.body.email;
       user.setPassword(req.body.password);
@@ -43,10 +42,10 @@ class UserController {
           return next(err);
         }
 
-        let token = user.generateJwt();
+        const token = user.generateJwt();
         res.status(HttpStatus.CREATED);
         res.json({
-          token: token
+          token
         });
       });
     }

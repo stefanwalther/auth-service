@@ -34,7 +34,7 @@ const schema = new Schema({
 schema.index({username: 1, email: 1});
 schema.plugin(timeStamps, {createdAt: 'created_at', updatedAt: 'updated_at'});
 
-schema.methods.setPassword = function(password){
+schema.methods.setPassword = function (password) {
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(
     password,
@@ -44,7 +44,7 @@ schema.methods.setPassword = function(password){
     'sha1').toString('hex');
 };
 
-schema.methods.validPassword = function(password) {
+schema.methods.validPassword = function (password) {
   const hash = crypto.pbkdf2Sync(
     password,
     this.salt,
@@ -54,7 +54,7 @@ schema.methods.validPassword = function(password) {
   return this.hash === hash;
 };
 
-schema.methods.generateJwt = function() {
+schema.methods.generateJwt = function () {
   const expiry = new Date();
   expiry.setDate(expiry.getDate() + 7);
 
@@ -62,7 +62,7 @@ schema.methods.generateJwt = function() {
     _id: this._id,
     email: this.email,
     username: this.username,
-    exp: parseInt(expiry.getTime() / 1000),
+    exp: parseInt(expiry.getTime() / 1000) // eslint-disable-line radix
   }, jwtConfig.JWT_SECRET);
 };
 

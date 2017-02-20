@@ -4,7 +4,7 @@ class HealthCheckController {
 
   static get(req, res, next) {
     res.setHeader('Content-Type', 'application/json');
-    res.send( {
+    res.send({
       ts: new Date().toJSON(),
       name: pkg.name,
       repository: pkg.repository,

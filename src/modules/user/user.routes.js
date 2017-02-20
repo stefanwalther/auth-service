@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router(); // eslint-disable-line new-cap
 const UserController = require('./user.controller.js');
 
 /**
@@ -42,10 +42,8 @@ router.post('/user/login', UserController.login);
  */
 router.post('/user/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
 
-
 router.get('/user/status', UserController.status);
 
 router.get('/user/password-reset-request', UserController.status);
-
 
 module.exports = router;
