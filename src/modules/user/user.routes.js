@@ -2,6 +2,26 @@ const express = require('express');
 const router = express.Router(); // eslint-disable-line new-cap
 const UserController = require('./user.controller.js');
 
+/**
+ * @swagger
+ * definitions:
+ *   User:
+ *     required:
+ *       - username
+ *       - password
+ *     properties:
+ *       username:
+ *         type: String
+ *         example: "Max Mustermann"
+ *       email:
+ *         type: String
+ *         example: "foo@bar.com"
+ *       password:
+ *         type: String
+ *         example: "passw0rd"
+ *
+ */
+
 // Todo: Document result
 // Todo: Document possible Validation Errors
 // Todo: Centralize tags (see https://apihandyman.io/writing-openapi-swagger-specification-tutorial-part-3-simplifying-specification-file/)
