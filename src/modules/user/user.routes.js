@@ -2,11 +2,16 @@ const express = require('express');
 const router = express.Router(); // eslint-disable-line new-cap
 const UserController = require('./user.controller.js');
 
+// Todo: Document result
+// Todo: Document possible Validation Errors
+// Todo: Centralize tags (see https://apihandyman.io/writing-openapi-swagger-specification-tutorial-part-3-simplifying-specification-file/)
 /**
  * @swagger
  * /v1/user/register:
  *   post:
  *     description: Register a new user.
+ *     tags:
+ *       - user
  *     produces:
  *       - application/json
  *     parameters:
@@ -14,11 +19,10 @@ const UserController = require('./user.controller.js');
  *         in: body
  *         description: The user to create.
  *         schema:
- *         $ref: "#/definitions/User"
+ *           $ref: "#/definitions/User"
  *     responses:
  *       201:
  *         description: Confirmation that the user has been created successfully.
- *
  */
 router.post('/v1/user/register', UserController.register);
 

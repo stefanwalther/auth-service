@@ -7,7 +7,7 @@
  *       - password
  *     properties:
  *       username:
- *         type: string
+ *         type: String
  *       password:
- *         type: string
+ *         type: String
  */
