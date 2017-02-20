@@ -25,6 +25,7 @@
     "lint:test:fix": "eslint test --fix",
     "start": "node ./src/index.js",
     "test": "yarn run lint && yarn test:unit && yarn test:integration",
+    "test-coverage": "export JWT_SECRET='My Secret' && istanbul cover node_modules/.bin/_mocha  --require ./test/mocha.conf.js -- -- -u exports -R spec test/**/* && codecov",
     "test:integration": "export JWT_SECRET='My Secret' && mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
     "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'",
     "precommit": "yarn run lint --quiet && yarn run docs"
@@ -54,10 +55,12 @@
     "winster": "^0.2.5"
   },
   "devDependencies": {
+    "codecov": "^1.0.1",
     "eslint": "^3.15.0",
     "eslint-config-space-single": "^0.0.4",
     "eslint-plugin-mocha": "^4.8.0",
     "husky": "^0.13.1",
+    "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "supertest": "^3.0.0",
     "supertest-as-promised": "^4.0.2"

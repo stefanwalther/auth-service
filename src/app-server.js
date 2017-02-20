@@ -7,6 +7,7 @@ const expressLogger = require('morgan');
 const helmet = require('helmet');
 const logger = require('winster').instance();
 const MongooseConnection = require('mongoose-connection-promise');
+const passport = require('passport');
 
 const mongooseConfig = require('./config/mongoose-config');
 const routesConfig = require('./config/routes-config');
@@ -41,6 +42,10 @@ class AppServer {
 
     this.app.settings.env = process.env;
 
+    // Todo: refactor
+    require('./middleware/passport-strategy.local');
+    this.app.use(passport.initialize());
+    // Todo: Due to the new Routes-Api, we should also be able to do something like app.use('/api', routesApi);
     routesConfig.init(this.app);
   }
 

@@ -49,7 +49,12 @@ describe('auth-service => user', () => {
     return server
       .post('/v1/user/register')
       .send(doc)
-      .expect(HttpStatus.CREATED);
+      .expect(HttpStatus.CREATED)
+      .then(result => {
+        expect(result).to.exist;
+        expect(result).to.have.a.property('body').to.exist;
+        expect(result.body).to.have.a.property('token');
+      });
   });
 
 });
