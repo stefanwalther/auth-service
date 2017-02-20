@@ -40,11 +40,12 @@ router.post('/user/login', UserController.login);
  *     200:
  *       description: Successfully logged out.
  */
-router.post('/v1/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
+router.post('/user/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
 
 
-router.get('/v1/status', UserController.status);
+router.get('/user/status', UserController.status);
 
+router.get('/user/password-reset-request', UserController.status);
 
 
 module.exports = router;

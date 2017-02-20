@@ -1,38 +1,52 @@
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-const MongooseConfig = require('./../../config/mongoose-config');
+const mongooseConfig = require('./../../config/mongoose-config');
+const jwtConfig = require('./../../config/jwt-config');
+
 const Schema = mongoose.Schema;
 
 /* eslint-disable camelcase */
 const schema = new Schema({
-  name: {
+  email: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
-  source: {
+  username: {
     type: String,
-    required: true
+    require: true,
+    unique: true
   },
-  level: {
-    type: String,
-    enum: ['fatal', 'error', 'debug', 'warn', 'data', 'info', 'verbose', 'trace'],
-    default: 'info'
-  },
-  message: {
-    type: Object
-  },
-  ts: {
-    type: Date,
-    default: new Date()
-  }
+  hash: String,
+  salt: string
+
 }, {
-  collection: MongooseConfig.COLLECTION_PREFIX + MongooseConfig.COLLECTION_JOBS,
+  collection: mongooseConfig.COLLECTION_PREFIX + mongooseConfig.COLLECTION_AUTH,
   strict: true
 });
 /* eslint-enable camelcase */
 
+schema.methods.validPassword = function(password) {
+  const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64).toString('hex');
+  return this.hash === hash;
+};
+
+schema.methods.generateJwt = function() {
+  const expiry = new Date();
+  expiry.setDate(expiry.getDate() + 7);
+
+  return jwt.sign({
+    _id: this._id,
+    email: this.email,
+    username: this.username,
+    exp: parseInt(expiry.getTime() / 1000),
+  }, jwtConfig.JWT_SECRET);
+};
+
 module.exports = {
   Schema: schema,
-  Model: mongoose.model(MongooseConfig.COLLECTION_JOBS, schema)
+  Model: mongoose.model(mongooseConfig.COLLECTION_AUTH, schema)
 };
 
