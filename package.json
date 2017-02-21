@@ -15,6 +15,7 @@
   "scripts": {
     "d-build": "docker build -t sammler/auth-service .",
     "dc-dev-up": "docker-compose --f=./docker-compose.dev.yml up",
+    "dc-dev-up-d": "docker-compose --f=./docker-compose.dev.yml up -d",
     "dc-dev-down": "docker-compose --f=./docker-compose.dev.yml down",
     "docs": "verb",
     "lint": "yarn run lint:src && yarn run lint:test",

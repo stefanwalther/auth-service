@@ -109,6 +109,8 @@ class UserController {
     next();
   }
 
+  // Todo: Nice idea, but figure out how this could be of help?
+  // Reference: https://github.com/binocarlos/passport-service
   static details(req, res, next) {
     next();
   }

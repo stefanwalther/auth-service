@@ -45,8 +45,7 @@ class AppServer {
     // Todo: refactor
     require('./middleware/passport-strategy.local');
     this.app.use(passport.initialize());
-    // Todo: Due to the new Routes-Api, we should also be able to do something like app.use('/api', routesApi);
-    routesConfig.init(this.app);
+    this.app.use(routesConfig);
   }
 
   /**
