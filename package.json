@@ -53,6 +53,7 @@
     "nodemailer-sendgrid-transport": "^0.2.0",
     "passport": "^0.3.2",
     "passport-github": "^1.1.0",
+    "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "sammler-nodelib-logger": "^0.2.1",
     "swagger-jsdoc": "^1.9.1",
