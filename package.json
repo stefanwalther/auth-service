@@ -40,7 +40,7 @@
     "crypto": "^0.0.3",
     "email-templates": "^2.5.4",
     "express": "^4.14.1",
-    "express-result": "stefanwalther/express-result",
+    "express-result": "*",
     "helmet": "^3.4.0",
     "http-status-codes": "^1.1.6",
     "jsonwebtoken": "^7.3.0",
@@ -55,7 +55,7 @@
     "passport-github": "^1.1.0",
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
-    "sammler-nodelib-logger": "^0.2.1",
+    "sammler-nodelib-logger": "*",
     "swagger-jsdoc": "^1.9.1",
     "swagger-ui-express": "^1.0.4",
     "winster": "^0.2.5"

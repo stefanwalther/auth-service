@@ -964,9 +964,9 @@ exit-hook@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/exit-hook/-/exit-hook-1.1.1.tgz#f05ca233b48c05d54fff07765df8507e95c02ff8"
 
-express-result@stefanwalther/express-result:
-  version "0.1.0"
-  resolved "https://codeload.github.com/stefanwalther/express-result/tar.gz/318f2f00361276212f02dfa5b7870f970100ade8"
+express-result@*:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/express-result/-/express-result-0.1.1.tgz#a4e97cedd8c7db5c611fdfbdba11e281af6e7ddb"
   dependencies:
     eslint-config-space-single "^0.0.4"
     express "^4.14.1"
@@ -2369,7 +2369,7 @@ safe-buffer@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.0.1.tgz#d263ca54696cd8a306b5ca6551e92de57918fbe7"
 
-sammler-nodelib-logger@^0.2.1:
+sammler-nodelib-logger@*:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/sammler-nodelib-logger/-/sammler-nodelib-logger-0.2.1.tgz#86c39899a775aa0c203c3078b7884fdecc40b798"
   dependencies:
