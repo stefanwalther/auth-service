@@ -1,8 +1,8 @@
 machine:
   node:
-    version: 7.2.0
+    version: 7.6.0
   environment:
-    YARN_VERSION: 0.20.3
+    YARN_VERSION: 0.21.3
     CONTAINER_NAME: sammlerio/auth-service
     CONTAINER_PORT: 3010
     PATH: "${PATH}:${HOME}/.yarn/bin:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
