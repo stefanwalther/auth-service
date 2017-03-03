@@ -127,4 +127,7 @@ describe('auth-service => user', () => {
       });
   });
 
+  xit('POST /logout => should logout an existing user', () => {
+    expect(true).to.be.false;
+  });
 });

@@ -18,7 +18,7 @@ global.Promise = bluebird;
 
 class AppServer {
   constructor(config) {
-    this.config = config || {};
+    this.config = config || {}; // Todo: add more tests, we need a better pattern; something is not stable here.
 
     this.server = null;
     this.logger = logger;
@@ -40,7 +40,7 @@ class AppServer {
     this.app.use(bodyParser.json());
     this.app.use(cors());
 
-    this.app.settings.env = process.env;
+    this.app.settings.env = process.env; // Todo: something is wrong here.
 
     // Todo: refactor
     require('./middleware/passport-strategy.local');
@@ -59,6 +59,7 @@ class AppServer {
       mongooseConnection.connect()
         .then(connection => {
           this.app.db = connection;
+          console.log(this.config.PORT);
           this.server = this.app.listen(this.config.PORT, err => {
             if (err) {
               this.logger.error('Cannot start express server', err);

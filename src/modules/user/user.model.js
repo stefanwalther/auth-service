@@ -27,7 +27,7 @@ const schema = new Schema({
   hash: String,
   salt: String
 }, {
-  collection: mongooseConfig.COLLECTION_PREFIX + mongooseConfig.COLLECTION_AUTH,
+  collection: mongooseConfig.COLLECTION_PREFIX + mongooseConfig.COLLECTION_NAME,
   strict: true
 });
 /* eslint-enable camelcase */
@@ -67,6 +67,6 @@ schema.methods.generateJwt = () => {
 
 module.exports = {
   Schema: schema,
-  Model: mongoose.model(mongooseConfig.COLLECTION_AUTH, schema)
+  Model: mongoose.model(mongooseConfig.COLLECTION_NAME, schema)
 };
 
