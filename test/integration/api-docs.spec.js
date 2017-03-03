@@ -45,6 +45,7 @@ describe('auth-service => api-docs', () => {
         expect(result).to.have.a.property('body').to.exist;
         expect(result.body).to.have.a.property('definitions');
       });
+
   });
 
   it('GET /api-docs/raw => contains all routes as defined', () => {
@@ -52,11 +53,12 @@ describe('auth-service => api-docs', () => {
       .get('/api-docs/raw')
       .expect(HttpStatus.OK)
       .then(result => {
-        expect(result.body.paths).to.have.property('/api-docs');
+        expect(result.body.paths).to.have.property('/api-docs/raw');
         expect(result.body.paths).to.have.property('/health-check');
         expect(result.body.paths).to.have.property('/v1/user/login');
         expect(result.body.paths).to.have.property('/v1/user/logout');
         expect(result.body.paths).to.have.property('/v1/user/register');
+        expect(result.body.paths).to.have.property('/v1/user/verify-token');
       });
   });
 

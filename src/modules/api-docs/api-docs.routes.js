@@ -4,9 +4,11 @@ const ApiDocsController = require('./api-docs.controller');
 
 /**
  * @swagger
- * /api-docs:
+ * /api-docs/raw:
  *   get:
  *     description: Return the formatted api-docs
+ *     tags:
+ *       - api-docs
  *     produces:
  *       - application/json
  *     responses:

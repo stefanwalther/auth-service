@@ -106,7 +106,25 @@ class UserController {
   }
 
   static verifyToken(req, res, next) {
+
+    const validationErrors = new ExpressResult.ValidationErrors();
+    const token = req.body.token || req.query.token;
+    if (!token) {
+      validationErrors.add('Property <token> is missing. Put the <token> in either your body or the querystring.');
+    }
+    if (validationErrors.length > 0) {
+      return ExpressResult.error(res, validationErrors);
+    }
+
+    try {
+      const decoded = UserModel.verify(token);
+      ExpressResult.ok(res, {message: 'Valid token.', details: decoded});
+    } catch (err) {
+      ExpressResult.error(res, {message: 'Invalid token.'});
+    }
+
     next();
+
   }
 
   // Todo: Nice idea, but figure out how this could be of help?

@@ -64,6 +64,8 @@ router.post('/v1/user/register', UserController.register);
  * /v1/user/login:
  *   post:
  *     description: Login
+ *     tags:
+ *       - user
  *     produces:
  *       - application/json
  *     parameters:
@@ -85,6 +87,8 @@ router.post('/v1/user/login', UserController.login);
  * /v1/user/logout:
  *   post:
  *     description: Logout
+ *     tags:
+ *       - user
  *   produces:
  *     - application/json
  *   responses:
@@ -93,8 +97,28 @@ router.post('/v1/user/login', UserController.login);
  */
 router.post('/v1/user/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
 
-router.get('/user/status', UserController.status);
+// Todo: Implement this
+router.get('/v1/user/status', UserController.status);
 
-router.get('/user/password-reset-request', UserController.status);
+// Todo: Implement this
+router.get('/v1/user/password-reset-request', UserController.status);
+
+// Todo: Document 200 and 500 message in detail
+/**
+ * @swagger
+ * /v1/user/verify-token:
+ *   post:
+ *     description: Verify a token.
+ *     tags:
+ *       - user
+ *   produces:
+ *     - application/json
+ *   responses:
+ *     200:
+ *       description: Token verified.
+ *     500:
+ *       description: Server error, token could not be verified.
+ */
+router.post('/v1/user/verify-token', UserController.verifyToken);
 
 module.exports = router;

@@ -127,6 +127,76 @@ describe('auth-service => user', () => {
       });
   });
 
+  it('POST /verify-token => returns an error if not token is passed', () => {
+    return server
+      .post('/v1/user/verify-token')
+      .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+      .then(result => {
+        expect(result.body).to.have.a.property('ValidationErrors');
+        expect(result.body.ValidationErrors).to.contain('Property <token> is missing. Put the <token> in either your body or the querystring.');
+      });
+  });
+
+  it('POST /verify-token => does not throw a validation error if token is passed in body', () => {
+    const doc = {
+      token: 'foo'
+    };
+    return server
+      .post('/v1/user/verify-token')
+      .send(doc)
+      .then(result => {
+        expect(result.body).to.not.have.a.property('ValidationErrors');
+      });
+  });
+
+  it('POST /verify-token => does not throw a validation error if token is passed in querystring', () => {
+    return server
+      .post('/v1/user/verify-token?token=foo')
+      .then(result => {
+        expect(result.body).to.not.have.a.property('ValidationErrors');
+      });
+  });
+
+  it('POST /verify-token => returns an error if the token is invalid', () => {
+
+    const doc = {
+      token: 'foo'
+    };
+
+    return server
+      .post('/v1/user/verify-token')
+      .send(doc)
+      .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+      .then(result => {
+        expect(result.body).to.exist;
+        expect(result.body).to.have.a.property('message').to.be.equal('Invalid token.');
+      });
+  });
+
+  it('POST /v1/user/verify-token => returns OK if the token is valid', () => {
+
+    const user = {
+      username: 'foo-user',
+      password: 'passw0rd',
+      email: 'foo@bar.com'
+    };
+
+    return server
+      .post('/v1/user/register')
+      .send(user)
+      .expect(HttpStatus.CREATED)
+      .then(result => {
+        expect(result.body).to.have.a.property('token');
+        return server
+          .post(`/v1/user/verify-token?token=${result.body.token}`)
+          .expect(HttpStatus.OK)
+          .then(result => {
+            expect(result.body).to.exist;
+            expect(result.body).to.have.a.property('message').to.be.equal('Valid token.');
+          });
+      });
+  });
+
   xit('POST /logout => should logout an existing user', () => {
     expect(true).to.be.false;
   });

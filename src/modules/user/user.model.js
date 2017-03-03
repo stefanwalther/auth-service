@@ -65,6 +65,10 @@ schema.methods.generateJwt = () => {
   }, jwtConfig.JWT_SECRET);
 };
 
+schema.statics.verify = token => {
+  return jwt.verify(token, jwtConfig.JWT_SECRET);
+};
+
 module.exports = {
   Schema: schema,
   Model: mongoose.model(mongooseConfig.COLLECTION_NAME, schema)
