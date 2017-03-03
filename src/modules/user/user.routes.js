@@ -33,6 +33,14 @@ const UserController = require('./user.controller.js');
  *         type: String
  *         example: "passw0rd"
  *
+ *   Token:
+ *     required:
+ *       - token
+ *     properties:
+ *       token:
+ *         type: String
+ *         example: "foo"
+ *
  */
 
 // Todo: Document result
@@ -113,12 +121,41 @@ router.get('/v1/user/password-reset-request', UserController.status);
  *       - user
  *   produces:
  *     - application/json
+ *   parameters:
+ *     - name: Token
+ *       in: body
+ *       schema:
+ *         $ref: "#/definitions/Token"
  *   responses:
  *     200:
  *       description: Token verified.
+ *       message: Valid token.
  *     500:
  *       description: Server error, token could not be verified.
  */
 router.post('/v1/user/verify-token', UserController.verifyToken);
+
+/**
+ * @swagger
+ * /v1/user/verify-token:
+ *   get:
+ *     description: Verify a token.
+ *     tags:
+ *       - user
+ *   produces:
+ *     - application/json
+ *   parameters:
+ *     - name: token
+ *       in: query
+ *       type: string
+ *       example: foo
+ *   responses:
+ *     200:
+ *       description: Token verified.
+ *       message: Valid token.
+ *     500:
+ *       description: Server error, token could not be verified.
+ */
+router.get('/v1/user/verify-token', UserController.verifyToken);
 
 module.exports = router;
