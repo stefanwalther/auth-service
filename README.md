@@ -1,7 +1,5 @@
 # auth-service
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/sammler/auth-service.svg)](https://greenkeeper.io/)
-
 > Auth service (for sammler).
 
 [![CircleCI](https://img.shields.io/circleci/project/github/sammler/auth-service.svg)](https://circleci.com/gh/sammler/auth-service)

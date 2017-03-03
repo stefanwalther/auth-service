@@ -850,6 +850,12 @@ eslint-config-space-single@^0.0.4:
   dependencies:
     eslint-config-xo-space "^0.15.0"
 
+eslint-config-space-single@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/eslint-config-space-single/-/eslint-config-space-single-0.0.5.tgz#9f3cf0bce492f63a4b508ad7a9ac1b6441a3973b"
+  dependencies:
+    eslint-config-xo-space "^0.15.0"
+
 eslint-config-xo-space@^0.15.0:
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/eslint-config-xo-space/-/eslint-config-xo-space-0.15.0.tgz#1174a376c159afd03295d5a1ca9c488fb5379cd0"
