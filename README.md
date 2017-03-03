@@ -3,6 +3,7 @@
 > Auth service (for sammler).
 
 [![CircleCI](https://img.shields.io/circleci/project/github/sammler/auth-service.svg)](https://circleci.com/gh/sammler/auth-service)
+[![Greenkeeper badge](https://badges.greenkeeper.io/sammler/auth-service.svg)](https://greenkeeper.io/)
 
 ---
 <br/>
@@ -51,6 +52,14 @@ _auth-service_ can be configured by the following environment variables:
 - `PORT` - The port to run the REST API (defaults to `3010`).
 - `JWT_SECRET` - The secret uses for JWT.
 
+**MongoDB:**
+
+- `MONGODB_DEBUG` - Whether to use the Mongoose debug mode or not, defaults to `false`
+- `MONGODB_HOST` - MongoDB host, defaults to `localhost`.
+- `MONGODB_PORT` - MongoDB port, defaults to `27017`. 
+- `MONGODB_COLLECTION_PREFIX` - Prefix for the collection, defaults to `''`.
+- `MONGODB_COLLECTION_NAME` - Name for the colleciton, defaults to `auth`.
+
 **Nodemailer:**   
 (e.g for sending an account verification message):
 
@@ -70,12 +79,12 @@ Nodemailer settings only need to be set if **one** of the following options are 
 Once the Http server is up and listening, the following routes can be used:
 
 - `GET /health-check`
-- `POST /v1/register`
-- `POST /v1/login`
-- `POST /v1/logout`
-- `GET /v1/status`
+- `POST /v1/user/register`
+- `POST /v1/user/login`
+- `POST /v1/user/logout`
+- `GET /v1/user/status`
+- `POST /v1/user/details`
 - `POST /v1/verify-token`
-- `POST /v1/details`
 
 ## About
 
