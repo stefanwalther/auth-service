@@ -111,6 +111,7 @@ router.get('/v1/user/status', UserController.status);
 // Todo: Implement this
 router.get('/v1/user/password-reset-request', UserController.status);
 
+// Todo: The approach of having a GET & POST does not seem to work for swagger; seems to be a bug.
 // Todo: Document 200 and 500 message in detail
 /**
  * @swagger
