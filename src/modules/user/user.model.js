@@ -65,7 +65,7 @@ schema.methods.generateJwt = () => {
   }, jwtConfig.JWT_SECRET);
 };
 
-schema.statics.verify = token => {
+schema.statics.verifyToken = token => {
   return jwt.verify(token, jwtConfig.JWT_SECRET);
 };
 

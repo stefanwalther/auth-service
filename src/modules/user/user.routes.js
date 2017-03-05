@@ -146,8 +146,12 @@ router.post('/v1/user/verify-token', UserController.verifyToken);
  *   produces:
  *     - application/json
  *   parameters:
- *     - name: token
+ *     - name: t
  *       in: query
+ *       type: string
+ *       example: foo
+ *     - name: token
+ *       in: body
  *       type: string
  *       example: foo
  *   responses:

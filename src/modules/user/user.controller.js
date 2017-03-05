@@ -117,7 +117,7 @@ class UserController {
     }
 
     try {
-      const decoded = UserModel.verify(token);
+      const decoded = UserModel.verifyToken(token);
       ExpressResult.ok(res, {message: 'Valid token.', details: decoded});
     } catch (err) {
       ExpressResult.error(res, {message: 'Invalid token.'});

@@ -157,14 +157,14 @@ describe('auth-service => user', () => {
       });
   });
 
-  it('POST /verify-token => returns an error if the token is invalid', () => {
+  it('GET /v1/user/verify-token => returns an error if the token is invalid', () => {
 
     const doc = {
       token: 'foo'
     };
 
     return server
-      .post('/v1/user/verify-token')
+      .get('/v1/user/verify-token')
       .send(doc)
       .expect(HttpStatus.INTERNAL_SERVER_ERROR)
       .then(result => {
@@ -173,7 +173,7 @@ describe('auth-service => user', () => {
       });
   });
 
-  it('POST /v1/user/verify-token => returns OK if the token is valid', () => {
+  it('GET /v1/user/verify-token => returns OK if the token is valid', () => {
 
     const user = {
       username: 'foo-user',
@@ -188,7 +188,7 @@ describe('auth-service => user', () => {
       .then(result => {
         expect(result.body).to.have.a.property('token');
         return server
-          .post(`/v1/user/verify-token?token=${result.body.token}`)
+          .get(`/v1/user/verify-token?token=${result.body.token}`)
           .expect(HttpStatus.OK)
           .then(result => {
             expect(result.body).to.exist;
