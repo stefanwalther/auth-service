@@ -56,6 +56,7 @@
     "passport-jwt": "^2.2.1",
     "passport-local": "^1.0.0",
     "sammler-nodelib-logger": "*",
+    "serve-favicon": "^2.4.1",
     "swagger-jsdoc": "^1.9.1",
     "swagger-ui-express": "^1.0.4",
     "winster": "^0.2.5"

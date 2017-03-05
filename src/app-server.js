@@ -4,10 +4,12 @@ const compression = require('compression');
 const cors = require('cors');
 const express = require('express');
 const expressLogger = require('morgan');
+const favicon = require('serve-favicon');
 const helmet = require('helmet');
 const logger = require('winster').instance();
 const MongooseConnection = require('mongoose-connection-promise');
 const passport = require('passport');
+const path = require('path');
 
 const mongooseConfig = require('./config/mongoose-config');
 const routesConfig = require('./config/routes-config');
@@ -39,6 +41,7 @@ class AppServer {
     this.app.use(bodyParser.urlencoded({extended: true}));
     this.app.use(bodyParser.json());
     this.app.use(cors());
+    this.app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
     this.app.settings.env = process.env; // Todo: something is wrong here.
 
