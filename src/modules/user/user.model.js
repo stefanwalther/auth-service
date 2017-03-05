@@ -1,8 +1,8 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 const mongoose = require('mongoose');
 const timeStamps = require('mongoose-timestamp');
-const moment = require('moment');
 
 mongoose.Promise = global.Promise; // Todo: How to centralize this guy ...
 
@@ -24,10 +24,10 @@ const schema = new Schema({
     required: true,
     unique: true
   },
-  hash: String,
-  salt: String
+  hash: String,   // Todo: Move to local
+  salt: String    // Todo: Move to local
 }, {
-  collection: mongooseConfig.COLLECTION_PREFIX + mongooseConfig.COLLECTION_NAME,
+  collection: mongooseConfig.COLLECTION_PREFIX + '_user',
   strict: true
 });
 /* eslint-enable camelcase */
@@ -71,6 +71,6 @@ schema.statics.verifyToken = token => {
 
 module.exports = {
   Schema: schema,
-  Model: mongoose.model(mongooseConfig.COLLECTION_NAME, schema)
+  Model: mongoose.model('user', schema)
 };
 
