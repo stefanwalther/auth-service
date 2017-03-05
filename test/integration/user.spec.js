@@ -50,6 +50,7 @@ describe('auth-service => user', () => {
       .expect(HttpStatus.CREATED)
       .then(result => {
         expect(result.body).to.have.a.property('token');
+        expect(result.body.token).to.exist;
       });
   });
 

@@ -7,7 +7,7 @@ const UserModel = require('./user.model').Model;
 class UserController {
 
   // Todo: Validation could be generalized and probably broken out.
-  static register(req, res, next) {
+  static register(req, res) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
     if (!req.body.username) {
@@ -29,20 +29,14 @@ class UserController {
     user.email = req.body.email;
     user.setPassword(req.body.password);
 
-    // Todo: as promise
-    user.save(err => {
-
-      // Todo: Test error handling
-      if (err) {
-        return next(err);
-      }
-
-      const token = user.generateJwt();
-      res.status(HttpStatus.CREATED);
-      res.json({
-        token
+    return user.save()
+      .then(user => {
+        const token = user.generateJwt();
+        res.status(HttpStatus.CREATED);
+        res.json({
+          token
+        });
       });
-    });
   }
 
   // Todo: What should a failed login return, 400
