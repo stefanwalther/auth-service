@@ -34,6 +34,9 @@ class UserController {
         const token = user.generateJwt();
         res.status(HttpStatus.CREATED);
         res.json({
+          _id: user._id,
+          username: user.username,
+          email: user.email,
           token
         });
       });
@@ -99,6 +102,10 @@ class UserController {
     next();
   }
 
+  static remove(req, res, next) {
+    next();
+  }
+
   static verifyToken(req, res, next) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
@@ -124,6 +131,7 @@ class UserController {
   // Todo: Nice idea, but figure out how this could be of help?
   // Reference: https://github.com/binocarlos/passport-service
   static details(req, res, next) {
+
     next();
   }
 

@@ -130,7 +130,7 @@ describe('auth-service => user', () => {
 
   it('POST /verify-token => returns an error if not token is passed', () => {
     return server
-      .post('/v1/user/verify-token')
+      .get('/v1/user/verify-token')
       .expect(HttpStatus.INTERNAL_SERVER_ERROR)
       .then(result => {
         expect(result.body).to.have.a.property('ValidationErrors');
@@ -187,7 +187,7 @@ describe('auth-service => user', () => {
       .send(user)
       .expect(HttpStatus.CREATED)
       .then(result => {
-        expect(result.body).to.have.a.property('token');
+        expect(result.body).to.have.a.property('token').to.exist;
         return server
           .get(`/v1/user/verify-token?token=${result.body.token}`)
           .expect(HttpStatus.OK)
@@ -196,6 +196,35 @@ describe('auth-service => user', () => {
             expect(result.body).to.have.a.property('message').to.be.equal('Valid token.');
           });
       });
+  });
+
+  it('DELETE /v1/user:id => marks a user as deleted', () => {
+    const user = {
+      username: 'foo-user',
+      password: 'passw0rd',
+      email: 'foo@bar.com'
+    };
+
+    return server
+      .post('/v1/user/register')
+      .send(user)
+      .expect(HttpStatus.CREATED)
+      .then(result => {
+        expect(result.body).to.have.a.property('_id').to.not.be.empty;
+        expect(result.body).to.have.a.property('username').to.be.equal(user.username);
+        expect(result.body).to.have.a.property('email').to.be.equal(user.email);
+        expect(result.body).to.have.a.property('token').to.exist;
+        // return server
+        //   .delete('/')
+      });
+  });
+
+  it('GET /v1/user/login => will not allow deactivated users to login', () => {
+
+  });
+
+  it('GET /v1/user/verify-token => will not verify if a user is deleted', () => {
+
   });
 
   xit('POST /logout => should logout an existing user', () => {

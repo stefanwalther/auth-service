@@ -21,6 +21,24 @@ const UserController = require('./user.controller.js');
  *         type: String
  *         example: "passw0rd"
  *
+ *   UserStatus:
+ *    description: Some details about the given user.
+ *    properties:
+ *      _id:
+ *        type: ObjectId
+ *        example: ""
+ *      username:
+ *        type: String
+ *        example: "foo-user"
+ *      email:
+ *        type: String
+ *        example: "foo@bar.com"
+ *      token:
+ *        type: String
+ *        example: "foo-bar-token"
+ *      status: # // Todo: implementation missing
+ *        type: String
+ *
  *   Login:
  *     required:
  *       - username
@@ -46,6 +64,7 @@ const UserController = require('./user.controller.js');
 // Todo: Document result
 // Todo: Document possible Validation Errors
 // Todo: Centralize tags (see https://apihandyman.io/writing-openapi-swagger-specification-tutorial-part-3-simplifying-specification-file/)
+// Todo: Registration date should definitely be saved explicitly
 /**
  * @swagger
  * /v1/user/register:
@@ -67,6 +86,8 @@ const UserController = require('./user.controller.js');
  */
 router.post('/v1/user/register', UserController.register);
 
+// Todo: Login date (in case of successful login should be saved).
+// Todo: Login attempt (in case of failed login should be saved).
 /**
  * @swagger
  * /v1/user/login:
@@ -116,29 +137,6 @@ router.get('/v1/user/password-reset-request', UserController.status);
 /**
  * @swagger
  * /v1/user/verify-token:
- *   post:
- *     description: Verify a token.
- *     tags:
- *       - user
- *   produces:
- *     - application/json
- *   parameters:
- *     - name: Token
- *       in: body
- *       schema:
- *         $ref: "#/definitions/Token"
- *   responses:
- *     200:
- *       description: Token verified.
- *       message: Valid token.
- *     500:
- *       description: Server error, token could not be verified.
- */
-router.post('/v1/user/verify-token', UserController.verifyToken);
-
-/**
- * @swagger
- * /v1/user/verify-token:
  *   get:
  *     description: Verify a token.
  *     tags:
@@ -162,5 +160,22 @@ router.post('/v1/user/verify-token', UserController.verifyToken);
  *       description: Server error, token could not be verified.
  */
 router.get('/v1/user/verify-token', UserController.verifyToken);
+
+/**
+ * @wagger
+ * /v1/user/:id
+ *   delete:
+ *     description: Remove a user (which essentially just marks the user as `deleted`).
+*      tags:
+ *       - user
+ *   produces:
+ *     - application/json
+ *   responses:
+ *     200:
+ *       description: User removed
+ *     500:
+ *       description: Server error
+ */
+router.delete('/v1/user/:id', UserController.remove);
 
 module.exports = router;
