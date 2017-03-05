@@ -5,7 +5,10 @@ const Schema = mongoose.Schema;
 const mongooseConfig = require('./../../config/mongoose-config');
 
 const schema = new Schema({
-
+  user_id: {
+    type: Schema.Types.ObjectId,
+    ref: 'user'
+  }
 }, {
   collection: mongooseConfig.COLLECTION_PREFIX + '_user-audit',
   strict: true

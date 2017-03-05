@@ -21,6 +21,8 @@ const UserController = require('./user.controller.js');
  *         type: String
  *         example: "passw0rd"
  *
+ *
+ *   # Todo: See registered claims: https://scotch.io/tutorials/the-anatomy-of-a-json-web-token
  *   UserStatus:
  *    description: Some details about the given user.
  *    properties:
