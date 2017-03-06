@@ -9,7 +9,7 @@ describe('UserModel => unit tests', () => {
     userModel.validate(err => {
       expect(err.errors).to.exist;
       expect(err.errors).to.have.a.property('username');
-      expect(err.errors).to.have.a.property('email');
+      expect(err.errors).to.have.a.property('local.email');
       done();
     });
   });
@@ -18,8 +18,10 @@ describe('UserModel => unit tests', () => {
 
     const doc = {
       username: 'foo',
-      email: 'foo@bar.com',
-      password: 'foobarbaz'
+      password: 'foobarbaz',
+      local: {
+        email: 'foo@bar.com'
+      }
     };
 
     const userModel = new UserModel(doc);

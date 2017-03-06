@@ -1,5 +1,4 @@
 const ExpressResult = require('express-result');
-const HttpStatus = require('http-status-codes');
 const passport = require('passport');
 
 const UserModel = require('./user.model').Model;
@@ -17,7 +16,7 @@ class UserController {
     if (!req.body.password) {
       validationErrors.add('Property <password> missing.');
     }
-    if (!req.body.email) {
+    if (!req.body.local || !req.body.local.email) {
       validationErrors.add('Property <email> missing.');
     }
 
@@ -26,20 +25,23 @@ class UserController {
     }
 
     const user = new UserModel();
+    user.local = {};
     user.username = req.body.username;
-    user.email = req.body.email;
+    user.local.email = req.body.local && req.body.local.email;
     user.setPassword(req.body.password);
 
     return user.save()
       .then(user => {
         const token = user.generateJwt();
-        res.status(HttpStatus.CREATED);
-        res.json({
+        ExpressResult.created(res, {
           _id: user._id,
           username: user.username,
-          email: user.email,
+          email: user.local.email,
           token
         });
+      })
+      .catch(err => {
+        ExpressResult.error(res, err);
       });
   }
 
@@ -112,7 +114,7 @@ class UserController {
     const validationErrors = new ExpressResult.ValidationErrors();
     const token = (req.body && req.body.token) || (req.query && req.query.token) || req.headers['x-access-token']; // Todo: Verify x-access-token
     if (!token) {
-      validationErrors.add('Property <token> is missing. Put the <token> in either your body or the querystring.');
+      validationErrors.add('Property <token> is missing. Put the <token> in either your body, the query-string or the header.');
     }
     if (validationErrors.length > 0) {
       return ExpressResult.error(res, validationErrors);

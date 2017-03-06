@@ -161,7 +161,7 @@ router.get('/v1/user/password-reset-request', UserController.status);
  *     500:
  *       description: Server error, token could not be verified.
  */
-router.get('/v1/user/verify-token', UserController.verifyToken);
+router.post('/v1/user/verify-token', UserController.verifyToken);
 
 /**
  * @wagger

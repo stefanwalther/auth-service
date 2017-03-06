@@ -19,13 +19,15 @@ const schema = new Schema({
     unique: true,
     minlength: [6, 'Username too short, 6 characters required.']
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
-  hash: String,   // Todo: Move to local
-  salt: String    // Todo: Move to local
+  local: {
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    hash: String,
+    salt: String
+  }
 }, {
   collection: mongooseConfig.COLLECTION_PREFIX + '_user',
   strict: true
@@ -36,10 +38,13 @@ schema.index({username: 1, email: 1});
 schema.plugin(timeStamps, {createdAt: 'created_at', updatedAt: 'updated_at'});
 
 schema.methods.setPassword = password => {
-  this.salt = crypto.randomBytes(16).toString('hex');
+  if (!this.local) {
+    this.local = {};
+  }
+  this.local.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(
     password,
-    this.salt,
+    this.local.salt,
     1000,
     64,
     'sha1').toString('hex');
@@ -48,7 +53,7 @@ schema.methods.setPassword = password => {
 schema.methods.validPassword = password => {
   const hash = crypto.pbkdf2Sync(
     password,
-    this.salt,
+    this.local.salt,
     1000,
     64,
     'sha1').toString('hex');
@@ -59,7 +64,7 @@ schema.methods.generateJwt = () => {
 
   return jwt.sign({
     _id: this._id,
-    email: this.email,
+    email: this.local.email,
     username: this.username,
     exp: moment().add(7, 'days').valueOf()
   }, jwtConfig.JWT_SECRET);
