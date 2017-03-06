@@ -3,6 +3,7 @@ const HttpStatus = require('http-status-codes');
 const passport = require('passport');
 
 const UserModel = require('./user.model').Model;
+// const UserModelAudit = require('./../user-audit/user-audit.model').Model;
 
 class UserController {
 

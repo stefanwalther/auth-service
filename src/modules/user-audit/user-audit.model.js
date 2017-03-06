@@ -8,6 +8,14 @@ const schema = new Schema({
   user_id: {
     type: Schema.Types.ObjectId,
     ref: 'user'
+  },
+  event: {
+    type: String,
+    default: '<event:empty>'
+  },
+  message: {
+    type: String,
+    default: '<message:empty>'
   }
 }, {
   collection: mongooseConfig.COLLECTION_PREFIX + '_user-audit',
@@ -16,8 +24,14 @@ const schema = new Schema({
 
 schema.index({username: 1, email: 1});
 schema.plugin(timeStamps, {createdAt: 'created_at', updatedAt: 'updated_at'});
+const UserAuditModel = mongoose.model('user-audit', schema);
+
+schema.statics.save = user => {
+  const newRec = new UserAuditModel(user);
+  return newRec.save().exec();
+};
 
 module.exports = {
   Schema: schema,
-  Model: mongoose.model('user-audit', schema)
+  Model: UserAuditModel
 };
