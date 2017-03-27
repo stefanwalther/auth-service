@@ -210,6 +210,7 @@ describe('auth-service => user', () => {
       });
   });
 
+  /* eslint-disable max-nested-callbacks */
   it('DELETE /v1/user:id => marks a user as deleted', () => {
     const user = {
       username: 'foo-user',
@@ -227,31 +228,60 @@ describe('auth-service => user', () => {
         expect(result.body).to.have.a.property('_id').to.not.be.empty;
         expect(result.body).to.have.a.property('is_deleted').to.be.false;
         return server
-           .delete(`/v1/user/${result.body._id}`)
-           .expect(HttpStatus.OK)
-           .then(updateResult => {
-             expect(updateResult.body).to.have.property('n').to.be.equal(1);
-             expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
-             expect(updateResult.body).to.have.property('ok').to.be.equal(1);
+          .delete(`/v1/user/${result.body._id}`)
+          .expect(HttpStatus.OK)
+          .then(updateResult => {
+            expect(updateResult.body).to.have.property('n').to.be.equal(1);
+            expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
+            expect(updateResult.body).to.have.property('ok').to.be.equal(1);
 
-             return server
-               .get(`/v1/user/${result.body._id}`)
-               .then(updatedUser => {
-                 expect(updatedUser).to.exist;
-                 expect(updatedUser.body).to.exist;
-                 expect(updatedUser.body).to.have.property('is_deleted').to.be.true;
-               });
+            return server
+              .get(`/v1/user/${result.body._id}`)
+              .then(updatedUser => {
+                expect(updatedUser).to.exist;
+                expect(updatedUser.body).to.exist;
+                expect(updatedUser.body).to.have.property('is_deleted').to.be.true;
+              });
 
-           });
+          });
       });
   });
+  // eslint-enable max-nested-callbacks
 
   xit('GET /v1/user/login => will not allow deactivated users to login', () => {
-
+    const user = {
+      username: 'foo-user',
+      password: 'passw0rd',
+      is_deleted: true,
+      local: {
+        email: 'foo@bar.com'
+      }
+    };
   });
 
-  xit('GET /v1/user/login => will not allow deleted users to login', () => {
+  it('GET /v1/user/login => will not allow deleted users to login', () => {
+    const user = {
+      username: 'foo-user',
+      password: 'passw0rd',
+      is_deleted: true,
+      local: {
+        email: 'foo@bar.com'
+      }
+    };
 
+    return server
+      .post('/v1/user/register')
+      .send(user)
+      .expect(HttpStatus.CREATED)
+      .then(() => {
+        return server
+          .post('/v1/user/login')
+          .send(user)
+          .expect(HttpStatus.UNAUTHORIZED)
+          .then(result => {
+            expect(result.body).to.contain.a.property('message', 'User not found');
+          });
+      });
   });
 
   xit('GET /v1/user/verify-token => will not verify if a user is deleted', () => {

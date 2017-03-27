@@ -38,6 +38,7 @@ class UserController {
     const user = new UserModel();
     user.local = {};
     user.username = req.body.username;
+    user.is_deleted = req.body.is_deleted;
     user.local.email = req.body.local && req.body.local.email;
     user.setPassword(req.body.password);
 
