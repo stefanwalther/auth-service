@@ -2,11 +2,22 @@ const ExpressResult = require('express-result');
 const passport = require('passport');
 
 const UserModel = require('./user.model').Model;
+const UserBL = require('./user.bl');
 // const UserModelAudit = require('./../user-audit/user-audit.model').Model;
 
 class UserController {
 
+  static getById(req, res) {
+    return UserBL
+      .getById(req.params.id)
+      .then(result => {
+        ExpressResult.ok(res, result);
+      })
+      .catch(err => ExpressResult.error(res, err));
+  }
+
   // Todo: Validation could be generalized and probably broken out.
+  // Todo: Refactor, don't like how the returned object is created, that's too error-prone if new props are added.
   static register(req, res) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
@@ -36,6 +47,9 @@ class UserController {
         ExpressResult.created(res, {
           _id: user._id,
           username: user.username,
+          is_deleted: user.is_deleted,
+          is_active: user.is_active,
+          is_verified: user.is_verified,
           email: user.local.email,
           token
         });
@@ -105,8 +119,28 @@ class UserController {
     next();
   }
 
-  static remove(req, res, next) {
-    next();
+  static delete(req, res) {
+
+    return UserBL
+      .markAsDeleted(req.params.id)
+      .then(result => {
+        return ExpressResult.ok(res, result);
+      })
+      .catch(err => {
+        return ExpressResult.error(res, err);
+      });
+  }
+
+  static unDelete(req, res) {
+
+    return UserBL
+      .unMarkAsDeleted(req.params.id)
+      .then(result => {
+        return ExpressResult.ok(res, result);
+      })
+      .catch(err => {
+        return ExpressResult.error(res, err);
+      });
   }
 
   static verifyToken(req, res, next) {

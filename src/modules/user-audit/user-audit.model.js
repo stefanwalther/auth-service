@@ -26,6 +26,7 @@ schema.index({username: 1, email: 1});
 schema.plugin(timeStamps, {createdAt: 'created_at', updatedAt: 'updated_at'});
 const UserAuditModel = mongoose.model('user-audit', schema);
 
+// Todo: Doesn't make sense without allowing to save a custom event
 schema.statics.save = user => {
   const newRec = new UserAuditModel(user);
   return newRec.save().exec();

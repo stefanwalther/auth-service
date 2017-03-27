@@ -19,6 +19,21 @@ const schema = new Schema({
     unique: true,
     minlength: [6, 'Username too short, 6 characters required.']
   },
+  is_active: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  is_verifed: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  is_deleted: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   local: {
     email: {
       type: String,

@@ -210,12 +210,13 @@ describe('auth-service => user', () => {
       });
   });
 
-  // Todo: Not implemented
-  xit('DELETE /v1/user:id => marks a user as deleted', () => {
+  it('DELETE /v1/user:id => marks a user as deleted', () => {
     const user = {
       username: 'foo-user',
       password: 'passw0rd',
-      email: 'foo@bar.com'
+      local: {
+        email: 'foo@bar.com'
+      }
     };
 
     return server
@@ -224,23 +225,40 @@ describe('auth-service => user', () => {
       .expect(HttpStatus.CREATED)
       .then(result => {
         expect(result.body).to.have.a.property('_id').to.not.be.empty;
-        expect(result.body).to.have.a.property('username').to.be.equal(user.username);
-        // expect(result.body).to.have.a.property('local.email').to.be.equal(user.email);
-        expect(result.body).to.have.a.property('token').to.exist;
-        // return server
-        //   .delete('/')
+        expect(result.body).to.have.a.property('is_deleted').to.be.false;
+        return server
+           .delete(`/v1/user/${result.body._id}`)
+           .expect(HttpStatus.OK)
+           .then(updateResult => {
+             expect(updateResult.body).to.have.property('n').to.be.equal(1);
+             expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
+             expect(updateResult.body).to.have.property('ok').to.be.equal(1);
+
+             return server
+               .get(`/v1/user/${result.body._id}`)
+               .then(updatedUser => {
+                 expect(updatedUser).to.exist;
+                 expect(updatedUser.body).to.exist;
+                 expect(updatedUser.body).to.have.property('is_deleted').to.be.true;
+               });
+
+           });
       });
   });
 
-  it('GET /v1/user/login => will not allow deactivated users to login', () => {
+  xit('GET /v1/user/login => will not allow deactivated users to login', () => {
 
   });
 
-  it('GET /v1/user/verify-token => will not verify if a user is deleted', () => {
+  xit('GET /v1/user/login => will not allow deleted users to login', () => {
 
   });
 
-  xit('POST /logout => should logout an existing user', () => {
-    expect(true).to.be.false;
+  xit('GET /v1/user/verify-token => will not verify if a user is deleted', () => {
+
+  });
+
+  xit('GET /v1/users => should only be allowed to be executed by admins', () => {
+
   });
 });

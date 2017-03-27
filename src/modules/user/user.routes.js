@@ -131,6 +131,8 @@ router.post('/v1/user/logout', UserController.logout); // Todo: Decide whether t
 // Todo: Implement this
 router.get('/v1/user/status', UserController.status);
 
+router.get('/v1/user/:id', UserController.getById);
+
 // Todo: Implement this
 router.get('/v1/user/password-reset-request', UserController.status);
 
@@ -178,6 +180,6 @@ router.post('/v1/user/verify-token', UserController.verifyToken);
  *     500:
  *       description: Server error
  */
-router.delete('/v1/user/:id', UserController.remove);
+router.delete('/v1/user/:id', UserController.delete);
 
 module.exports = router;
