@@ -36,6 +36,12 @@ class UserBL {
 
   }
 
+  static purge() {
+    return UserModel
+      .remove({is_deleted: true})
+      .exec();
+  }
+
 }
 
 module.exports = UserBL;

@@ -4,10 +4,14 @@ const Schema = mongoose.Schema;
 
 const mongooseConfig = require('./../../config/mongoose-config');
 
+// Todo: It's a bit problematic here: If we purge user's audit-log doesn't have enough information (except the username ot tell us enough about the deleted user)
 const schema = new Schema({
   user_id: {
     type: Schema.Types.ObjectId,
     ref: 'user'
+  },
+  user: {
+    username: String
   },
   event: {
     type: String,
