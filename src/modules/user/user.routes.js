@@ -182,4 +182,12 @@ router.post('/v1/user/verify-token', UserController.verifyToken);
  */
 router.delete('/v1/user/:id', UserController.delete);
 
+// Todo: Test
+// Todo: Document
+router.patch('/v1/user/:id/delete', UserController.delete);
+
+// Todo: Test
+// Todo: Document
+router.patch('/v1/user/:id/undelete', UserController.unDelete);
+
 module.exports = router;

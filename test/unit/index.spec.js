@@ -4,7 +4,7 @@ describe('AppServer => unit tests', () => {
 
   let server = null;
   beforeEach(() => {
-    server = new AppServer();
+    server = new AppServer({PORT: 2000});
   });
 
   afterEach(() => {

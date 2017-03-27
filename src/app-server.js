@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const bluebird = require('bluebird');
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -54,8 +55,8 @@ class AppServer {
 
   _validateConfig() {
 
-    if (!this.config.PORT) {
-      throw new Error('PORT is missing');
+    if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
+      throw new Error('PORT is not a number.');
     }
 
   }

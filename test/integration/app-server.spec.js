@@ -2,12 +2,13 @@ const AppServer = require('./../../src/app-server');
 
 describe('app-server', () => {
 
-  xit('start => throws an error if the port is invalid', () => {
-    const appServer = new AppServer({PORT: 'abc'});
-    return appServer.start()
-      .catch(err => {
-        expect(err).to.exist;
-      });
+  it('ctor => throws an error if the port is invalid', () => {
+    try {
+      const appServer = new AppServer({PORT: 'abc'});
+    } catch (e) {
+      expect(e).to.exist;
+      expect(e).to.have.a.property('message').to.contain('PORT is not a number');
+    }
   });
 
 });
