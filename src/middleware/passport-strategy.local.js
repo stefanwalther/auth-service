@@ -8,7 +8,11 @@ passport.use(new LocalStrategy(
     usernameField: 'username'
   },
   (username, password, done) => {
-    UserModel.findOne({username, is_deleted: false}, (err, user) => {
+    UserModel.findOne({
+      username,
+      is_active: true,
+      is_deleted: false
+    }, (err, user) => {
       if (err) {
         return done(err);
       }

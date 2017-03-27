@@ -17,6 +17,7 @@ class UserController {
   }
 
   // Todo: Validation could be generalized and probably broken out.
+  // Todo: Validation should go to the mongoose model
   // Todo: Refactor, don't like how the returned object is created, that's too error-prone if new props are added.
   static register(req, res) {
 
@@ -35,11 +36,7 @@ class UserController {
       return ExpressResult.error(res, validationErrors);
     }
 
-    const user = new UserModel();
-    user.local = {};
-    user.username = req.body.username;
-    user.is_deleted = req.body.is_deleted;
-    user.local.email = req.body.local && req.body.local.email;
+    const user = new UserModel(req.body);
     user.setPassword(req.body.password);
 
     return user.save()

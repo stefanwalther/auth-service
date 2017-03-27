@@ -49,13 +49,10 @@ describe('auth-service => user', () => {
     return server
       .post('/v1/user/register')
       .send(doc)
-      // .expect(HttpStatus.CREATED)
+      .expect(HttpStatus.CREATED)
       .then(result => {
         expect(result.body).to.have.a.property('token');
         expect(result.body.token).to.exist;
-      })
-      .catch(err => {
-        expect(err).to.not.exist;
       });
   });
 
@@ -117,6 +114,7 @@ describe('auth-service => user', () => {
     const user = {
       username: 'foo-user',
       password: 'passw0rd',
+      is_active: true,
       local: {
         email: 'foo@bar.com'
       }
@@ -248,15 +246,31 @@ describe('auth-service => user', () => {
   });
   // eslint-enable max-nested-callbacks
 
-  xit('GET /v1/user/login => will not allow deactivated users to login', () => {
+  it('GET /v1/user/login => will not allow deactivated users to login', () => {
     const user = {
       username: 'foo-user',
       password: 'passw0rd',
-      is_deleted: true,
+      is_deleted: false,
+      is_active: false,
       local: {
         email: 'foo@bar.com'
       }
     };
+
+    return server
+      .post('/v1/user/register')
+      .send(user)
+      .expect(HttpStatus.CREATED)
+      .then(() => {
+        return server
+          .post('/v1/user/login')
+          .send(user)
+          .expect(HttpStatus.UNAUTHORIZED)
+          .then(result => {
+            expect(result.body).to.contain.a.property('message', 'User not found');
+          });
+      });
+
   });
 
   it('GET /v1/user/login => will not allow deleted users to login', () => {

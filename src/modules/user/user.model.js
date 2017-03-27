@@ -21,17 +21,14 @@ const schema = new Schema({
   },
   is_active: {
     type: Boolean,
-    required: true,
     default: false
   },
-  is_verifed: {
+  is_verified: {
     type: Boolean,
-    required: true,
     default: false
   },
   is_deleted: {
     type: Boolean,
-    required: true,
     default: false
   },
   local: {
