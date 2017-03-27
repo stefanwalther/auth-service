@@ -21,6 +21,7 @@ global.Promise = bluebird;
 class AppServer {
   constructor(config) {
     this.config = config || {}; // Todo: add more tests, we need a better pattern; something is not stable here.
+    this._validateConfig();
 
     this.server = null;
     this.logger = logger;
@@ -51,6 +52,14 @@ class AppServer {
     this.app.use(routesConfig);
   }
 
+  _validateConfig() {
+
+    if (!this.config.PORT) {
+      throw new Error('PORT is missing');
+    }
+
+  }
+
   /**
    * Start the auth-server.
    *
@@ -62,12 +71,12 @@ class AppServer {
       mongooseConnection.connect()
         .then(connection => {
           this.app.db = connection;
-          this.server = this.app.listen(this.config.PORT, err => {
+          this.server = this.app.listen(this._validateConfig.PORT, err => {
             if (err) {
               this.logger.error('Cannot start express server', err);
               return reject(err);
             }
-            this.logger.info(`Express server listening on port ${this.config.PORT} in "${this.app.settings.env.NODE_ENV}" mode`);
+            this.logger.info(`Express server listening on port ${this._validateConfig.PORT} in "${this.app.settings.env.NODE_ENV}" mode`);
             return resolve();
           });
         })
