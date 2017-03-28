@@ -3,7 +3,7 @@ const HttpStatus = require('http-status-codes');
 const AppServer = require('./../../src/api/app-server');
 
 const defaultConfig = require('./../test-lib/default-config');
-const pkg = require('./../../package.json');
+const pkg = require('read-pkg-up').sync().pkg;
 
 describe('auth-service => api-docs', () => {
 

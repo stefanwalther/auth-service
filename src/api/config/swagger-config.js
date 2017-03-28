@@ -1,4 +1,4 @@
-const pkg = require('./../../../package.json');
+const pkg = require('read-pkg-up').sync().pkg;
 
 const swaggerConfig = {
   swaggerDefinition: {

@@ -61,6 +61,7 @@
     "passport-linkedin": "^1.0.0",
     "passport-local": "^1.0.0",
     "passport-twitter": "^1.0.4",
+    "read-pkg-up": "^2.0.0",
     "sammler-nodelib-logger": "*",
     "serve-favicon": "^2.4.1",
     "swagger-jsdoc": "^1.9.1",
