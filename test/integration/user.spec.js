@@ -4,6 +4,7 @@ const AppServer = require('./../../src/api/app-server');
 
 const UserModel = require('./../../src/api/modules/user/user.model').Model;
 const defaultConfig = require('./../test-lib/default-config');
+const userAssertions = require('./../test-lib/user-assertions');
 
 describe('auth-service => user', () => {
 
@@ -50,10 +51,7 @@ describe('auth-service => user', () => {
       .post('/v1/user/register')
       .send(doc)
       .expect(HttpStatus.CREATED)
-      .then(result => {
-        expect(result.body).to.have.a.property('token');
-        expect(result.body.token).to.exist;
-      });
+      .expect(userAssertions.hasToken);
   });
 
   it('POST /login => throws validation errors for required fields', () => {
@@ -124,6 +122,7 @@ describe('auth-service => user', () => {
       .post('/v1/user/register')
       .send(user)
       .expect(HttpStatus.CREATED)
+      .expect(userAssertions.hasToken)
       .then(() => {
         delete user.email;
         return server
@@ -196,6 +195,7 @@ describe('auth-service => user', () => {
       .post('/v1/user/register')
       .send(user)
       .expect(HttpStatus.CREATED)
+      .expect(userAssertions.hasToken)
       .then(result => {
         expect(result.body).to.have.a.property('token').to.exist;
         return server
@@ -222,6 +222,7 @@ describe('auth-service => user', () => {
       .post('/v1/user/register')
       .send(user)
       .expect(HttpStatus.CREATED)
+      .expect(userAssertions.hasToken)
       .then(result => {
         expect(result.body).to.have.a.property('_id').to.not.be.empty;
         expect(result.body).to.have.a.property('is_deleted').to.be.false;
@@ -261,6 +262,7 @@ describe('auth-service => user', () => {
       .post('/v1/user/register')
       .send(user)
       .expect(HttpStatus.CREATED)
+      .expect(userAssertions.hasToken)
       .then(() => {
         return server
           .post('/v1/user/login')
@@ -287,6 +289,7 @@ describe('auth-service => user', () => {
       .post('/v1/user/register')
       .send(user)
       .expect(HttpStatus.CREATED)
+      .expect(userAssertions.hasToken)
       .then(() => {
         return server
           .post('/v1/user/login')
