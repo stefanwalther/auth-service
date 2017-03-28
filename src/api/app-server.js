@@ -49,6 +49,7 @@ class AppServer {
 
     // Todo: refactor
     require('./middleware/passport-strategy.local');
+
     this.app.use(passport.initialize());
     this.app.use(routesConfig);
   }

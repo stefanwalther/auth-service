@@ -1,8 +1,8 @@
 const superTest = require('supertest');
 const HttpStatus = require('http-status-codes');
-const AppServer = require('./../../src/app-server');
+const AppServer = require('./../../src/api/app-server');
 
-const UserModel = require('./../../src/modules/user/user.model').Model;
+const UserModel = require('./../../src/api/modules/user/user.model').Model;
 const defaultConfig = require('./../test-lib/default-config');
 
 describe('auth-service => user', () => {

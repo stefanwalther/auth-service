@@ -1,4 +1,4 @@
-const AppServer = require('./../../src/app-server');
+const AppServer = require('./../../src/api/app-server');
 
 describe('app-server', () => {
   it('throws an error if no config is provided', () => {
