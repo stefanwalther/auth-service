@@ -84,7 +84,9 @@ describe('auth-service => user', () => {
     const user = {
       username: 'foo-user',
       password: 'passw0rd',
-      email: 'foo@bar.com'
+      local: {
+        email: 'foo@bar.com'
+      }
     };
 
     const login = {
@@ -92,19 +94,17 @@ describe('auth-service => user', () => {
       password: 'other-password'
     };
 
-    return server
-      .post('/v1/user/register')
-      .send(user)
-      // .expect(HttpStatus.CREATED)
+    const newUser = new UserModel(user);
+    newUser.setPassword(user.password);
+
+    return newUser.save()
       .then(() => {
         return server
           .post('/v1/user/login')
           .send(login)
           .expect(HttpStatus.UNAUTHORIZED);
-      })
-      .catch(err => {
-        expect(err).to.exist;
       });
+
   });
 
   it('POST /login => returns a token if successfully logged in', () => {
@@ -329,6 +329,7 @@ describe('auth-service => user', () => {
 
   });
 
+  // Todo: We don't have the concept at all right now ..
   xit('GET /v1/users => should only be allowed to be executed by admins', () => {
 
   });

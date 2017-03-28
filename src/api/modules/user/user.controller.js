@@ -39,6 +39,8 @@ class UserController {
     const user = new UserModel(req.body);
     user.setPassword(req.body.password);
 
+    // Todo: Change this, as this is a security hole: The controller should never allow to set is_deleted, is_active, etc.
+    // (Use the model in the tests instead)
     return user.save()
       .then(user => {
         const result = {
