@@ -118,20 +118,16 @@ describe('auth-service => user', () => {
       }
     };
 
-    return server
-      .post('/v1/user/register')
-      .send(user)
-      .expect(HttpStatus.CREATED)
-      .expect(userAssertions.hasToken)
+    const newUser = new UserModel(user);
+    newUser.setPassword(user.password);
+
+    return newUser.save()
       .then(() => {
-        delete user.email;
         return server
           .post('/v1/user/login')
           .send(user)
           .expect(HttpStatus.OK)
-          .then(result => {
-            expect(result.body).to.have.a.property('token');
-          });
+          .expect(userAssertions.hasToken);
       });
   });
 
@@ -175,10 +171,7 @@ describe('auth-service => user', () => {
       .post('/v1/user/verify-token')
       .send(doc)
       .expect(HttpStatus.INTERNAL_SERVER_ERROR)
-      .then(result => {
-        expect(result.body).to.exist;
-        expect(result.body).to.have.a.property('message').to.be.equal('Invalid token.');
-      });
+      .expect(userAssertions.invalidToken);
   });
 
   it('POST /v1/user/verify-token => returns OK if the token is valid', () => {
@@ -197,14 +190,10 @@ describe('auth-service => user', () => {
       .expect(HttpStatus.CREATED)
       .expect(userAssertions.hasToken)
       .then(result => {
-        expect(result.body).to.have.a.property('token').to.exist;
         return server
           .post(`/v1/user/verify-token?token=${result.body.token}`)
           .expect(HttpStatus.OK)
-          .then(result => {
-            expect(result.body).to.exist;
-            expect(result.body).to.have.a.property('message').to.be.equal('Valid token.');
-          });
+          .expect(userAssertions.validToken);
       });
   });
 
@@ -267,9 +256,7 @@ describe('auth-service => user', () => {
           .post('/v1/user/login')
           .send(user)
           .expect(HttpStatus.UNAUTHORIZED)
-          .then(result => {
-            expect(result.body).to.contain.a.property('message', 'User not found');
-          });
+          .expect(userAssertions.userNotFound);
       });
 
   });
@@ -294,9 +281,7 @@ describe('auth-service => user', () => {
           .post('/v1/user/login')
           .send(user)
           .expect(HttpStatus.UNAUTHORIZED)
-          .then(result => {
-            expect(result.body).to.contain.a.property('message', 'User not found');
-          });
+          .expect(userAssertions.userNotFound);
       });
   });
 
@@ -317,14 +302,10 @@ describe('auth-service => user', () => {
       .expect(HttpStatus.CREATED)
       .expect(userAssertions.hasToken)
       .then(result => {
-        expect(result.body).to.have.a.property('token').to.exist;
         return server
           .post(`/v1/user/verify-token?token=${result.body.token}`)
           .expect(HttpStatus.OK)
-          .then(result => {
-            expect(result.body).to.exist;
-            expect(result.body).to.have.a.property('message').to.be.equal('Valid token.');
-          });
+          .expect(userAssertions.validToken);
       });
 
   });
