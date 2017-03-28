@@ -41,16 +41,18 @@ class UserController {
 
     return user.save()
       .then(user => {
-        const token = user.generateJwt();
-        ExpressResult.created(res, {
+        const result = {
           _id: user._id,
           username: user.username,
           is_deleted: user.is_deleted,
           is_active: user.is_active,
           is_verified: user.is_verified,
-          email: user.local.email,
-          token
-        });
+          email: user.local.email
+        };
+        if (!user.is_deleted && user.is_active) {
+          result.token = user.generateJwt();
+        }
+        ExpressResult.created(res, result);
       })
       .catch(err => {
         ExpressResult.error(res, err);
@@ -78,7 +80,7 @@ class UserController {
 
       // If Passport throws/catches an error
       if (err) {
-        return ExpressResult.err(err);
+        return ExpressResult.error(err);
       }
 
       // If a user is found

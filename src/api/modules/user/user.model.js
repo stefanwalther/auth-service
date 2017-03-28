@@ -21,7 +21,7 @@ const schema = new Schema({
   },
   is_active: {
     type: Boolean,
-    default: false
+    default: true
   },
   is_verified: {
     type: Boolean,

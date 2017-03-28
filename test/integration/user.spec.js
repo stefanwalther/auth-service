@@ -262,7 +262,6 @@ describe('auth-service => user', () => {
       .post('/v1/user/register')
       .send(user)
       .expect(HttpStatus.CREATED)
-      .expect(userAssertions.hasToken)
       .then(() => {
         return server
           .post('/v1/user/login')
@@ -276,6 +275,33 @@ describe('auth-service => user', () => {
   });
 
   it('GET /v1/user/login => will not allow deleted users to login', () => {
+
+    const user = {
+      username: 'foo-user',
+      password: 'passw0rd',
+      is_deleted: true,
+      local: {
+        email: 'foo@bar.com'
+      }
+    };
+
+    return server
+      .post('/v1/user/register')
+      .send(user)
+      .expect(HttpStatus.CREATED)
+      .then(() => {
+        return server
+          .post('/v1/user/login')
+          .send(user)
+          .expect(HttpStatus.UNAUTHORIZED)
+          .then(result => {
+            expect(result.body).to.contain.a.property('message', 'User not found');
+          });
+      });
+  });
+
+  xit('GET /v1/user/verify-token => will not verify if a user is marked as deleted', () => {
+
     const user = {
       username: 'foo-user',
       password: 'passw0rd',
@@ -290,18 +316,16 @@ describe('auth-service => user', () => {
       .send(user)
       .expect(HttpStatus.CREATED)
       .expect(userAssertions.hasToken)
-      .then(() => {
+      .then(result => {
+        expect(result.body).to.have.a.property('token').to.exist;
         return server
-          .post('/v1/user/login')
-          .send(user)
-          .expect(HttpStatus.UNAUTHORIZED)
+          .post(`/v1/user/verify-token?token=${result.body.token}`)
+          .expect(HttpStatus.OK)
           .then(result => {
-            expect(result.body).to.contain.a.property('message', 'User not found');
+            expect(result.body).to.exist;
+            expect(result.body).to.have.a.property('message').to.be.equal('Valid token.');
           });
       });
-  });
-
-  xit('GET /v1/user/verify-token => will not verify if a user is deleted', () => {
 
   });
 
