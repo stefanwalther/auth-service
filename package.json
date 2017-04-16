@@ -39,6 +39,7 @@
     "crypto": "^0.0.3",
     "email-templates": "^2.5.4",
     "express": "^4.14.1",
+    "express-initializers": "^0.0.1",
     "express-result": "*",
     "global": "^4.3.1",
     "helmet": "^3.4.0",
