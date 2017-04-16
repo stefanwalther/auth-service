@@ -50,9 +50,10 @@ class AppServer {
    */
   start() {
 
-    return initializer(this.app, {
-      directory: path.join(__dirname, 'config/initializers')
-    })
+    return initializer(this.app,
+      {
+        directory: path.join(__dirname, 'config/initializers')
+      })
       .then(mongooseConnection.connect())
       .then(connection => {
         this.app.db = connection;
