@@ -36,7 +36,7 @@
     "body-parser": "^1.16.1",
     "compression": "^1.6.2",
     "cors": "^2.8.1",
-    "crypto": "^0.0.3",
+    "crypto": "^1.0.0",
     "email-templates": "^2.5.4",
     "express": "^4.14.1",
     "express-initializers": "^0.0.1",
