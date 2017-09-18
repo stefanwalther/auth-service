@@ -30,7 +30,7 @@ describe('auth-service => api-docs', () => {
         expect(result).to.have.a.property('body').to.exist;
         expect(result.body).to.deep.include({swagger: '2.0'});
         expect(result.body).to.have.a.property('info');
-        expect(result.body.info).to.include({title: 'auth-service'});
+        expect(result.body.info).to.include({title: pkg.name});
         expect(result.body.info).to.include({version: pkg.version});
       });
   });

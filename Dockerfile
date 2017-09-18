@@ -1,17 +1,15 @@
 FROM sammlerio/node
 
-RUN yarn global add nodemon
-
 ENV HOME /home
 RUN mkdir -p $HOME
 WORKDIR $HOME
 
-COPY package.json yarn.lock ./
+COPY package.json package-lock.json ./
 
-RUN yarn install
+RUN npm install
 
 COPY /src ./src/
 
 EXPOSE 3010
 
-CMD ["yarn", "run", "start"]
+CMD ["npm", "run", "start"]

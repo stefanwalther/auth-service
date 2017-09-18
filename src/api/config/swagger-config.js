@@ -3,7 +3,7 @@ const pkg = require('read-pkg-up').sync().pkg;
 const swaggerConfig = {
   swaggerDefinition: {
     info: {
-      title: 'auth-service',
+      title: pkg.name,
       version: pkg.version,
       description: pkg.description
     },
