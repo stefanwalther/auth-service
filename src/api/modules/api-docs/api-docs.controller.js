@@ -14,7 +14,6 @@ class ApiDocsController {
     res.send(ApiDocsController.getDocs());
     res.status(HttpStatus.OK);
   }
-
 }
 
 module.exports = ApiDocsController;

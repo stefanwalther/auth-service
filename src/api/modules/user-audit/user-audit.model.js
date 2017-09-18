@@ -22,13 +22,13 @@ const schema = new Schema({
     default: '<message:empty>'
   }
 }, {
-  collection: mongooseConfig.COLLECTION_PREFIX + '_user-audit',
+  collection: mongooseConfig.COLLECTION_PREFIX + mongooseConfig.COLLECTION_USER_AUDIT,
   strict: true
 });
 
 schema.index({username: 1, email: 1});
-schema.plugin(timeStamps, {createdAt: 'created_at', updatedAt: 'updated_at'});
-const UserAuditModel = mongoose.model('user-audit', schema);
+schema.plugin(timeStamps, {createdAt: mongooseConfig.FIELD_CREATED_AT, updatedAt: mongooseConfig.FIELD_UPDATED_AT});
+const UserAuditModel = mongoose.model(mongooseConfig.COLLECTION_USER_AUDIT, schema);
 
 // Todo: Doesn't make sense without allowing to save a custom event
 schema.statics.save = user => {

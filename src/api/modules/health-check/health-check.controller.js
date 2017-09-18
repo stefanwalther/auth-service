@@ -12,7 +12,6 @@ class HealthCheckController {
     });
     next();
   }
-
 }
 
 module.exports = HealthCheckController;

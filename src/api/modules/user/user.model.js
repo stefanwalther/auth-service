@@ -41,13 +41,13 @@ const schema = new Schema({
     salt: String
   }
 }, {
-  collection: mongooseConfig.COLLECTION_PREFIX + '_user',
+  collection: mongooseConfig.COLLECTION_PREFIX + mongooseConfig.COLLECTION_USER,
   strict: true
 });
 /* eslint-enable camelcase */
 
 schema.index({username: 1, email: 1});
-schema.plugin(timeStamps, {createdAt: 'created_at', updatedAt: 'updated_at'});
+schema.plugin(timeStamps, {createdAt: mongooseConfig.FIELD_CREATED_AT, updatedAt: mongooseConfig.FIELD_UPDATED_AT});
 
 schema.methods.setPassword = password => {
   if (!this.local) {
@@ -88,6 +88,6 @@ schema.statics.verifyToken = token => {
 
 module.exports = {
   Schema: schema,
-  Model: mongoose.model('user', schema)
+  Model: mongoose.model(mongooseConfig.COLLECTION_USER, schema)
 };
 
