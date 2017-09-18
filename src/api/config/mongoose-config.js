@@ -11,5 +11,4 @@ module.exports = {
 
   COLLECTION_USER: 'user',
   COLLECTION_USER_AUDIT: 'user-audit'
-
 };
