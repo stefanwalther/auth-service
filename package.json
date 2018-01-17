@@ -49,7 +49,7 @@
     "jsonwebtoken": "^8.1.0",
     "lodash": "^4.17.4",
     "moment": "^2.19.2",
-    "mongoose": "^4.13.5",
+    "mongoose": "^5.0.0",
     "mongoose-connection-promise": "*",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.9.0",
