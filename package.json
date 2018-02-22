@@ -27,10 +27,11 @@
     "lint:test:fix": "eslint test --fix",
     "start": "node ./src/index.js",
     "start:watch": "nodemon ./src/index.js",
-    "test": "npm run test:unit && npm run test:integration",
+    "test": "npm run test:unit && npm run test:integration && npm run coverage",
     "test-coverage": "export JWT_SECRET='My Secret' && istanbul cover node_modules/.bin/_mocha  --require ./test/mocha.conf.js -- -- -u exports -R spec test/**/* && codecov",
-    "test:integration": "export JWT_SECRET='My Secret' && mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
-    "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'"
+    "test:integration": "export JWT_SECRET='My Secret' && nyc --reporter=lcov mocha mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
+    "test:unit": "nyc --reporter=lcov mocha mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'",
+    "coverage": "nyc report"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
@@ -78,6 +79,7 @@
     "eslint-plugin-mocha": "4.11.0",
     "istanbul": "0.4.5",
     "mocha": "5.0.1",
+    "nyc": "^11.4.1",
     "supertest": "3.0.0"
   },
   "verb": {
