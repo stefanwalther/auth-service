@@ -1,4 +1,4 @@
-FROM sammlerio/node
+FROM node:8.9.4
 
 ENV HOME /home
 RUN mkdir -p $HOME

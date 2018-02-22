@@ -27,39 +27,38 @@
     "lint:test:fix": "eslint test --fix",
     "start": "node ./src/index.js",
     "start:watch": "nodemon ./src/index.js",
-    "test": "npm run lint && npm run test:unit && npm run test:integration",
+    "test": "npm run test:unit && npm run test:integration",
     "test-coverage": "export JWT_SECRET='My Secret' && istanbul cover node_modules/.bin/_mocha  --require ./test/mocha.conf.js -- -- -u exports -R spec test/**/* && codecov",
     "test:integration": "export JWT_SECRET='My Secret' && mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
-    "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'",
-    "precommit": "npm run lint --quiet"
+    "test:unit": "mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'"
   },
   "dependencies": {
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
-    "compression": "^1.7.1",
-    "cors": "^2.8.1",
+    "compression": "^1.7.2",
+    "cors": "2.8.4",
     "crypto": "^1.0.1",
-    "email-templates": "^3.1.7",
+    "email-templates": "^3.4.0",
     "express": "^4.16.2",
     "express-initializers": "^0.0.1",
     "express-result": "*",
-    "global": "^4.3.1",
-    "helmet": "^3.9.0",
-    "http-status-codes": "^1.1.6",
-    "jsonwebtoken": "^8.1.0",
-    "lodash": "^4.17.4",
-    "moment": "^2.19.2",
-    "mongoose": "^4.13.5",
-    "mongoose-connection-promise": "*",
+    "global": "4.3.2",
+    "helmet": "^3.11.0",
+    "http-status-codes": "1.3.0",
+    "jsonwebtoken": "^8.1.1",
+    "lodash": "^4.17.5",
+    "moment": "^2.20.1",
+    "mongoose": "^5.0.6",
+    "mongoose-connection-config": "^0.1.0",
     "mongoose-timestamp": "^0.6.0",
     "morgan": "^1.9.0",
-    "nodemailer": "^4.4.0",
+    "nodemailer": "^4.6.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
-    "nodemon": "^1.11.0",
+    "nodemon": "^1.15.1",
     "passport": "^0.4.0",
     "passport-facebook": "^2.1.1",
     "passport-github": "^1.1.0",
-    "passport-google-auth": "^1.0.1",
+    "passport-google-auth": "1.0.2",
     "passport-jwt": "^3.0.1",
     "passport-linkedin": "^1.0.0",
     "passport-local": "^1.0.0",
@@ -68,18 +67,17 @@
     "sammler-nodelib-logger": "*",
     "serve-favicon": "^2.4.5",
     "swagger-jsdoc": "^1.9.1",
-    "swagger-ui-express": "^2.0.11",
-    "winster": "^0.2.7"
+    "swagger-ui-express": "^2.0.15",
+    "winster": "^0.2.9"
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "eslint": "^4.11.0",
-    "eslint-config-space-single": "^0.3.0",
     "codecov": "^3.0.0",
+    "eslint": "^4.18.1",
+    "eslint-config-space-single": "^0.3.0",
     "eslint-plugin-mocha": "^4.8.0",
-    "husky": "^0.14.3",
     "istanbul": "^0.4.5",
-    "mocha": "^5.0.0",
+    "mocha": "^5.0.1",
     "supertest": "^3.0.0"
   },
   "verb": {
@@ -105,5 +103,10 @@
   },
   "winster": {
     "configFile": "./src/api/config/winster-config.js"
+  },
+  "renovate": {
+    "extends": [
+      "config:base"
+    ]
   }
 }
