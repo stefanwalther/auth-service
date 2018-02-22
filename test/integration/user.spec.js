@@ -10,12 +10,10 @@ describe('auth-service => user', () => {
 
   let server;
   const appServer = new AppServer(defaultConfig);
-  beforeEach(() => {
-    return appServer.start()
-      .then(() => {
-        server = superTest(appServer.server);
-        return UserModel.remove({}).exec();
-      });
+  beforeEach(async () => {
+    await appServer.start();
+    server = superTest(appServer.server);
+    await UserModel.remove();
   });
 
   afterEach(() => {

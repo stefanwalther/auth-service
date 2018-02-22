@@ -1,16 +1,12 @@
 const initializer = require('express-initializers');
 const _ = require('lodash');
-const bluebird = require('bluebird');
 const express = require('express');
 const logger = require('winster').instance();
-const MongooseConnection = require('mongoose-connection-promise');
+const MongooseConnectionConfig = require('mongoose-connection-config');
+const mongoose = require('mongoose');
 const path = require('path');
 
-const mongooseConfig = require('./config/mongoose-config');
-
-const mongooseConnection = new MongooseConnection(mongooseConfig);
-
-global.Promise = bluebird;
+const mongoUri = new MongooseConnectionConfig(require('./config/mongoose-config')).getMongoUri();
 
 class AppServer {
   constructor(config) {
@@ -40,7 +36,6 @@ class AppServer {
     if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
       throw new Error('PORT is not a number.');
     }
-
   }
 
   /**
@@ -49,16 +44,11 @@ class AppServer {
    * @returns {Promise}
    */
   start() {
-
     return initializer(this.app,
       {
         directory: path.join(__dirname, 'config/initializers')
       })
-      .then(mongooseConnection.connect())
-      .then(connection => {
-        this.app.db = connection;
-        return connection;
-      })
+      .then(mongoose.connect(mongoUri))
       .then(() => {
         this.server = this.app.listen(this._validateConfig.PORT, err => {
           if (err) {
@@ -80,7 +70,7 @@ class AppServer {
    */
   stop() {
     return new Promise(resolve => {
-      mongooseConnection.disconnect()
+      mongoose.connection.close()
         .then(() => {
 
           if (this.server) {
