@@ -1,2 +1,16 @@
-node_modules
+.nyc_output/
+circleci/
+coverage/
+docs/
+node_modules/
+
+.dockerignore
+.nvmrc
 npm-debug.log
+.verb.md
+circleci.yml
+docker-compose.dev.yml
+Dockerfile
+index.js
+log-test.log
+README.md

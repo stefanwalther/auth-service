@@ -33,9 +33,9 @@ class AppServer {
 
   _validateConfig() {
 
-    if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
-      throw new Error('PORT is not a number.');
-    }
+    // if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
+    //   throw new Error(`PORT is not a number: ${this.config.PORT}`);
+    // }
   }
 
   /**
