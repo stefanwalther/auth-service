@@ -1,4 +1,4 @@
-FROM node:8.9.4@sha256:9d3c5b6b15c9f82f4f668a7bf8348730ccfdca6a7fceddfcd5ef446f597c41f3
+FROM node:8.9.4@sha256:5afc7736a71bcf24281d9dbff878c771106e0791d56949b1a4e8d27c50424283
 
 ENV HOME /home
 RUN mkdir -p $HOME
