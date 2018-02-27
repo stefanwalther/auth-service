@@ -1,0 +1,53 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    working_directory: ~/auth-service
+    environment:
+      SERVICE_NAME: auth-service
+      DOCKER_REPO: sammlerio/auth-service
+      DOCKER_URL: https://download.docker.com/linux/static/stable/x86_64/docker-17.06.0-ce.tgz
+      DOCKER_COMPOSE_URL: https://github.com/docker/compose/releases/download/1.14.0/docker-compose-Linux-x86_64
+    steps:
+      - checkout
+      - add_ssh_keys
+      - run:
+          name: Install required tools
+          command: make setup
+      - run:
+          name: Update version
+          command: |
+            VER=$(node -e "console.log(require('./package.json').version.replace(/-[0-9]+/, '-$CIRCLE_BUILD_NUM'))")
+            echo "$VER" > ./version.txt
+            if (echo $VER | egrep -- '-[0-9]+$' 1> /dev/null); then
+              npm version $VER --no-git-tag-version
+            fi
+      - run:
+          name: Upgrade Docker
+          command: |
+            curl -sSL $DOCKER_URL | sudo tar -xz --strip-components=1 -C /usr/bin/
+            sudo service docker restart
+      - run:
+          name: Upgrade Docker Compose
+          command: |
+            loc=$(which docker-compose)
+            sudo curl -sSLf -z $loc -o $loc $DOCKER_COMPOSE_URL
+            sudo chmod 755 $loc
+      - run:
+          name: Build Docker image
+          command: |
+            VER=$(cat ./version.txt)
+            docker build -t $DOCKER_REPO:$VER .
+            echo "xx"
+      - run:
+          name: Login to Docker
+          command: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+      - deploy:
+          name: Push image to Docker Hub
+          command: |
+            # Only branch "master" is being pushed to Docker Hub
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              VER=$(cat ./version.txt)
+              docker tag $DOCKER_REPO:$VER $DOCKER_REPO:latest
+            fi
+            docker push $DOCKER_REPO
