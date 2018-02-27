@@ -20,3 +20,15 @@ d-run:							## Run the docker image
 dc-up:							## Get the stack up and running (docker-compose)
 	docker-compose up
 .PHONY: dc-up
+
+setup:
+	@echo "Setup ... nothing here right now"
+.PHONY: setup
+
+circleci-validate: 	## Validate the circleci config.
+	circleci config validate
+.PHONY: circleci-validate
+
+circleci-build:			## Build circleci locally.
+	circleci build
+.PHONY: circleci-build

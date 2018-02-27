@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  mongo:
+    image: sammlerio/mongo
+    ports:
+      - 27017:27017
+
+  auth-service:
+    build:
+      context: .
+    environment:
+      - PORT=3010
+      - JWT_SECRET=foo
+      - MONGODB_DEBUG=false
+      - MONGODB_HOST=mongo
+      - MONGODB_PORT=27017
+    command: npm run start:watch
+

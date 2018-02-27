@@ -11,6 +11,5 @@ npm-debug.log
 circleci.yml
 docker-compose.dev.yml
 Dockerfile
-index.js
 log-test.log
 README.md
