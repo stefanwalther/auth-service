@@ -43,24 +43,16 @@ class AppServer {
    *
    * @returns {Promise}
    */
-  start() {
-    return initializer(this.app,
-      {
-        directory: path.join(__dirname, 'config/initializers')
-      })
-      .then(mongoose.connect(mongoUri))
-      .then(() => {
-        this.server = this.app.listen(this._validateConfig.PORT, err => {
-          if (err) {
-            this.logger.error('Cannot start express server', err);
-            throw err;
-          }
-          this.logger.info(`Express server listening on port ${this.config.PORT} in "${this.app.settings.env.NODE_ENV}" mode`);
-        });
-      })
-      .catch(err => {
-        this.logger.fatal(err);
-      });
+  async start() {
+    await initializer(this.app, {directory: path.join(__dirname, 'config/initializers')});
+    await mongoose.connect(mongoUri);
+
+    try {
+      this.server = await this.app.listen(this._validateConfig.PORT);
+      this.logger.info(`Express server listening on port ${this.config.PORT} in ${this.app.settings.env.NODE_ENV} mode`);
+    } catch (e) {
+      this.logger.error('Cannot start express server', err);
+    }
   }
 
   /**

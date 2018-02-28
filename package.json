@@ -24,11 +24,11 @@
     "lint:src:fix": "eslint src --fix",
     "lint:test": "eslint test",
     "lint:test:fix": "eslint test --fix",
-    "start": "node ./src/index.js",
+    "start": "node ./src/api/index.js",
     "start:watch": "nodemon ./src/api/index.js",
     "test": "npm run test:unit && npm run test:integration && npm run coverage",
     "test:integration": "export JWT_SECRET='My Secret' && nyc --reporter=lcov mocha mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
-    "test:unit": "nyc --reporter=lcov mocha mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'",
+    "test:unit": "nyc --reporter=lcov mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'",
     "coverage": "nyc report"
   },
   "dependencies": {

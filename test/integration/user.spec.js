@@ -16,15 +16,15 @@ describe('auth-service => user', () => {
     await UserModel.remove();
   });
 
-  afterEach(() => {
-    return appServer.stop();
+  afterEach(async () => {
+    await appServer.stop();
   });
 
-  it('POST /register => throws validation errors for required fields', () => {
+  it('POST /register => throws validation errors for required fields', async () => {
 
     const doc = {};
 
-    return server
+    await server
       .post('/v1/user/register')
       .send(doc)
       .expect(HttpStatus.INTERNAL_SERVER_ERROR)

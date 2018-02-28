@@ -10,7 +10,7 @@ gen-readme:					## Generate README.md (using docker-verb)
 .PHONY: gen-readme
 
 d-build:						## Build the docker image
-	docker build -t sammlerio/auth-service .
+	docker build --force-rm -t sammlerio/auth-service .
 .PHONY: d-build
 
 d-run:							## Run the docker image
@@ -20,6 +20,22 @@ d-run:							## Run the docker image
 dc-up:							## Get the stack up and running (docker-compose)
 	docker-compose up
 .PHONY: dc-up
+
+dc-down:
+	docker-compose down
+.PHONY: dc-down
+
+dc-up-deps:
+	docker-compose --f=docker-compose.deps.yml up
+.PHONY: dc-up-deps
+
+dc-down-deps:
+	docker-compose --f=docker-compose.deps.yml down
+.PHONY: dc-down-deps
+
+dc-up-test:
+	docker-compose --f=docker-compose.test.yml up
+.PHONY: dc-up-test
 
 setup:
 	@echo "Setup ... nothing here right now"
@@ -32,3 +48,5 @@ circleci-validate: 	## Validate the circleci config.
 circleci-build:			## Build circleci locally.
 	circleci build
 .PHONY: circleci-build
+
+
