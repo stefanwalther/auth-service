@@ -51,7 +51,7 @@ jobs:
             command: make build
       - run:
             name: Build test image
-            command: make build-test-image
+            command: make build-test
       - run:
             name: Tests
             command: |
