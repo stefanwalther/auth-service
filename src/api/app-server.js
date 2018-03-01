@@ -26,9 +26,7 @@ class AppServer {
    */
   _initApp() {
     this.app = express();
-
     this.app.settings.env = process.env; // Todo: something is wrong here.
-
   }
 
   _validateConfig() {
@@ -36,6 +34,7 @@ class AppServer {
     // if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
     //   throw new Error(`PORT is not a number: ${this.config.PORT}`);
     // }
+
   }
 
   /**
@@ -48,9 +47,9 @@ class AppServer {
     await mongoose.connect(mongoUri);
 
     try {
-      this.server = await this.app.listen(this._validateConfig.PORT);
+      this.server = await this.app.listen(this.config.PORT);
       this.logger.info(`Express server listening on port ${this.config.PORT} in ${this.app.settings.env.NODE_ENV} mode`);
-    } catch (e) {
+    } catch (err) {
       this.logger.error('Cannot start express server', err);
     }
   }

@@ -10,7 +10,6 @@ jobs:
       DOCKER_COMPOSE_URL: https://github.com/docker/compose/releases/download/1.13.0/docker-compose-Linux-x86_64
     steps:
       - checkout
-      - add_ssh_keys
       - run:
           name: Upgrade Docker
           command: |
@@ -47,13 +46,24 @@ jobs:
               if (echo $VER | egrep -- '-[0-9]+$' 1> /dev/null); then
                 npm version $VER --no-git-tag-version
               fi
-#      - deploy:
-#          name: Push image to Docker Hub
-#          command: |
-#            # Only branch "master" is being pushed to Docker Hub
-#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-#              VER=$(cat ./version.txt)
-#              docker tag $DOCKER_REPO:$VER $DOCKER_REPO:latest
-#            fi
-#            docker push $DOCKER_REPO
+      - run:
+            name: Build image
+            command: make build
+      - run:
+            name: Build test image
+            command: make build-test-image
+      - run:
+            name: Tests
+            command: |
+              docker-compose -f docker-compose.test.yml
+      - add_ssh_keys
+      - deploy:
+          name: Push image to Docker Hub
+          command: |
+            # Only branch "master" is being pushed to Docker Hub
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              VER=$(cat ./version.txt)
+              docker tag $DOCKER_REPO:$VER $DOCKER_REPO:latest
+            fi
+            docker push $DOCKER_REPO
 

@@ -6,5 +6,8 @@ services:
     ports:
       - 27017:27017
 
+  rabbitmq:
+    image: sammlerio/rabbitmq
+
 
 

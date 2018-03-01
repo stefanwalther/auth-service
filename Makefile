@@ -9,6 +9,18 @@ gen-readme:					## Generate README.md (using docker-verb)
 	docker run --rm -v ${PWD}:/opt/verb stefanwalther/verb
 .PHONY: gen-readme
 
+build:							## Build the docker image (production)
+	docker build --force-rm -t sammlerio/auth-service -f Dockerfile.prod .
+.PHONY: build
+
+run:
+	docker run -it sammlerio/auth-service
+.PHONY: run
+
+build-test: build
+	docker build --force-rm -t sammlerio/auth-service-test -f Dockerfile.test .
+.PHONY: build-test
+
 d-build:						## Build the docker image
 	docker build --force-rm -t sammlerio/auth-service .
 .PHONY: d-build
@@ -17,21 +29,35 @@ d-run:							## Run the docker image
 	docker run -it sammlerio/auth-service
 .PHONY: d-run
 
-dc-up:							## Get the stack up and running (docker-compose)
+up:							## Get the stack up and running (docker-compose)
 	docker-compose up
-.PHONY: dc-up
+.PHONY: up
 
-dc-down:
+down:
 	docker-compose down
-.PHONY: dc-down
+.PHONY: down
 
-dc-up-deps:
+up-test:
+	docker-compose --f=docker-compose.test.yml up
+.PHONY: up-test
+
+down-test:
+	docker-compose --f=docker-compose.test.yml down
+.PHONY: down-test
+
+rs: down up
+.PHONY: rs
+
+up-deps:
 	docker-compose --f=docker-compose.deps.yml up
-.PHONY: dc-up-deps
+.PHONY: up-deps
 
-dc-down-deps:
+rs-deps: down-deps up-deps
+.PHONY: rs-deps
+
+down-deps:
 	docker-compose --f=docker-compose.deps.yml down
-.PHONY: dc-down-deps
+.PHONY: down-deps
 
 dc-up-test:
 	docker-compose --f=docker-compose.test.yml up

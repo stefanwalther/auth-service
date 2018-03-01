@@ -1,0 +1,20 @@
+ARG NODE_VER="8.9.4"
+
+FROM node:${NODE_VER}-alpine as RELEASE
+
+ENV HOME_DIR "opt/auth-service"
+
+RUN mkdir -p $HOME_DIR
+WORKDIR $HOME_DIR
+
+COPY package.json ./
+
+RUN npm install --only=production --silent
+
+COPY /src ./src/
+
+ARG PORT=3001
+ENV PORT=${PORT}
+EXPOSE $PORT
+
+CMD ["npm", "run", "start"]
