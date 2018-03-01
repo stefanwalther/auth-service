@@ -17,7 +17,7 @@ run:
 	docker run -it sammlerio/auth-service
 .PHONY: run
 
-build-test: build
+build-test:
 	docker build --force-rm -t sammlerio/auth-service-test -f Dockerfile.test .
 .PHONY: build-test
 
