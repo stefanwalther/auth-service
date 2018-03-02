@@ -3,7 +3,7 @@ const morganLogger = morgan('dev', {silent: false});
 
 module.exports = {
   configure: app => {
-    morganLogger.silent = true;
+    morganLogger.silent = false;
     app.use(morganLogger);
   }
 };

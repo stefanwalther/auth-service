@@ -5,6 +5,8 @@ const UserModel = require('./user.model').Model;
 const UserBL = require('./user.bl');
 // const UserModelAudit = require('./../user-audit/user-audit.model').Model;
 
+const logger = require('winster').instance();
+
 class UserController {
 
   static getById(req, res) {
@@ -20,6 +22,8 @@ class UserController {
   // Todo: Validation should go to the mongoose model
   // Todo: Refactor, don't like how the returned object is created, that's too error-prone if new props are added.
   static register(req, res) {
+
+    logger.info('Registering', req.body);
 
     const validationErrors = new ExpressResult.ValidationErrors();
     if (!req.body.username) {
@@ -46,9 +50,9 @@ class UserController {
         const result = {
           _id: user._id,
           username: user.username,
-          is_deleted: user.is_deleted,
-          is_active: user.is_active,
-          is_verified: user.is_verified,
+          is_deleted: user.is_deleted || false,
+          is_active: user.is_active || false,
+          is_verified: user.is_verified || false,
           email: user.local.email
         };
         if (!user.is_deleted && user.is_active) {
@@ -57,6 +61,7 @@ class UserController {
         ExpressResult.created(res, result);
       })
       .catch(err => {
+        console.error(err);
         ExpressResult.error(res, err);
       });
   }

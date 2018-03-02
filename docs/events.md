@@ -1,0 +1,3 @@
+- user.created
+- user.validated
+- user.login

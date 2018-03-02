@@ -17,7 +17,15 @@ const schema = new Schema({
     type: String,
     required: true,
     unique: true,
-    minlength: [6, 'Username too short, 6 characters required.']
+    minlength: [4, 'Username too short, 4 characters required.']
+  },
+  firstname: {
+    type: String,
+    required: false
+  },
+  lastname: {
+    type: String,
+    required: false
   },
   is_active: {
     type: Boolean,
@@ -34,7 +42,7 @@ const schema = new Schema({
   local: {
     email: {
       type: String,
-      required: true,
+      required: false,
       unique: true
     },
     hash: String,
