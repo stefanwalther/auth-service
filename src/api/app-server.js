@@ -64,29 +64,21 @@ class AppServer {
   async stop() {
 
     if (mongoose.connection) {
-      await mongoose.connection.close();
+      try {
+        await mongoose.connection.close();
+        this.logger.trace('Closed mongoose connection');
+      } catch (e) {
+        this.logger.trace('Could not close mongoose connection', e);
+      }
     }
-    await this.server.close();
-    this.logger.info('Server closed');
-
-    // return new Promise(resolve => {
-    //   mongoose.connection.close()
-    //     .then(() => {
-    //
-    //       if (this.server) {
-    //         this.server.close(() => {
-    //           this.logger.info('Server stopped');
-    //           return resolve();
-    //         });
-    //       }
-    //       return resolve();
-    //
-    //     })
-    //     .catch(err => {
-    //       this.logger.error('Could not disconnect from MongoDB', err);
-    //       throw err;
-    //     });
-    // });
+    if (this.server) {
+      try {
+        await this.server.close();
+        this.logger.trace('Server closed');
+      } catch (e) {
+        this.logger.trace('Could not close server', e);
+      }
+    }
   }
 }
 
