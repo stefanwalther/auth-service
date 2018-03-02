@@ -61,6 +61,9 @@ jobs:
       - run:
           name: Unit tests
           command: docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:unit
+      - run:
+          name: Integration tests
+          command: docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
       - add_ssh_keys
       - deploy:
           name: Push image to Docker Hub
