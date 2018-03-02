@@ -29,7 +29,7 @@ jobs:
           name: Pull public docker images in the background
           background: true
           command: |
-            docker pull node:8-alpine
+            docker pull node:8.9.4-alpine
       - run:
           name: Upgrade Docker Compose
           command: |
@@ -68,10 +68,11 @@ jobs:
       - deploy:
           name: Push image to Docker Hub
           command: |
+            VER=$(cat ./version.txt)
             # Only branch "master" is being pushed to Docker Hub
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              VER=$(cat ./version.txt)
+              docker push $DOCKER_REPO
+            else
               docker tag $DOCKER_REPO:$VER $DOCKER_REPO:latest
             fi
-            docker push $DOCKER_REPO
 
