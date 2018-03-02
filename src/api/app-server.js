@@ -37,8 +37,6 @@ class AppServer {
 
   }
 
-
-
   /**
    * Start the auth-server.
    *
@@ -65,8 +63,7 @@ class AppServer {
    */
   async stop() {
 
-    if(mongoose.connection)
-    {
+    if (mongoose.connection) {
       await mongoose.connection.close();
     }
     await this.server.close();

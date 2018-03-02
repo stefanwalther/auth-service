@@ -13,7 +13,7 @@ describe('auth-service => user', () => {
   let appServer;
 
   beforeEach(async () => {
-    appServer =  new AppServer(defaultConfig);
+    appServer = new AppServer(defaultConfig);
     await appServer.start();
     server = superTest(appServer.server);
     await UserModel.remove();
@@ -51,7 +51,7 @@ describe('auth-service => user', () => {
       }
     });
 
-    it('is fine registering multiple users (with different usernames)', async() => {
+    it('is fine registering multiple users (with different usernames)', async () => {
       let user1 = new UserModel({
         username: 'test',
         password: 'test',
@@ -74,7 +74,7 @@ describe('auth-service => user', () => {
       } catch (e) {
         expect(e).to.not.exist;
       }
-    })
+    });
   });
 
   describe('POST /user/register', () => {
@@ -193,7 +193,6 @@ describe('auth-service => user', () => {
     });
 
   });
-
 
   it('POST /verify-token => returns an error if not token is passed', () => {
     return server
