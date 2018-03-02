@@ -1,0 +1,6 @@
+version: '2'
+
+services:
+  auth-service-test:
+    image: sammlerio/auth-service-test
+    command: npm run test:unit

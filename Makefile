@@ -1,3 +1,8 @@
+CODECLIMATE = $(MOD_BIN)/codeclimate-test-reporter
+MOD_BIN = ./node_modules/.bin
+MOCHA = $(MOD_BIN)/_mocha
+NYC = $(MOD_BIN)/nyc
+
 help:								## Show this help.
 	@echo ''
 	@echo 'Available commands:'
@@ -38,8 +43,20 @@ down:
 .PHONY: down
 
 up-test:
-	docker-compose --f=docker-compose.test.yml up
+	docker-compose --f=docker-compose.test.yml up -d
 .PHONY: up-test
+
+run-test:
+	docker-compose --f=docker-compose.test.yml run auth-service-test
+.PHONY: run-test
+
+up-unit-tests:
+	docker-compose --f=docker-compose.unit-tests.yml up -d
+.PHONY: up-unit-tests
+
+run-unit-tests:
+	docker-compose --f=docker-compose.unit-tests.yml run auth-service-test npm run test:unit
+.PHONY: run-unit-tests
 
 down-test:
 	docker-compose --f=docker-compose.test.yml down
@@ -67,12 +84,13 @@ setup:
 	@echo "Setup ... nothing here right now"
 .PHONY: setup
 
-circleci-validate: 	## Validate the circleci config.
-	circleci config validate
-.PHONY: circleci-validate
+test-unit:
+	@NODE_ENV=test:unit
+	#$(CODECLIMATE) < coverage/lcov.info
+.PHONY: test-ci
 
-circleci-build:			## Build circleci locally.
-	circleci build
-.PHONY: circleci-build
+lint:
+	$(MOD_BIN)/eslint
+.PHONY: lint
 
 
