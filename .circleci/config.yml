@@ -53,7 +53,7 @@ jobs:
           name: Build test image
           command: make build-test
       - run:
-          name: Tests
+          name: Setting up test environment
           command: make up-test
       - run:
           name: Lint
