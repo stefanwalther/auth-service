@@ -1,0 +1,13 @@
+version: '2'
+services:
+
+  mongo:
+    image: sammlerio/mongo
+    ports:
+      - 27017:27017
+
+  rabbitmq:
+    image: sammlerio/rabbitmq
+
+
+

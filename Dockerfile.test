@@ -1,0 +1,9 @@
+FROM sammlerio/auth-service:latest
+
+RUN npm install --silent
+
+COPY /test ./test/
+COPY /.eslintrc.json ./.eslintrc.json
+COPY /Makefile ./Makefile
+
+RUN apk --no-cache add make grep git

@@ -1,15 +1,62 @@
-FROM node:8.9.4@sha256:9d3c5b6b15c9f82f4f668a7bf8348730ccfdca6a7fceddfcd5ef446f597c41f3
+ARG NODE_VER="8.9.4"
 
-ENV HOME /home
-RUN mkdir -p $HOME
-WORKDIR $HOME
+# --------------------------------------
+#               BASE NODE
+# --------------------------------------
+FROM node:${NODE_VER} as BASE
 
-COPY package.json package-lock.json ./
+ARG HOME_DIR="opt/auth-service"
+ENV HOME_DIR $HOME_DIR
+RUN mkdir -p $HOME_DIR
+WORKDIR $HOME_DIR
 
+#COPY package.json package-lock.json ./
+COPY package.json ./
+
+# --------------------------------------
+#              DEPENDENCIES
+# --------------------------------------
+FROM BASE as DEPENDENCIES
+
+RUN npm install --only=production
+
+# copy production node_modules aside
+RUN cp -R node_modules prod_node_modules
+
+# install ALL node_modules, including 'devDependencies'
 RUN npm install
 
+# --------------------------------------
+#                  TEST
+# --------------------------------------
+# run linters, setup and tests
+FROM dependencies AS TEST
+
+COPY .eslintrc.json .
+COPY /src ./src/
+COPY /test ./test/
+
+RUN  npm run lint:fix && npm run lint && npm run test:unit
+
+# --------------------------------------
+#                 RELEASE
+# --------------------------------------
+FROM node:${NODE_VER}-alpine as RELEASE
+
+ARG PORT=3001
+ENV PORT=${PORT}
+
+ARG HOME_DIR="opt/auth-service"
+ENV HOME_DIR $HOME_DIR
+RUN mkdir -p $HOME_DIR
+WORKDIR $HOME_DIR
+
+COPY index.js package.json nodemon.json ./
+
+# copy production node_modules
+COPY --from=dependencies $HOME_DIR/prod_node_modules ./node_modules
 COPY /src ./src/
 
-EXPOSE 3010
+EXPOSE $PORT
 
 CMD ["npm", "run", "start"]
