@@ -9,7 +9,6 @@ describe('UserModel => unit tests', () => {
     userModel.validate(err => {
       expect(err.errors).to.exist;
       expect(err.errors).to.have.a.property('username');
-      expect(err.errors).to.have.a.property('local.email');
       done();
     });
   });
@@ -27,7 +26,7 @@ describe('UserModel => unit tests', () => {
     const userModel = new UserModel(doc);
     userModel.validate(err => {
       expect(err.errors).to.have.a.property('username');
-      expect(err.errors.username).to.deep.include({message: 'Username too short, 6 characters required.'});
+      expect(err.errors.username).to.deep.include({message: 'Username too short, 4 characters required.'});
       done();
     });
   });
