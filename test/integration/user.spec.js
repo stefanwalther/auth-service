@@ -1,133 +1,199 @@
 const superTest = require('supertest');
 const HttpStatus = require('http-status-codes');
-const AppServer = require('./../../src/api/app-server');
+const mongoose = require('mongoose');
 
-const UserModel = require('./../../src/api/modules/user/user.model').Model;
+const AppServer = require('./../../src/api/app-server');
+const UserModel = mongoose.models.User || require('./../../src/api/modules/user/user.model').Model;
 const defaultConfig = require('./../test-lib/default-config');
 const userAssertions = require('./../test-lib/user-assertions');
 
 describe('auth-service => user', () => {
 
   let server;
-  const appServer = new AppServer(defaultConfig);
+  let appServer;
+
   beforeEach(async () => {
+    appServer =  new AppServer(defaultConfig);
     await appServer.start();
     server = superTest(appServer.server);
     await UserModel.remove();
   });
 
   afterEach(async () => {
-    await appServer.stop();
+    return await appServer.stop();
   });
 
-  it('POST /register => throws validation errors for required fields', async () => {
+  describe('UserModel', () => {
+    it('registering a new user throws an error if user already exists', async () => {
 
-    const doc = {};
-
-    await server
-      .post('/v1/user/register')
-      .send(doc)
-      .expect(HttpStatus.INTERNAL_SERVER_ERROR)
-      .then(result => {
-        expect(result.body).to.have.a.property('ValidationErrors');
-        expect(result.body.ValidationErrors).to.contain('Property <username> missing.');
-        expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
-        expect(result.body.ValidationErrors).to.contain('Property <email> missing.');
+      let user1 = new UserModel({
+        username: 'test',
+        password: 'test',
+        local: {
+          email: 'test@bar.com'
+        }
       });
-  });
+      await user1.save();
 
-  it('POST /register => created a new user', () => {
-    const doc = {
-      username: 'foofoo',
-      password: 'bar',
-      local: {
-        email: 'foo@bar.com'
+      let user2 = new UserModel({
+        username: 'test',
+        password: 'test',
+        local: {
+          email: 'test@foobar.com'
+        }
+      });
+
+      try {
+        await user2.save();
+      } catch (e) {
+        expect(e).to.exist;
+        expect(e.name).to.be.equal('BulkWriteError');
       }
-    };
+    });
 
-    return server
-      .post('/v1/user/register')
-      .send(doc)
-      .expect(HttpStatus.CREATED)
-      .expect(userAssertions.hasToken);
-  });
-
-  it('POST /login => throws validation errors for required fields', () => {
-
-    const doc = {};
-    return server
-      .post('/v1/user/login')
-      .send(doc)
-      .expect(HttpStatus.INTERNAL_SERVER_ERROR)
-      .then(result => {
-        expect(result.body).to.have.a.property('ValidationErrors');
-        expect(result.body.ValidationErrors).to.contain('Property <username> missing.');
-        expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
+    it('is fine registering multiple users (with different usernames)', async() => {
+      let user1 = new UserModel({
+        username: 'test',
+        password: 'test',
+        local: {
+          email: 'test@bar.com'
+        }
       });
-  });
+      await user1.save();
 
-  it('POST /login => return 401/Unauthorized if login fails (no user found)', () => {
-    const doc = {
-      username: 'foo-user',
-      password: 'passw0rd'
-    };
-    return server
-      .post('/v1/user/login')
-      .send(doc)
-      .expect(HttpStatus.UNAUTHORIZED);
-  });
+      let user2 = new UserModel({
+        username: 'test2',
+        password: 'test',
+        local: {
+          email: 'test@foobar.com'
+        }
+      });
 
-  it('POST /login => return 401/Unauthorized if login fails (user found, password does not match)', () => {
-
-    const user = {
-      username: 'foo-user',
-      password: 'passw0rd',
-      local: {
-        email: 'foo@bar.com'
+      try {
+        await user2.save();
+      } catch (e) {
+        expect(e).to.not.exist;
       }
-    };
+    })
+  });
 
-    const login = {
-      username: 'foo-user',
-      password: 'other-password'
-    };
+  describe('POST /user/register', () => {
 
-    const newUser = new UserModel(user);
-    newUser.setPassword(user.password);
+    it('throws validation errors for required fields', async () => {
 
-    return newUser.save()
-      .then(() => {
-        return server
-          .post('/v1/user/login')
-          .send(login)
-          .expect(HttpStatus.UNAUTHORIZED);
-      });
+      const doc = {};
+
+      await server
+        .post('/v1/user/register')
+        .send(doc)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .then(result => {
+          expect(result.body).to.have.a.property('ValidationErrors');
+          expect(result.body.ValidationErrors).to.contain('Property <username> missing.');
+          expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
+          expect(result.body.ValidationErrors).to.contain('Property <email> missing.');
+        });
+    });
+
+    it('creates a new user', () => {
+      const doc = {
+        username: 'foofoo',
+        password: 'bar',
+        local: {
+          email: 'foo@bar.com'
+        }
+      };
+
+      return server
+        .post('/v1/user/register')
+        .send(doc)
+        .expect(HttpStatus.CREATED)
+        .expect(userAssertions.hasToken);
+    });
 
   });
 
-  it('POST /login => returns a token if successfully logged in', () => {
+  describe('POST /user/login', () => {
 
-    const user = {
-      username: 'foo-user',
-      password: 'passw0rd',
-      is_active: true,
-      local: {
-        email: 'foo@bar.com'
-      }
-    };
+    it('throws validation errors for required fields', () => {
 
-    const newUser = new UserModel(user);
-    newUser.setPassword(user.password);
+      const doc = {};
+      return server
+        .post('/v1/user/login')
+        .send(doc)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .then(result => {
+          expect(result.body).to.have.a.property('ValidationErrors');
+          expect(result.body.ValidationErrors).to.contain('Property <username> missing.');
+          expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
+        });
+    });
 
-    return newUser.save()
-      .then(() => {
-        return server
-          .post('/v1/user/login')
-          .send(user)
-          .expect(HttpStatus.OK)
-          .expect(userAssertions.hasToken);
-      });
+    it('returns 401/Unauthorized if login fails (no user found)', () => {
+      const doc = {
+        username: 'foo-user',
+        password: 'passw0rd'
+      };
+      return server
+        .post('/v1/user/login')
+        .send(doc)
+        .expect(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('returns 401/Unauthorized if login fails (user found, password does not match)', () => {
+
+      const user = {
+        username: 'foo-user',
+        password: 'passw0rd',
+        local: {
+          email: 'foo@bar.com'
+        }
+      };
+
+      const login = {
+        username: 'foo-user',
+        password: 'other-password'
+      };
+
+      const newUser = new UserModel(user);
+      newUser.setPassword(user.password);
+
+      return newUser.save()
+        .then(() => {
+          return server
+            .post('/v1/user/login')
+            .send(login)
+            .expect(HttpStatus.UNAUTHORIZED);
+        });
+
+    });
+
+    it('returns a token if successfully logged in', () => {
+
+      const user = {
+        username: 'foo-user',
+        password: 'passw0rd',
+        is_active: true,
+        local: {
+          email: 'foo@bar.com'
+        }
+      };
+
+      const newUser = new UserModel(user);
+      newUser.setPassword(user.password);
+
+      return newUser.save()
+        .then(() => {
+          return server
+            .post('/v1/user/login')
+            .send(user)
+            .expect(HttpStatus.OK)
+            .expect(userAssertions.hasToken);
+        });
+    });
+
   });
+
 
   it('POST /verify-token => returns an error if not token is passed', () => {
     return server

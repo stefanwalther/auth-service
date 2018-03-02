@@ -37,13 +37,17 @@ class AppServer {
 
   }
 
+
+
   /**
    * Start the auth-server.
    *
    * @returns {Promise}
    */
   async start() {
+
     await initializer(this.app, {directory: path.join(__dirname, 'config/initializers')});
+
     await mongoose.connect(mongoUri);
 
     try {
@@ -59,25 +63,33 @@ class AppServer {
    *
    * @returns {Promise}
    */
-  stop() {
-    return new Promise(resolve => {
-      mongoose.connection.close()
-        .then(() => {
+  async stop() {
 
-          if (this.server) {
-            this.server.close(() => {
-              this.logger.info('Server stopped');
-              return resolve();
-            });
-          }
-          return resolve();
+    if(mongoose.connection)
+    {
+      await mongoose.connection.close();
+    }
+    await this.server.close();
+    this.logger.info('Server closed');
 
-        })
-        .catch(err => {
-          this.logger.error('Could not disconnect from MongoDB', err);
-          throw err;
-        });
-    });
+    // return new Promise(resolve => {
+    //   mongoose.connection.close()
+    //     .then(() => {
+    //
+    //       if (this.server) {
+    //         this.server.close(() => {
+    //           this.logger.info('Server stopped');
+    //           return resolve();
+    //         });
+    //       }
+    //       return resolve();
+    //
+    //     })
+    //     .catch(err => {
+    //       this.logger.error('Could not disconnect from MongoDB', err);
+    //       throw err;
+    //     });
+    // });
   }
 }
 
