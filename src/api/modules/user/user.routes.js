@@ -86,7 +86,7 @@ const UserController = require('./user.controller.js');
  *       201:
  *         description: Confirmation that the user has been created successfully.
  */
-router.post('/v1/user/register', UserController.register);
+router.post('/v1/user/register/local', UserController.registerLocal);
 
 // Todo: Login date (in case of successful login should be saved).
 // Todo: Login attempt (in case of failed login should be saved).

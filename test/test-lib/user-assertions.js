@@ -1,5 +1,8 @@
 
 module.exports = {
+  hasNoToken: result => {
+    expect(result.body).to.not.have.a.property('token');
+  },
   hasToken: result => {
     expect(result.body).to.have.property('token');
     expect(result.body.token).to.exist;
