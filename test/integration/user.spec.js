@@ -411,7 +411,6 @@ describe('auth-service => user', () => {
 
       let user = new UserModel(doc);
       let newUser = await user.save();
-      console.log('newUser', newUser);
 
       await server
         .delete(`/v1/user/${newUser._id}`)
@@ -422,14 +421,39 @@ describe('auth-service => user', () => {
           expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
           expect(updateResult.body).to.have.property('ok').to.be.equal(1);
         });
-      //
-      // await server
-      //   .get(`/v1/user/${newUser._id}`)
-      //   .then(updatedUser => {
-      //     expect(updatedUser).to.exist;
-      //     expect(updatedUser.body).to.exist;
-      //     expect(updatedUser.body).to.have.property('is_deleted').to.be.true;
-      //   });
+    });
+
+    it('unmarks a user as deleted', async () => {
+
+      const doc = {
+        is_deleted: false,
+        is_active: false,
+        local: {
+          username: 'foo-user',
+          password: 'passw0rd',
+          email: 'foo@bar.com'
+        }
+      };
+
+      let user = new UserModel(doc);
+      let newUser = await user.save();
+
+      await server
+        .post(`/v1/user/${newUser._id}/undelete`)
+        .expect(HttpStatus.OK)
+        .then(updateResult => {
+          console.log(updateResult);
+          expect(updateResult.body).to.have.property('n').to.be.equal(1);
+          expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
+          expect(updateResult.body).to.have.property('ok').to.be.equal(1);
+        });
+
+      await server
+        .get(`/v1/user/${newUser._id}`)
+        .expect(HttpStatus.OK)
+        .then(result => {
+          expect(result.body).to.have.a.property('is_deleted').to.be.false;
+        });
     });
 
   });
