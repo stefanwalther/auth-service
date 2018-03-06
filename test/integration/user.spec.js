@@ -7,6 +7,12 @@ const UserModel = mongoose.models.User || require('./../../src/api/modules/user/
 const defaultConfig = require('./../test-lib/default-config');
 const userAssertions = require('./../test-lib/user-assertions');
 
+const ENDPOINTS = {
+  REGISTER_LOCAL: '/v1/user/register/local',
+  USER_LOGIN: '/v1/user/login',
+  VERIFY_TOKEN: '/v1/user/verify-token'
+};
+
 describe('auth-service => user', () => {
 
   let server;
@@ -24,22 +30,23 @@ describe('auth-service => user', () => {
   });
 
   describe('UserModel', () => {
+
     it('registering a new user throws an error if user already exists', async () => {
 
       let user1 = new UserModel({
-        username: 'test',
-        password: 'test',
         local: {
-          email: 'test@bar.com'
+          password: 'test',
+          email: 'test@bar.com',
+          username: 'test'
         }
       });
       await user1.save();
 
       let user2 = new UserModel({
-        username: 'test',
-        password: 'test',
         local: {
-          email: 'test@foobar.com'
+          password: 'test',
+          email: 'test@foobar.com',
+          username: 'test'
         }
       });
 
@@ -52,39 +59,42 @@ describe('auth-service => user', () => {
     });
 
     it('is fine registering multiple users (with different usernames)', async () => {
+
       let user1 = new UserModel({
-        username: 'test',
-        password: 'test',
         local: {
-          email: 'test@bar.com'
+          username: 'foo',
+          email: 'foo@bar.com',
+          password: 'test'
         }
       });
-      await user1.save();
+      let u = await user1.save();
+      console.log('user1', u);
 
       let user2 = new UserModel({
-        username: 'test2',
-        password: 'test',
         local: {
-          email: 'test@foobar.com'
+          username: 'foo2',
+          email: 'foo2@bar.com',
+          password: 'test2'
         }
       });
 
       try {
-        await user2.save();
+        let u2 = await user2.save();
+        console.log(u2);
       } catch (e) {
+        console.error(e);
         expect(e).to.not.exist;
       }
     });
   });
 
-  describe('POST /user/register', () => {
+  describe('POST /user/register/local', () => {
 
     it('throws validation errors for required fields', async () => {
 
       const doc = {};
-
       await server
-        .post('/v1/user/register')
+        .post(ENDPOINTS.REGISTER_LOCAL)
         .send(doc)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(result => {
@@ -97,18 +107,22 @@ describe('auth-service => user', () => {
 
     it('creates a new user', () => {
       const doc = {
-        username: 'foofoo',
-        password: 'bar',
         local: {
+          password: 'bar',
+          username: 'foofoo',
           email: 'foo@bar.com'
         }
       };
 
       return server
-        .post('/v1/user/register')
+        .post(ENDPOINTS.REGISTER_LOCAL)
         .send(doc)
         .expect(HttpStatus.CREATED)
-        .expect(userAssertions.hasToken);
+        .expect(userAssertions.hasNoToken);
+    });
+
+    xit('does not return any sensitive information', () => {
+
     });
 
   });
@@ -119,7 +133,7 @@ describe('auth-service => user', () => {
 
       const doc = {};
       return server
-        .post('/v1/user/login')
+        .post(ENDPOINTS.USER_LOGIN)
         .send(doc)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(result => {
@@ -135,7 +149,7 @@ describe('auth-service => user', () => {
         password: 'passw0rd'
       };
       return server
-        .post('/v1/user/login')
+        .post(ENDPOINTS.USER_LOGIN)
         .send(doc)
         .expect(HttpStatus.UNAUTHORIZED);
     });
@@ -143,9 +157,9 @@ describe('auth-service => user', () => {
     it('returns 401/Unauthorized if login fails (user found, password does not match)', () => {
 
       const user = {
-        username: 'foo-user',
-        password: 'passw0rd',
         local: {
+          username: 'foo-user',
+          password: 'passw0rd',
           email: 'foo@bar.com'
         }
       };
@@ -156,225 +170,256 @@ describe('auth-service => user', () => {
       };
 
       const newUser = new UserModel(user);
-      newUser.setPassword(user.password);
+      newUser.setPassword(user.local.password);
 
       return newUser.save()
         .then(() => {
           return server
-            .post('/v1/user/login')
+            .post(ENDPOINTS.USER_LOGIN)
             .send(login)
             .expect(HttpStatus.UNAUTHORIZED);
         });
 
     });
 
-    it('returns a token if successfully logged in', () => {
+    it('does return a token if successfully logged in', () => {
 
-      const user = {
-        username: 'foo-user',
-        password: 'passw0rd',
+      const doc = {
         is_active: true,
         local: {
-          email: 'foo@bar.com'
+          username: 'foo-user',
+          email: 'foo@bar.com',
+          password: 'passw0rd'
         }
       };
 
-      const newUser = new UserModel(user);
-      newUser.setPassword(user.password);
+      const newUser = new UserModel(doc);
+      newUser.setPassword(doc.local.password);
 
       return newUser.save()
         .then(() => {
           return server
-            .post('/v1/user/login')
-            .send(user)
+            .post(ENDPOINTS.USER_LOGIN)
+            .send({
+              username: doc.local.username,
+              password: doc.local.password
+            })
+            // .expect(res => {
+            //   console.log(res);
+            // })
             .expect(HttpStatus.OK)
             .expect(userAssertions.hasToken);
         });
     });
 
-  });
+    it('will not allow deactivated users to login', async () => {
 
-  it('POST /verify-token => returns an error if not token is passed', () => {
-    return server
-      .post('/v1/user/verify-token')
-      .expect(HttpStatus.INTERNAL_SERVER_ERROR)
-      .then(result => {
-        expect(result.body).to.have.a.property('ValidationErrors');
-        expect(result.body.ValidationErrors).to.contain('Property <token> is missing. Put the <token> in either your body, the query-string or the header.');
-      });
-  });
+      const doc = {
+        is_deleted: false,
+        is_active: false,
+        local: {
+          username: 'foo-user',
+          password: 'passw0rd',
+          email: 'foo@bar.com'
+        }
+      };
 
-  it('POST /verify-token => does not throw a validation error if token is passed in body', () => {
-    const doc = {
-      token: 'foo'
-    };
-    return server
-      .post('/v1/user/verify-token')
-      .send(doc)
-      .then(result => {
-        expect(result.body).to.not.have.a.property('ValidationErrors');
-      });
-  });
+      let user = new UserModel(doc);
+      let newUser = await user.save();
 
-  it('POST /verify-token => does not throw a validation error if token is passed in querystring', () => {
-    return server
-      .post('/v1/user/verify-token?token=foo')
-      .then(result => {
-        expect(result.body).to.not.have.a.property('ValidationErrors');
-      });
-  });
+      await server
+        .post('/v1/user/login')
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect(userAssertions.userNotFound);
+    });
 
-  it('POST /v1/user/verify-token => returns an error if the token is invalid', () => {
+    it('will not allow deleted users to login', async () => {
 
-    const doc = {
-      token: 'foo'
-    };
+      const doc = {
+        is_deleted: true,
+        local: {
+          password: 'passw0rd',
+          username: 'foo-user',
+          email: 'foo@bar.com'
+        }
+      };
 
-    return server
-      .post('/v1/user/verify-token')
-      .send(doc)
-      .expect(HttpStatus.INTERNAL_SERVER_ERROR)
-      .expect(userAssertions.invalidToken);
-  });
+      let user = new UserModel(doc);
+      await user.save();
 
-  it('POST /v1/user/verify-token => returns OK if the token is valid', () => {
+      await server
+        .post('/v1/user/login')
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect(userAssertions.userNotFound);
 
-    const user = {
-      username: 'foo-user',
-      password: 'passw0rd',
-      local: {
-        email: 'foo@bar.com'
-      }
-    };
-
-    return server
-      .post('/v1/user/register')
-      .send(user)
-      .expect(HttpStatus.CREATED)
-      .expect(userAssertions.hasToken)
-      .then(result => {
-        return server
-          .post(`/v1/user/verify-token?token=${result.body.token}`)
-          .expect(HttpStatus.OK)
-          .expect(userAssertions.validToken);
-      });
-  });
-
-  /* eslint-disable max-nested-callbacks */
-  it('DELETE /v1/user:id => marks a user as deleted', () => {
-    const user = {
-      username: 'foo-user',
-      password: 'passw0rd',
-      local: {
-        email: 'foo@bar.com'
-      }
-    };
-
-    return server
-      .post('/v1/user/register')
-      .send(user)
-      .expect(HttpStatus.CREATED)
-      .expect(userAssertions.hasToken)
-      .then(result => {
-        expect(result.body).to.have.a.property('_id').to.not.be.empty;
-        expect(result.body).to.have.a.property('is_deleted').to.be.false;
-        return server
-          .delete(`/v1/user/${result.body._id}`)
-          .expect(HttpStatus.OK)
-          .then(updateResult => {
-            expect(updateResult.body).to.have.property('n').to.be.equal(1);
-            expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
-            expect(updateResult.body).to.have.property('ok').to.be.equal(1);
-
-            return server
-              .get(`/v1/user/${result.body._id}`)
-              .then(updatedUser => {
-                expect(updatedUser).to.exist;
-                expect(updatedUser.body).to.exist;
-                expect(updatedUser.body).to.have.property('is_deleted').to.be.true;
-              });
-
-          });
-      });
-  });
-  // eslint-enable max-nested-callbacks
-
-  it('GET /v1/user/login => will not allow deactivated users to login', () => {
-    const user = {
-      username: 'foo-user',
-      password: 'passw0rd',
-      is_deleted: false,
-      is_active: false,
-      local: {
-        email: 'foo@bar.com'
-      }
-    };
-
-    return server
-      .post('/v1/user/register')
-      .send(user)
-      .expect(HttpStatus.CREATED)
-      .then(() => {
-        return server
-          .post('/v1/user/login')
-          .send(user)
-          .expect(HttpStatus.UNAUTHORIZED)
-          .expect(userAssertions.userNotFound);
-      });
+    });
 
   });
 
-  it('GET /v1/user/login => will not allow deleted users to login', () => {
+  describe('POST /verify-token', () => {
 
-    const user = {
-      username: 'foo-user',
-      password: 'passw0rd',
-      is_deleted: true,
-      local: {
-        email: 'foo@bar.com'
-      }
-    };
+    it('returns an error if not token is passed', () => {
+      return server
+        .post(ENDPOINTS.VERIFY_TOKEN)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .then(result => {
+          expect(result.body).to.have.a.property('ValidationErrors');
+          expect(result.body.ValidationErrors).to.contain('Property <token> is missing. Put the <token> in either your body, the query-string or the header.');
+        });
+    });
 
-    return server
-      .post('/v1/user/register')
-      .send(user)
-      .expect(HttpStatus.CREATED)
-      .then(() => {
-        return server
-          .post('/v1/user/login')
-          .send(user)
-          .expect(HttpStatus.UNAUTHORIZED)
-          .expect(userAssertions.userNotFound);
-      });
+    it('does not throw a validation error if token is passed in body', () => {
+      const doc = {
+        token: 'foo'
+      };
+      return server
+        .post(ENDPOINTS.VERIFY_TOKEN)
+        .send(doc)
+        .then(result => {
+          expect(result.body).to.not.have.a.property('ValidationErrors');
+        });
+    });
+
+    it('does not throw a validation error if token is passed in querystring', () => {
+      return server
+        .post(ENDPOINTS.VERIFY_TOKEN + '?token=foo')
+        .then(result => {
+          expect(result.body).to.not.have.a.property('ValidationErrors');
+        });
+    });
+
+    it('returns an error if the token is invalid', () => {
+
+      const doc = {
+        token: 'foo'
+      };
+
+      return server
+        .post(ENDPOINTS.VERIFY_TOKEN)
+        .send(doc)
+        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .expect(userAssertions.invalidToken);
+    });
+
+    it('returns OK if the token is valid', async () => {
+
+      const doc = {
+        is_deleted: false,
+        is_verified: true,
+        local: {
+          password: 'passw0rd',
+          username: 'foo-user',
+          email: 'foo@bar.com'
+        }
+      };
+
+      const user = new UserModel(doc);
+      user.setPassword(doc.local.password);
+
+      let newUser = await user.save();
+      let token = newUser.generateJwt();
+
+      await server
+        .post(`${ENDPOINTS.VERIFY_TOKEN}?token=${token}`)
+        .expect(HttpStatus.OK)
+        .expect(userAssertions.validToken);
+    });
+
+    it('returns OK if the token is NOT valid', async () => {
+
+      const doc = {
+        is_deleted: false,
+        is_verified: true,
+        local: {
+          password: 'passw0rd',
+          username: 'foo-user',
+          email: 'foo@bar.com'
+        }
+      };
+
+      const user = new UserModel(doc);
+      user.setPassword(doc.local.password);
+
+      await user.save();
+      let token = 'abcde';
+
+      await server
+        .post(`${ENDPOINTS.VERIFY_TOKEN}?token=${token}`)
+        // Todo: This currently returns INTERNAL_SERVER_ERROR, but what should it return ...?
+        // .expect(HttpStatus.OK)
+        .expect(userAssertions.invalidToken);
+    });
+
+    it('will not verify if a user is marked as deleted', async () => {
+
+      const doc = {
+        username: 'foo-user',
+        password: 'passw0rd',
+        is_deleted: true,
+        local: {
+          email: 'foo@bar.com'
+        }
+      };
+
+      let user = new UserModel(doc);
+      await user.save();
+      let token = user.generateJwt();
+
+      await server
+        .post(`${ENDPOINTS.VERIFY_TOKEN}?token=${token}`)
+        .expect(HttpStatus.OK)
+        .expect(userAssertions.validToken);
+
+    });
+
   });
 
-  xit('GET /v1/user/verify-token => will not verify if a user is marked as deleted', () => {
+  describe('DELETE /v1/user:id', () => {
 
-    const user = {
-      username: 'foo-user',
-      password: 'passw0rd',
-      is_deleted: true,
-      local: {
-        email: 'foo@bar.com'
-      }
-    };
+    it('marks a user as deleted', async () => {
 
-    return server
-      .post('/v1/user/register')
-      .send(user)
-      .expect(HttpStatus.CREATED)
-      .expect(userAssertions.hasToken)
-      .then(result => {
-        return server
-          .post(`/v1/user/verify-token?token=${result.body.token}`)
-          .expect(HttpStatus.OK)
-          .expect(userAssertions.validToken);
-      });
+      const doc = {
+        is_deleted: false,
+        is_active: false,
+        local: {
+          username: 'foo-user',
+          password: 'passw0rd',
+          email: 'foo@bar.com'
+        }
+      };
+
+      let user = new UserModel(doc);
+      let newUser = await user.save();
+      console.log('newUser', newUser);
+
+      await server
+        .delete(`/v1/user/${newUser._id}`)
+        .expect(HttpStatus.OK)
+        .then(updateResult => {
+          console.log(updateResult);
+          expect(updateResult.body).to.have.property('n').to.be.equal(1);
+          expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
+          expect(updateResult.body).to.have.property('ok').to.be.equal(1);
+        });
+      //
+      // await server
+      //   .get(`/v1/user/${newUser._id}`)
+      //   .then(updatedUser => {
+      //     expect(updatedUser).to.exist;
+      //     expect(updatedUser.body).to.exist;
+      //     expect(updatedUser.body).to.have.property('is_deleted').to.be.true;
+      //   });
+    });
 
   });
 
-  // Todo: We don't have the concept at all right now ..
-  xit('GET /v1/users => should only be allowed to be executed by admins', () => {
-
-  });
 });
+

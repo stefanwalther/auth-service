@@ -1,5 +1,6 @@
 const ExpressResult = require('express-result');
 const passport = require('passport');
+const _ = require('lodash');
 
 const UserModel = require('./user.model').Model;
 const UserBL = require('./user.bl');
@@ -19,20 +20,21 @@ class UserController {
   }
 
   // Todo: Validation could be generalized and probably broken out.
+  // Todo: Validation needs unit testing
   // Todo: Validation should go to the mongoose model
   // Todo: Refactor, don't like how the returned object is created, that's too error-prone if new props are added.
-  static register(req, res) {
+  static registerLocal(req, res) {
 
-    logger.info('Registering', req.body);
+    logger.info('Registering using local strategy', req.body);
 
     const validationErrors = new ExpressResult.ValidationErrors();
-    if (!req.body.username) {
+    if (!_.has(req.body, 'local.username')) {
       validationErrors.add('Property <username> missing.');
     }
-    if (!req.body.password) {
+    if (!_.has(req.body, 'local.password')) {
       validationErrors.add('Property <password> missing.');
     }
-    if (!req.body.local || !req.body.local.email) {
+    if (!_.has(req.body, 'local.email')) {
       validationErrors.add('Property <email> missing.');
     }
 
@@ -41,23 +43,17 @@ class UserController {
     }
 
     const user = new UserModel(req.body);
-    user.setPassword(req.body.password);
+    user.setPassword(req.body.local.password);
 
-    // Todo: Change this, as this is a security hole: The controller should never allow to set is_deleted, is_active, etc.
-    // (Use the model in the tests instead)
     return user.save()
       .then(user => {
         const result = {
           _id: user._id,
           username: user.username,
-          is_deleted: user.is_deleted || false,
           is_active: user.is_active || false,
           is_verified: user.is_verified || false,
-          email: user.local.email
+          email: user.email
         };
-        if (!user.is_deleted && user.is_active) {
-          result.token = user.generateJwt();
-        }
         ExpressResult.created(res, result);
       })
       .catch(err => {
@@ -83,6 +79,7 @@ class UserController {
       return ExpressResult.error(res, validationErrors);
     }
 
+    console.log('authenticate => local');
     passport.authenticate('local', (err, user, info) => {
 
       // If Passport throws/catches an error
