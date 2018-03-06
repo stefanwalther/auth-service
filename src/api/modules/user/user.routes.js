@@ -11,15 +11,18 @@ const UserController = require('./user.controller.js');
  *       - password
  *       - email
  *     properties:
- *       username:
- *         type: String
- *         example: "foo-user"
- *       email:
- *         type: String
- *         example: "foo@bar.com"
- *       password:
- *         type: String
- *         example: "passw0rd"
+ *       local:
+ *         type: Object
+ *         username:
+ *           type: String
+ *           example: "foo-user"
+ *         email:
+ *           type: String
+ *           example: "foo@bar.com"
+ *         password:
+ *           type: String
+ *           example: "passw0rd"
+ *
  *
  *
  *   # Todo: See registered claims: https://scotch.io/tutorials/the-anatomy-of-a-json-web-token

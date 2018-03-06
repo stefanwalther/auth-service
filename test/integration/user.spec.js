@@ -121,8 +121,21 @@ describe('auth-service => user', () => {
         .expect(userAssertions.hasNoToken);
     });
 
-    xit('does not return any sensitive information', () => {
+    it('does not return any sensitive information', () => {
+      const doc = {
+        local: {
+          password: 'bar',
+          username: 'foofoo',
+          email: 'foo@bar.com'
+        }
+      };
 
+      return server
+        .post(ENDPOINTS.REGISTER_LOCAL)
+        .send(doc)
+        .expect(HttpStatus.CREATED)
+        .expect(userAssertions.hasNoToken)
+        .expect(userAssertions.hasNoPassword);
     });
 
   });

@@ -1,7 +1,7 @@
 
 module.exports = {
   hasNoToken: result => {
-    expect(result.body).to.not.have.a.property('token');
+    expect(result.body).to.not.have.a.deep.property('token');
   },
   hasToken: result => {
     expect(result.body).to.have.property('token');
@@ -18,5 +18,8 @@ module.exports = {
   userNotFound: result => {
     expect(result.body).to.exist;
     expect(result.body).to.contain.a.property('message', 'User not found');
+  },
+  hasNoPassword: result => {
+    expect(result.body).to.not.contain.a.deep.property('password');
   }
 };
