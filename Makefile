@@ -26,19 +26,19 @@ build-test:
 	docker build --force-rm -t sammlerio/auth-service-test -f Dockerfile.test .
 .PHONY: build-test
 
-d-build:						## Build the docker image
+build:							## Build the docker image
 	docker build --force-rm -t sammlerio/auth-service .
-.PHONY: d-build
+.PHONY: build
 
-d-run:							## Run the docker image
+run:								## Run the docker image
 	docker run -it sammlerio/auth-service
-.PHONY: d-run
+.PHONY: run
 
-up:							## Get the stack up and running (docker-compose)
+up:									## Get the stack up and running (docker-compose)
 	docker-compose up
 .PHONY: up
 
-down:
+down:								## Stop the stack (docker-compose down)
 	docker-compose down
 .PHONY: down
 
@@ -90,7 +90,7 @@ test-unit:
 .PHONY: test-ci
 
 lint:
-	$(MOD_BIN)/eslint
+	npm run lint
 .PHONY: lint
 
 
