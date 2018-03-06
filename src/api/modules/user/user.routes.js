@@ -11,15 +11,18 @@ const UserController = require('./user.controller.js');
  *       - password
  *       - email
  *     properties:
- *       username:
- *         type: String
- *         example: "foo-user"
- *       email:
- *         type: String
- *         example: "foo@bar.com"
- *       password:
- *         type: String
- *         example: "passw0rd"
+ *       local:
+ *         type: Object
+ *         username:
+ *           type: String
+ *           example: "foo-user"
+ *         email:
+ *           type: String
+ *           example: "foo@bar.com"
+ *         password:
+ *           type: String
+ *           example: "passw0rd"
+ *
  *
  *
  *   # Todo: See registered claims: https://scotch.io/tutorials/the-anatomy-of-a-json-web-token
@@ -188,6 +191,6 @@ router.patch('/v1/user/:id/delete', UserController.delete);
 
 // Todo: Test
 // Todo: Document
-router.patch('/v1/user/:id/undelete', UserController.unDelete);
+router.post('/v1/user/:id/undelete', UserController.unDelete);
 
 module.exports = router;

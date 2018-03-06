@@ -98,6 +98,46 @@ schema.statics.verifyToken = token => {
   return jwt.verify(token, jwtConfig.JWT_SECRET);
 };
 
+schema.statics.markAsDeleted = id => {
+
+  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+    .update(
+      {_id: id},
+      {$set: {is_deleted: true}}
+    )
+    .exec();
+};
+
+schema.statics.unMarkAsDeleted = id => {
+  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+    .update(
+      {_id: id},
+      {$set: {is_deleted: false}}
+    )
+    .exec();
+};
+
+schema.statics.getById = id => {
+  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+    .findById(id)
+    .exec();
+};
+
+// Todo: needs testing
+schema.statics.getDeleted = () => {
+
+  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+    .find({is_deleted: true})
+    .exec();
+};
+
+// Todo: needs testing
+schema.statics.purge = () => {
+  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+    .remove({is_deleted: true})
+    .exec();
+};
+
 module.exports = {
   Schema: schema,
   Model: mongoose.model(mongooseConfig.COLLECTION_USER, schema)

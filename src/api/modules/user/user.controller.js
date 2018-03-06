@@ -3,15 +3,12 @@ const passport = require('passport');
 const _ = require('lodash');
 
 const UserModel = require('./user.model').Model;
-const UserBL = require('./user.bl');
-// const UserModelAudit = require('./../user-audit/user-audit.model').Model;
-
 const logger = require('winster').instance();
 
 class UserController {
 
   static getById(req, res) {
-    return UserBL
+    return UserModel
       .getById(req.params.id)
       .then(result => {
         ExpressResult.ok(res, result);
@@ -125,7 +122,7 @@ class UserController {
 
   static delete(req, res) {
 
-    return UserBL
+    return UserModel
       .markAsDeleted(req.params.id)
       .then(result => {
         return ExpressResult.ok(res, result);
@@ -137,7 +134,7 @@ class UserController {
 
   static unDelete(req, res) {
 
-    return UserBL
+    return UserModel
       .unMarkAsDeleted(req.params.id)
       .then(result => {
         return ExpressResult.ok(res, result);
