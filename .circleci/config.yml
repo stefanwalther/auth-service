@@ -72,7 +72,5 @@ jobs:
             # Only branch "master" is being pushed to Docker Hub
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker push $DOCKER_REPO
-            else
-              docker tag $DOCKER_REPO:$VER $DOCKER_REPO:latest
             fi
 

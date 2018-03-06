@@ -191,6 +191,6 @@ router.patch('/v1/user/:id/delete', UserController.delete);
 
 // Todo: Test
 // Todo: Document
-router.patch('/v1/user/:id/undelete', UserController.unDelete);
+router.post('/v1/user/:id/undelete', UserController.unDelete);
 
 module.exports = router;
