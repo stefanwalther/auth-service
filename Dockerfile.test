@@ -1,6 +1,7 @@
 FROM sammlerio/auth-service:latest
 
-RUN npm install --silent
+RUN npm config npm config set loglevel warn
+RUN npm install
 
 COPY /test ./test/
 COPY /.eslintrc.json ./.eslintrc.json
