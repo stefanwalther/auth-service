@@ -9,7 +9,7 @@ WORKDIR $HOME_DIR
 
 COPY package.json ./
 
-RUN npm config npm config set loglevel warn
+RUN npm config set loglevel warn
 RUN npm install --only=production --no-package-lock
 
 COPY /src ./src/
