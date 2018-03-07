@@ -3,6 +3,8 @@ MOD_BIN = ./node_modules/.bin
 MOCHA = $(MOD_BIN)/_mocha
 NYC = $(MOD_BIN)/nyc
 
+.PHONY: help gen-readme build run build-test build run up down up-test run-test up-unit-tests run-unit-tests down-test rs up-deps rs-deps down-deps dc-up-test setup test-ci lint
+
 help:								## Show this help.
 	@echo ''
 	@echo 'Available commands:'
