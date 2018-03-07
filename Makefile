@@ -3,8 +3,6 @@ MOD_BIN = ./node_modules/.bin
 MOCHA = $(MOD_BIN)/_mocha
 NYC = $(MOD_BIN)/nyc
 
-.PHONY: help gen-readme build run build-test build run up down up-test run-test up-unit-tests run-unit-tests down-test rs up-deps rs-deps down-deps dc-up-test setup test-ci lint
-
 help:								## Show this help.
 	@echo ''
 	@echo 'Available commands:'
@@ -20,21 +18,13 @@ build:							## Build the docker image (production)
 	docker build --force-rm -t sammlerio/auth-service -f Dockerfile.prod .
 .PHONY: build
 
-run:
+run:								## Run the docker image
 	docker run -it sammlerio/auth-service
 .PHONY: run
 
 build-test:
 	docker build --force-rm -t sammlerio/auth-service-test -f Dockerfile.test .
 .PHONY: build-test
-
-build:							## Build the docker image
-	docker build --force-rm -t sammlerio/auth-service .
-.PHONY: build
-
-run:								## Run the docker image
-	docker run -it sammlerio/auth-service
-.PHONY: run
 
 up:									## Get the stack up and running (docker-compose)
 	docker-compose up
