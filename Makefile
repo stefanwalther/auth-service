@@ -38,15 +38,15 @@ up-test:
 	docker-compose --f=docker-compose.test.yml up -d
 .PHONY: up-test
 
-run-test:
-	docker-compose --f=docker-compose.test.yml run auth-service-test
+run-test:					## Run tests
+	docker-compose --f=docker-compose.test.yml run auth-service-test npm run test
 .PHONY: run-test
 
 up-unit-tests:
 	docker-compose --f=docker-compose.unit-tests.yml up -d
 .PHONY: up-unit-tests
 
-run-unit-tests:
+run-unit-tests:			## Run unit tests
 	docker-compose --f=docker-compose.unit-tests.yml run auth-service-test npm run test:unit
 .PHONY: run-unit-tests
 
