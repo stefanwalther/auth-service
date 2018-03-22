@@ -81,8 +81,12 @@ test-unit:
 	#$(CODECLIMATE) < coverage/lcov.info
 .PHONY: test-ci
 
-lint:
+lint:								## lint everything
 	npm run lint
 .PHONY: lint
+
+lint-fix: 					## lint & fix everything
+	npm run lint:fix
+.PHONY: lint-fix
 
 

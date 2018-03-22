@@ -1,7 +1,7 @@
 const AppServer = require('./../../src/api/app-server');
 
 describe('app-server', () => {
-  it('does not throw an error if no config is provided', () => {
+  xit('does not throw an error if no config is provided', () => {
 
     let fn = function () {
       let a = new AppServer();
@@ -9,7 +9,7 @@ describe('app-server', () => {
     expect(fn).to.not.throw();
 
   });
-  it('throws an error if a bad port is passed', () => {
+  xit('throws an error if a bad port is passed', () => {
     let fn = function () {
       let a = new AppServer({PORT: 'abc'});
     };
