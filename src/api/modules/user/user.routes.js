@@ -6,23 +6,27 @@ const UserController = require('./user.controller.js');
  * @swagger
  * definitions:
  *   User:
+ *     description: The user definition.
  *     required:
  *       - username
  *       - password
  *       - email
  *     properties:
  *       local:
- *         type: Object
- *         username:
- *           type: String
- *           example: "foo-user"
- *         email:
- *           type: String
- *           example: "foo@bar.com"
- *         password:
- *           type: String
- *           example: "passw0rd"
+ *         $ref: "#/definitions/UserLocal"
  *
+ *   UserLocal:
+ *     description: Local authentication strategy
+ *     properties:
+ *       username:
+ *         type: string
+ *         example: "foo-user"
+ *       email:
+ *         type: string
+ *         example: "foo@bar.com"
+ *       password:
+ *         type: string
+ *         example: "passw0rd"
  *
  *
  *   # Todo: See registered claims: https://scotch.io/tutorials/the-anatomy-of-a-json-web-token
@@ -33,13 +37,13 @@ const UserController = require('./user.controller.js');
  *        type: ObjectId
  *        example: ""
  *      username:
- *        type: String
+ *        type: string
  *        example: "foo-user"
  *      email:
- *        type: String
+ *        type: string
  *        example: "foo@bar.com"
  *      token:
- *        type: String
+ *        type: string
  *        example: "foo-bar-token"
  *      status: # // Todo: implementation missing
  *        type: String
@@ -72,9 +76,9 @@ const UserController = require('./user.controller.js');
 // Todo: Registration date should definitely be saved explicitly
 /**
  * @swagger
- * /v1/user/register:
+ * /v1/user/register/local:
  *   post:
- *     description: Register a new user.
+ *     description: Register a new user (using the local strategy).
  *     tags:
  *       - user
  *     produces:
