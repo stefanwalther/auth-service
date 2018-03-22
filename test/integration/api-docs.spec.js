@@ -57,7 +57,7 @@ describe('auth-service => api-docs', () => {
         expect(result.body.paths).to.have.property('/health-check');
         expect(result.body.paths).to.have.property('/v1/user/login');
         expect(result.body.paths).to.have.property('/v1/user/logout');
-        expect(result.body.paths).to.have.property('/v1/user/register');
+        expect(result.body.paths).to.have.property('/v1/user/register/local');
         expect(result.body.paths).to.have.property('/v1/user/verify-token');
       });
   });
