@@ -7,10 +7,11 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 const mongoUri = new MongooseConnectionConfig(require('./config/mongoose-config')).getMongoUri();
+const defaultConfig = require('./config/server-config');
 
 class AppServer {
   constructor(config) {
-    this.config = config || {}; // Todo: add more tests, we need a better pattern; something is not stable here.
+    this.config = _.extend(defaultConfig, config || {});
     this._validateConfig();
 
     this.server = null;
@@ -31,9 +32,9 @@ class AppServer {
 
   _validateConfig() {
 
-    // if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
-    //   throw new Error(`PORT is not a number: ${this.config.PORT}`);
-    // }
+    if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
+      throw new Error(`PORT is undefined or not a number: ${this.config.PORT}`);
+    }
 
   }
 

@@ -58,6 +58,9 @@ jobs:
       - run:
           name: Integration tests
           command: docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
+      - run:
+          name: CodeCov
+          command: bash <(curl -s https://codecov.io/bash)
       - add_ssh_keys
       - deploy:
           name: Push image to Docker Hub
