@@ -1,4 +1,5 @@
-### Run tests
+<details>
+<summary>### Run tests</summary>
 
 Running and reviewing unit tests is a great way to get familiarized with a library and its API. You can install dependencies and run tests with the following command:
 
@@ -36,5 +37,5 @@ $ npm run test:coverage
 ```
 
 ---
-
+</details>
 
