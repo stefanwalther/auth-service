@@ -4,6 +4,9 @@ services:
   auth-service-test:
     image: sammlerio/auth-service-test
     command: npm run test:unit
+    environment:
+      - NODE_ENV=test
+      - WINSTER_SUPRESS_LOGGING='true'
     volumes:
       - ./coverage:/opt/auth-service/coverage
       - ./.nyc_output:/opt/auth-service/.nyc_output
