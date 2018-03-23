@@ -4,3 +4,6 @@ services:
   auth-service-test:
     image: sammlerio/auth-service-test
     command: npm run test:unit
+    volumes:
+      - ./coverage:/opt/auth-service/coverage
+      - ./.nyc_output:/opt/auth-service/.nyc_output
