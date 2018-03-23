@@ -26,15 +26,15 @@ build-test:								## Build the docker image (test image)
 	docker build --force-rm -t sammlerio/auth-service-test -f Dockerfile.test .
 .PHONY: build-test
 
-up:												## Get the stack up and running (docker-compose)
+up:												## Get the stack up and running - dev environment (docker-compose up)
 	docker-compose --f=docker-compose.dev.yml up
 .PHONY: up
 
-down:											## Stop the stack (docker-compose down)
-	docker-compose down
+down:											## Stop the stack - dev environment (docker-compose down)
+	docker-compose --f=docker-compose.dev.yml down
 .PHONY: down
 
-up-test:
+up-test:									## Bring up the test environment (docker-compose up => docker-compose.test.yml)
 	docker-compose --f=docker-compose.test.yml up -d
 .PHONY: up-test
 
@@ -42,7 +42,7 @@ run-test:									## Run tests
 	docker-compose --f=docker-compose.test.yml run auth-service-test npm run test
 .PHONY: run-test
 
-up-unit-tests:
+up-unit-tests:						## Bring up the test environment (docker-compose up => docker-
 	docker-compose --f=docker-compose.unit-tests.yml up -d
 .PHONY: up-unit-tests
 
