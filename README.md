@@ -94,7 +94,8 @@ make gen-readme
 
 ### Tests
 <details>
-<summary>### Run tests</summary>
+<summary>Run tests</summary>
+### Run tests
 
 Running and reviewing unit tests is a great way to get familiarized with a library and its API. You can install dependencies and run tests with the following command:
 
@@ -132,6 +133,7 @@ $ npm run test:coverage
 ```
 
 ---
+
 </details>
 
 ### Author
