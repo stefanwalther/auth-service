@@ -1,6 +1,7 @@
 version: '2'
 
 services:
+
   mongo:
     image: sammlerio/mongo
     ports:
@@ -15,6 +16,8 @@ services:
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
+    volumes:
+      - ./coverage:/coverage
     command: npm run start:watch
 
   rabbitmq:

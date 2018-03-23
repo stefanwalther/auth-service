@@ -57,10 +57,10 @@ jobs:
           command: docker-compose --f=docker-compose.unit-tests.yml run auth-service-test npm run lint
       - run:
           name: Unit tests
-          command: docker-compose --f=docker-compose.unit-tests.yml run auth-service-test npm run test:unit
+          command: make run-unit-tests
       - run:
           name: Integration tests
-          command: docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
+          command: make run-integration-tests
       - run:
           name: CodeCov
           command: bash <(curl -s https://codecov.io/bash)

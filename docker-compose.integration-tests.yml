@@ -1,10 +1,12 @@
 version: '2'
 
 services:
+
   mongo:
     image: sammlerio/mongo
     ports:
       - 27017:27017
+
   auth-service-test:
     image: sammlerio/auth-service-test
     environment:

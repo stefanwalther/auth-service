@@ -1,10 +1,12 @@
 version: '2'
 
 services:
+
   mongo:
     image: sammlerio/mongo:3.7
     ports:
       - 27017:27017
+
   auth-service-test:
     image: sammlerio/auth-service-test
     environment:
@@ -15,3 +17,5 @@ services:
       - MONGODB_PORT=27017
     links:
       - mongo
+    volumes:
+      - ./coverage:/opt/auth-service/coverage

@@ -5,7 +5,5 @@ services:
     image: sammlerio/auth-service-test
     command: npm run test:unit
     volumes:
-      - ./coverage:/coverage
-      - ./.nyc_output:/.nyc_output
-    tty: true
-    stdin_open: false
+      - ./coverage:/opt/auth-service/coverage
+      - ./.nyc_output:/opt/auth-service/.nyc_output
