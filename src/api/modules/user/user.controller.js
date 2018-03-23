@@ -54,7 +54,7 @@ class UserController {
         ExpressResult.created(res, result);
       })
       .catch(err => {
-        console.error(err);
+        // console.error(err);
         ExpressResult.error(res, err);
       });
   }
@@ -76,7 +76,6 @@ class UserController {
       return ExpressResult.error(res, validationErrors);
     }
 
-    console.log('authenticate => local');
     passport.authenticate('local', (err, user, info) => {
 
       // If Passport throws/catches an error

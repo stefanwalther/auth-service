@@ -68,7 +68,7 @@ describe('auth-service => user', () => {
         }
       });
       let u = await user1.save();
-      console.log('user1', u);
+      // console.log('user1', u);
 
       let user2 = new UserModel({
         local: {
@@ -80,9 +80,9 @@ describe('auth-service => user', () => {
 
       try {
         let u2 = await user2.save();
-        console.log(u2);
+        // console.log(u2);
       } catch (e) {
-        console.error(e);
+        // console.error(e);
         expect(e).to.not.exist;
       }
     });
@@ -416,7 +416,7 @@ describe('auth-service => user', () => {
         .delete(`/v1/user/${newUser._id}`)
         .expect(HttpStatus.OK)
         .then(updateResult => {
-          console.log(updateResult);
+          // console.log(updateResult);
           expect(updateResult.body).to.have.property('n').to.be.equal(1);
           expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
           expect(updateResult.body).to.have.property('ok').to.be.equal(1);
@@ -442,7 +442,7 @@ describe('auth-service => user', () => {
         .post(`/v1/user/${newUser._id}/undelete`)
         .expect(HttpStatus.OK)
         .then(updateResult => {
-          console.log(updateResult);
+          // console.log(updateResult);
           expect(updateResult.body).to.have.property('n').to.be.equal(1);
           expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
           expect(updateResult.body).to.have.property('ok').to.be.equal(1);

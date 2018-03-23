@@ -15,6 +15,13 @@ services:
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
+      - NODE_ENV=test
+      - WINSTER_SUPRESS_LOGGING='true'
+    links:
+      - mongo
     volumes:
-      - ./coverage:/coverage
+      - ./coverage:/opt/auth-service/coverage
+
+  rabbitmq:
+    image: sammlerio/rabbitmq
 

@@ -46,11 +46,15 @@ up-unit-tests:						## Bring up the test environment (docker-compose up => docke
 	docker-compose --f=docker-compose.unit-tests.yml up -d
 .PHONY: up-unit-tests
 
+build-run-unit-tests: build build-test						## Run unit tests, and build related images first
+	docker-compose --f=docker-compose.unit-tests.yml run auth-service-test npm run test:unit
+.PHONY: build-run-unit-tests
+
 run-unit-tests:						## Run unit tests
 	docker-compose --f=docker-compose.unit-tests.yml run auth-service-test npm run test:unit
 .PHONY: run-unit-tests
 
-run-integration-tests: 		## Run integration tests
+run-integration-tests: build build-test 		## Run integration tests
 	docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
 .PHONY: run-integration-tests
 
