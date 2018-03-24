@@ -89,10 +89,8 @@ setup:
 	@echo "Setup ... nothing here right now"
 .PHONY: setup
 
-test-unit:
-	@NODE_ENV=test:unit
-	#$(CODECLIMATE) < coverage/lcov.info
-.PHONY: test-ci
+test: build build-test run-unit-tests run-integration-tests
+.PHONY: test
 
 lint:											## lint everything
 	npm run lint
