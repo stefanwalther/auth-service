@@ -7,7 +7,7 @@ describe('app-server', () => {
     let fn = function () {
       let a = new AppServer({PORT: 'abc'});
     };
-    expect(fn).to.throw(Error, 'PORT is undefined or not a number: abc');
+    expect(fn).to.throw(Error, 'PORT is not a number: abc');
   });
 
 });

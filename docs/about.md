@@ -4,13 +4,17 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 
 ### Basic functionality
 
-- Registration of a user
-- Login (and return a JWT token)
-- Verify JWT token
-- Logout
+- [x] Registration of a user
+- [x] Login (and return a JWT token)
+- [x] Verify JWT token
+- [x] Logout
 - Send password reset email
 - Password reset
 - Return the user's profile
+
+## Authentication Providers
+
+- [x] Local
 
 ## Social Authentication Providers
 
