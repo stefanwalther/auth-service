@@ -1,6 +1,6 @@
 
 
-### Start the Development Environment
+### Start the development environment
 
 To start the development environment, go for
 

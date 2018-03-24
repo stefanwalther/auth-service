@@ -10,6 +10,7 @@ const mongoUri = new MongooseConnectionConfig(require('./config/mongoose-config'
 const defaultConfig = require('./config/server-config');
 
 class AppServer {
+
   constructor(config) {
     this.config = _.extend(defaultConfig, config || {});
     this._validateConfig();
@@ -27,11 +28,14 @@ class AppServer {
    */
   _initApp() {
     this.app = express();
+
+    // Todo: not even sure if we should have this here, probably just remove it
     this.app.settings.env = process.env; // Todo: something is wrong here.
   }
 
   /**
    * Validate the configuration passed in and inherited from the default config.
+   *
    * @private
    */
   _validateConfig() {
@@ -49,8 +53,6 @@ class AppServer {
 
   /**
    * Start the auth-server.
-   *
-   * @returns {Promise}
    */
   async start() {
 
@@ -60,7 +62,7 @@ class AppServer {
 
     try {
       this.server = await this.app.listen(this.config.PORT);
-      this.logger.info(`Express server listening on port ${this.config.PORT} in ${this.app.settings.env.NODE_ENV} mode`);
+      this.logger.info(`Express server listening on port ${this.config.PORT} in "${this.app.settings.env.NODE_ENV}" mode`);
     } catch (err) {
       this.logger.error('Cannot start express server', err);
     }
@@ -68,8 +70,6 @@ class AppServer {
 
   /**
    * Stop the auth-server.
-   *
-   * @returns {Promise}
    */
   async stop() {
 
