@@ -13,26 +13,18 @@ $ npm run dc-dev-up
 
 Then run one of the following options:
 
-**Run all tests** (both unit and integration tests):
-```sh
-$ npm run test
-```
-
 **Run integration tests**:
 
+Spins up all required dependent services to run the integration tests and runs the integration tests:
+
 ```sh
-// A running MongoDB instance is required
-$ npm run test:integration
+$ make build-run-integration-tests
 ```
+
 
 **Run unit tests**:
 ```sh
-$ npm run test:unit
-```
-
-**Run all tests and generate code-coverage**:
-```sh
-$ npm run test:coverage
+$ make build-run-unit-tests
 ```
 
 ---

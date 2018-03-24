@@ -18,10 +18,9 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 
 ## Social Authentication Providers
 
-- GitHub
-
 As currently only GitHub is implemented, is should be pretty straightforward to extend _{%= name%}_ with other authentication provider, such as:
- 
+
+- GitHub 
 - auth0
 - saml
 - oauth/oauth2
