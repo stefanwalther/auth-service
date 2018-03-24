@@ -8,9 +8,11 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 - [x] Login (and return a JWT token)
 - [x] Verify JWT token
 - [x] Logout
-- Send password reset email
-- Password reset
-- Return the user's profile
+- [x] Mark a user as deleted (cannot login anymore)
+- [x] Mark a user as undeleted (can login again)
+- [ ] Send password reset email
+- [ ] Password reset
+- [ ] Return the user's profile
 
 ## Authentication Providers
 
