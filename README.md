@@ -25,9 +25,16 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 - [x] Logout
 - [x] Mark a user as deleted (cannot login anymore)
 - [x] Mark a user as undeleted (can login again)
+- [ ] Verify the users email
 - [ ] Send password reset email
 - [ ] Password reset
 - [ ] Return the user's profile
+
+## Documentation
+
+Every endpoint is documented using Swagger/OpenApi:
+
+http://localhost:3010/api-docs
 
 ## Authentication Providers
 
@@ -93,7 +100,7 @@ Once the Http server is up and listening, the following routes can be used:
 <details>
 <summary>Development environment</summary>
 
-### Start the Development Environment
+### Start the development environment
 
 To start the development environment, go for
 

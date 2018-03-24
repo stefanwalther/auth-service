@@ -11,11 +11,9 @@ describe('auth-service => health-check', () => {
   let appServer;
 
   beforeEach(async () => {
-
     appServer = new AppServer(defaultConfig);
     await appServer.start();
     server = superTest(appServer.server);
-
   });
 
   afterEach(async () => {

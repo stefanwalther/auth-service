@@ -88,7 +88,7 @@ const UserController = require('./user.controller.js');
  *         in: body
  *         description: The user to create.
  *         schema:
- *           $ref: "#/definitions/User"
+ *           $ref: "#/definitions/UserLocal"
  *     responses:
  *       201:
  *         description: Confirmation that the user has been created successfully.
