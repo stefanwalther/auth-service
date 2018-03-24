@@ -30,10 +30,19 @@ class AppServer {
     this.app.settings.env = process.env; // Todo: something is wrong here.
   }
 
+  /**
+   * Validate the configuration passed in and inherited from the default config.
+   * @private
+   */
   _validateConfig() {
 
-    if (!this.config.PORT || !_.isNumber(this.config.PORT)) {
-      throw new Error(`PORT is undefined or not a number: ${this.config.PORT}`);
+    if (!this.config.PORT) {
+      throw new Error(`PORT is undefined: ${this.config.PORT}`);
+    }
+
+    let n = _.toNumber(this.config.PORT);
+    if (!_.isNumber(n) || isNaN(n)) {
+      throw new Error(`PORT is not a number: ${this.config.PORT}`);
     }
 
   }
