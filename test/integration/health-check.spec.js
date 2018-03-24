@@ -20,7 +20,7 @@ describe('auth-service => health-check', () => {
     return appServer.stop();
   });
 
-  xit('returns OK and a timestamp', () => {
+  it('returns OK and a timestamp', () => {
     return server
       .get('/health-check')
       .expect(HttpStatus.OK)

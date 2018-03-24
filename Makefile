@@ -63,7 +63,6 @@ build-run-integration-tests: build build-test 		## Run integration tests
 	docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
 .PHONY: build-run-integration-tests
 
-
 down-test:
 	docker-compose --f=docker-compose.test.yml down
 .PHONY: down-test

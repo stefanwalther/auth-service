@@ -11,15 +11,22 @@ services:
     build:
       context: .
     environment:
+      - NODE_ENV=dev
       - PORT=3010
       - JWT_SECRET=foo
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
+    ports:
+      - "3010:3010"
     volumes:
       - ./coverage:/coverage
     command: npm run start:watch
+    links:
+      - mongo
 
   rabbitmq:
     image: sammlerio/rabbitmq
+    links:
+      - mongo
 
