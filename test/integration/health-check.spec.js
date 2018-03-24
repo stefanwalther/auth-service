@@ -8,16 +8,18 @@ const pkg = require('read-pkg-up').sync().pkg;
 describe('auth-service => health-check', () => {
 
   let server;
-  const appServer = new AppServer(defaultConfig);
-  before(() => {
-    return appServer.start()
-      .then(() => {
-        server = superTest(appServer.server);
-      });
+  let appServer;
+
+  beforeEach(async () => {
+
+    appServer = new AppServer(defaultConfig);
+    await appServer.start();
+    server = superTest(appServer.server);
+
   });
 
-  after(() => {
-    return appServer.stop();
+  afterEach(async () => {
+    return await appServer.stop();
   });
 
   it('returns OK and a timestamp', () => {
