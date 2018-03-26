@@ -7,6 +7,7 @@ const logger = require('winster').instance();
 
 class UserController {
 
+  // Todo: Standardize results
   static getById(req, res) {
     return UserModel
       .getById(req.params.id)
@@ -20,6 +21,8 @@ class UserController {
   // Todo: Validation needs unit testing
   // Todo: Validation should go to the mongoose model
   // Todo: Refactor, don't like how the returned object is created, that's too error-prone if new props are added.
+  // Todo: Standardize results
+  // Todo: Send event
   static registerLocal(req, res) {
 
     logger.info('Registering using local strategy', req.body);
@@ -61,6 +64,8 @@ class UserController {
 
   // Todo: What should a failed login return, 400
   // Todo: Investigate how to properly use next() here
+  // Todo: Standardize results
+  // Todo: Send event
   static login(req, res) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
@@ -99,6 +104,8 @@ class UserController {
    * Removes the session token and redirects the user to /
    *
    * @Todo: Make configurable where to redirect to.
+   * @Todo: Standardize results
+   * @Todo: Send event
    *
    * @param req
    * @param res
@@ -119,6 +126,8 @@ class UserController {
     next();
   }
 
+  // Todo: Standardize results
+  // Todo: Send event
   static delete(req, res) {
 
     return UserModel
@@ -131,6 +140,8 @@ class UserController {
       });
   }
 
+  // Todo: Standardize results
+  // Todo: Send event
   static unDelete(req, res) {
 
     return UserModel
@@ -143,12 +154,13 @@ class UserController {
       });
   }
 
+  // Todo: Standardize results
   static verifyToken(req, res, next) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
-    const token = (req.body && req.body.token) || (req.query && req.query.token) || req.headers['x-access-token']; // Todo: Verify x-access-token
+    const token = (req.body && req.body.token) || (req.query && req.query.token) || req.headers['x-access-token'];
     if (!token) {
-      validationErrors.add('Property <token> is missing. Put the <token> in either your body, the query-string or the header.');
+      validationErrors.add('Property <token> is missing. Put the <token> in either your body, the query-string or use <x-access-token> in the Http-header.');
     }
     if (validationErrors.length > 0) {
       return ExpressResult.error(res, validationErrors);

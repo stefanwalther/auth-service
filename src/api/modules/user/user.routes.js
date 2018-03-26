@@ -143,12 +143,13 @@ router.get('/v1/user/:id', UserController.getById);
 // Todo: Implement this
 router.get('/v1/user/password-reset-request', UserController.status);
 
+// Todo: Questionable whether the endpoint should include "user", could also just be "/v1/verify-token"
 // Todo: Document 200 and 500 message in detail
 /**
  * @swagger
  * /v1/user/verify-token:
  *   get:
- *     description: Verify a token.
+ *     description: Verify a token. The token can be either passed within the body, the query-string or in the Http-header.
  *     tags:
  *       - user
  *   produces:
@@ -157,13 +158,13 @@ router.get('/v1/user/password-reset-request', UserController.status);
  *     - name: token
  *       in: query
  *       type: string
- *       description: Token passed as querystring token=
+ *       description: Token passed as query-string token=
  *     - name: token
  *       in: body
  *       type: string
  *     - name: x-access-token
  *       in: header
- *       description: Token passed in the Http header.
+ *       description: Token passed in the Http-header.
  *   responses:
  *     200:
  *       description: Token verified.
