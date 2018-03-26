@@ -143,7 +143,6 @@ router.get('/v1/user/:id', UserController.getById);
 // Todo: Implement this
 router.get('/v1/user/password-reset-request', UserController.status);
 
-// Todo: The approach of having a GET & POST does not seem to work for swagger; seems to be a bug.
 // Todo: Document 200 and 500 message in detail
 /**
  * @swagger
@@ -155,14 +154,16 @@ router.get('/v1/user/password-reset-request', UserController.status);
  *   produces:
  *     - application/json
  *   parameters:
- *     - name: t
+ *     - name: token
  *       in: query
  *       type: string
- *       example: foo
+ *       description: Token passed as querystring token=
  *     - name: token
  *       in: body
  *       type: string
- *       example: foo
+ *     - name: x-access-token
+ *       in: header
+ *       description: Token passed in the Http header.
  *   responses:
  *     200:
  *       description: Token verified.
