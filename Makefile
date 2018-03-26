@@ -70,14 +70,14 @@ down-test:
 rs: down up
 .PHONY: rs
 
-up-deps:
+up-deps:									## Run services being dependent on
 	docker-compose --f=docker-compose.deps.yml up
 .PHONY: up-deps
 
 rs-deps: down-deps up-deps
 .PHONY: rs-deps
 
-down-deps:
+down-deps:								## Stop services being dependent on
 	docker-compose --f=docker-compose.deps.yml down
 .PHONY: down-deps
 
