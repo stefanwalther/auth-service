@@ -28,9 +28,6 @@ class AppServer {
    */
   _initApp() {
     this.app = express();
-
-    // Todo: not even sure if we should have this here, probably just remove it
-    this.app.settings.env = process.env; // Todo: something is wrong here.
   }
 
   /**
@@ -62,7 +59,7 @@ class AppServer {
 
     try {
       this.server = await this.app.listen(this.config.PORT);
-      this.logger.info(`Express server listening on port ${this.config.PORT} in "${this.app.settings.env.NODE_ENV}" mode`);
+      this.logger.info(`Express server listening on port ${this.config.PORT} in "${this.config.env.NODE_ENV}" mode`);
     } catch (err) {
       this.logger.error('Cannot start express server', err);
     }
