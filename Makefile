@@ -34,6 +34,9 @@ down:											## Stop the stack - dev environment (docker-compose down)
 	docker-compose --f=docker-compose.dev.yml down
 .PHONY: down
 
+rs: down up
+.PHONY: rs
+
 up-test:									## Bring up the test environment (docker-compose up => docker-compose.test.yml)
 	docker-compose --f=docker-compose.test.yml up -d
 .PHONY: up-test
@@ -58,7 +61,6 @@ run-integration-tests: 		## Run integration tests
 	docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
 .PHONY: run-integration-tests
 
-
 build-run-integration-tests: build build-test 		## Run integration tests
 	docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
 .PHONY: build-run-integration-tests
@@ -66,9 +68,6 @@ build-run-integration-tests: build build-test 		## Run integration tests
 down-test:
 	docker-compose --f=docker-compose.test.yml down
 .PHONY: down-test
-
-rs: down up
-.PHONY: rs
 
 up-deps:									## Run services being dependent on
 	docker-compose --f=docker-compose.deps.yml up
@@ -80,10 +79,6 @@ rs-deps: down-deps up-deps
 down-deps:								## Stop services being dependent on
 	docker-compose --f=docker-compose.deps.yml down
 .PHONY: down-deps
-
-dc-up-test:
-	docker-compose --f=docker-compose.test.yml up
-.PHONY: dc-up-test
 
 setup:
 	@echo "Setup ... nothing here right now"

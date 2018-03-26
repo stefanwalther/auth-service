@@ -3,11 +3,13 @@ version: '2'
 services:
 
   mongo:
+    container_name: mongo
     image: sammlerio/mongo
     ports:
-      - 27017:27017
+      - "27017:27017"
 
   auth-service:
+    container_name: auth-service
     build:
       context: .
     environment:
@@ -21,13 +23,14 @@ services:
       - "3010:3010"
     volumes:
       - ./coverage:/coverage
+      - ./:/opt/auth-service
     command: npm run start:watch
-    links:
+    depends_on:
       - mongo
       - rabbitmq
 
   rabbitmq:
+    container_name: rabbitmq
     image: sammlerio/rabbitmq
-    links:
-      - mongo
-
+    ports:
+      - "15672:15672"

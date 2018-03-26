@@ -1,4 +1,4 @@
-ARG NODE_VER="8.9.4"
+ARG NODE_VER="8.10.0"
 
 # --------------------------------------
 #               BASE NODE
@@ -43,7 +43,7 @@ RUN  npm run lint:fix && npm run lint && npm run test:unit
 # --------------------------------------
 FROM node:${NODE_VER}-alpine as RELEASE
 
-ARG PORT=3001
+ARG PORT=3010
 ENV PORT=${PORT}
 
 ARG HOME_DIR="opt/auth-service"

@@ -1,4 +1,4 @@
-ARG NODE_VER="8.9.4"
+ARG NODE_VER="8.10.0"
 
 FROM node:${NODE_VER}-alpine as RELEASE
 
@@ -14,6 +14,6 @@ RUN npm install --quiet --only=production --no-package-lock
 
 COPY /src ./src/
 
-ARG PORT=3001
+ARG PORT=3010
 ENV PORT=${PORT}
 EXPOSE $PORT

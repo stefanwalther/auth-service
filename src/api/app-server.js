@@ -54,7 +54,6 @@ class AppServer {
   async start() {
 
     await initializer(this.app, {directory: path.join(__dirname, 'config/initializers')});
-
     await mongoose.connect(mongoUri);
 
     try {

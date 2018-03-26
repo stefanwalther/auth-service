@@ -17,7 +17,7 @@ services:
       - MONGODB_PORT=27017
       - NODE_ENV=test
       - WINSTER_SUPRESS_LOGGING='true'
-    links:
+    depends_on:
       - mongo
     volumes:
       - ./coverage:/opt/auth-service/coverage

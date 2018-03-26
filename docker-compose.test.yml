@@ -10,12 +10,13 @@ services:
   auth-service-test:
     image: sammlerio/auth-service-test
     environment:
+      - NODE_ENV=test
       - PORT=3010
       - JWT_SECRET=foo
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
-    links:
+    depends_on:
       - mongo
     volumes:
       - ./coverage:/opt/auth-service/coverage

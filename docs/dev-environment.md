@@ -11,7 +11,7 @@ $ make up
 This will essentially:
 
 - Start MongoDB
-- Start RabbitMQ
+- Start RabbitMQ (management UI available at: http://localhost:15672/)
 - Start a server running the auth-service (http://localhost:3010)
 - Watch changes and re-start the server
 
@@ -29,3 +29,5 @@ Then start the server using
 ```sh
 $ npm run start:watch
 ```
+
+The API is available at http://localhost:3010
