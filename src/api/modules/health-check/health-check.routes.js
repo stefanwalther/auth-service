@@ -6,15 +6,17 @@ const HealthCheckController = require('./health-check.controller.js');
  * @swagger
  *
  * definitions:
- *   HealthCheck:
+ *   HealthCheckResult:
  *     type: object
  *     properties:
  *       ts:
  *         type: string
  *         format: date-time
+ *         description: Timestamp of the returned health-check result.
  *         example: "2018-03-24T23:05:28.341Z"
  *       name:
  *         type: string
+ *         description: "The name of the service."
  *         example: "auth-service"
  *       repository:
  *         type: object
@@ -27,7 +29,7 @@ const HealthCheckController = require('./health-check.controller.js');
  *             example: "https://github.com/sammler/auth-service"
  *       version:
  *         type: string
- *         description: "The name of the service: auth-service"
+ *         description: "The current version of the service."
  *         example: "0.1.0"
  *
  *
@@ -42,7 +44,7 @@ const HealthCheckController = require('./health-check.controller.js');
  *       200:
  *         description: Returned health-check status.
  *         schema:
- *           $ref: '#/definitions/HealthCheck'
+ *           $ref: '#/definitions/HealthCheckResult'
  *
  */
 router.get('/health-check', HealthCheckController.get);
