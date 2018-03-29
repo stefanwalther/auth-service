@@ -149,21 +149,18 @@ router.get('/v1/user/password-reset-request', UserController.status);
  * @swagger
  * /v1/user/verify-token:
  *   get:
- *     description: Verify a token. The token can be either passed within the body, the query-string or in the Http-header.
+ *     description: Verify a token. The token can be either passed within the body or the Http-header.
  *     tags:
  *       - user
  *   produces:
  *     - application/json
  *   parameters:
  *     - name: token
- *       in: query
- *       type: string
- *       description: Token passed as query-string token=
- *     - name: token
  *       in: body
  *       type: string
  *     - name: x-access-token
  *       in: header
+ *       type: string
  *       description: Token passed in the Http-header.
  *   responses:
  *     200:

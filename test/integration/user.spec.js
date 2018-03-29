@@ -285,25 +285,17 @@ describe('auth-service => user', () => {
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(result => {
           expect(result.body).to.have.a.property('ValidationErrors');
-          expect(result.body.ValidationErrors).to.contain('Property <token> is missing. Put the <token> in either your body, the query-string or the header.');
+          expect(result.body.ValidationErrors).to.contain('Property <token> is missing. Put the <token> in either your body or use <x-access-token> in the Http-header.');
         });
     });
 
     it('does not throw a validation error if token is passed in body', () => {
-      const doc = {
+      const body = {
         token: 'foo'
       };
       return server
         .post(ENDPOINTS.VERIFY_TOKEN)
-        .send(doc)
-        .then(result => {
-          expect(result.body).to.not.have.a.property('ValidationErrors');
-        });
-    });
-
-    it('does not throw a validation error if token is passed in querystring', () => {
-      return server
-        .post(ENDPOINTS.VERIFY_TOKEN + '?token=foo')
+        .send(body)
         .then(result => {
           expect(result.body).to.not.have.a.property('ValidationErrors');
         });
@@ -311,13 +303,13 @@ describe('auth-service => user', () => {
 
     it('returns an error if the token is invalid', () => {
 
-      const doc = {
+      const body = {
         token: 'foo'
       };
 
       return server
         .post(ENDPOINTS.VERIFY_TOKEN)
-        .send(doc)
+        .send(body)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .expect(userAssertions.invalidToken);
     });
@@ -338,10 +330,13 @@ describe('auth-service => user', () => {
       user.setPassword(doc.local.password);
 
       let newUser = await user.save();
-      let token = newUser.generateJwt();
+      let body = {
+        token: newUser.generateJwt()
+      };
 
       await server
-        .post(`${ENDPOINTS.VERIFY_TOKEN}?token=${token}`)
+        .post(`${ENDPOINTS.VERIFY_TOKEN}`)
+        .send(body)
         .expect(HttpStatus.OK)
         .expect(userAssertions.validToken);
     });
@@ -362,10 +357,13 @@ describe('auth-service => user', () => {
       user.setPassword(doc.local.password);
 
       await user.save();
-      let token = 'abcde';
+      let body = {
+        token: 'abcde'
+      };
 
       await server
-        .post(`${ENDPOINTS.VERIFY_TOKEN}?token=${token}`)
+        .post(`${ENDPOINTS.VERIFY_TOKEN}`)
+        .send(body)
         // Todo: This currently returns INTERNAL_SERVER_ERROR, but what should it return ...?
         // .expect(HttpStatus.OK)
         .expect(userAssertions.invalidToken);
@@ -384,10 +382,13 @@ describe('auth-service => user', () => {
 
       let user = new UserModel(doc);
       await user.save();
-      let token = user.generateJwt();
+      const body = {
+        token: user.generateJwt()
+      };
 
       await server
-        .post(`${ENDPOINTS.VERIFY_TOKEN}?token=${token}`)
+        .post(`${ENDPOINTS.VERIFY_TOKEN}`)
+        .send(body)
         .expect(HttpStatus.OK)
         .expect(userAssertions.validToken);
 

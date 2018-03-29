@@ -158,9 +158,9 @@ class UserController {
   static verifyToken(req, res, next) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
-    const token = (req.body && req.body.token) || (req.query && req.query.token) || req.headers['x-access-token'];
+    const token = (req.body && req.body.token) || req.headers['x-access-token'];
     if (!token) {
-      validationErrors.add('Property <token> is missing. Put the <token> in either your body, the query-string or use <x-access-token> in the Http-header.');
+      validationErrors.add('Property <token> is missing. Put the <token> in either your body or use <x-access-token> in the Http-header.');
     }
     if (validationErrors.length > 0) {
       return ExpressResult.error(res, validationErrors);
