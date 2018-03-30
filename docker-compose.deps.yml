@@ -5,6 +5,8 @@ services:
     image: sammlerio/mongo
     ports:
       - "27017:27017"
+    logging:
+      driver: none
 
   rabbitmq:
     image: sammlerio/rabbitmq
