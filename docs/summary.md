@@ -15,12 +15,6 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 - [ ] Password reset
 - [ ] Return the user's profile
 
-### Documentation
-
-Every endpoint is documented using Swagger/OpenApi:
-
-http://localhost:3010/api-docs
-
 ### Authentication Providers
 
 - [x] Local

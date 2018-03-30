@@ -30,12 +30,6 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 - [ ] Password reset
 - [ ] Return the user's profile
 
-### Documentation
-
-Every endpoint is documented using Swagger/OpenApi:
-
-http://localhost:3010/api-docs
-
 ### Authentication Providers
 
 - [x] Local
@@ -56,6 +50,11 @@ As currently only GitHub is implemented, is should be pretty straightforward to 
 - ...
 
 Just have a look at [passports.js](http://passportjs.org/) and the supported strategies.
+
+## Installation
+```bash
+$ docker run -it sammlerio/auth-service
+```
 
 ## Configuration
 _auth-service_ can be configured by the following environment variables:
@@ -85,18 +84,7 @@ Nodemailer settings only need to be set if **one** of the following options are 
 - `ENABLE_ACCOUNT_VERIFICATION` - Force users to verify their accounts.
 - `ENABLE_PWD_RESET` - Allow to reset the account's password.
 
-## Installation
-```bash
-$ docker run -it sammlerio/auth-service
-```
-
-### Routes
-Once the Http server is up and listening, the following routes can be used:
-
-- `GET /health-check`
-- `POST /v1/user/register/local`
-- `POST /v1/user/details`
-- `POST /v1/verify-token`
+## Usage
 
 ## Contribute
 
