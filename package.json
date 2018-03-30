@@ -13,11 +13,6 @@
   "main": "index.js",
   "repository": "https://github.com/sammler/auth-service",
   "scripts": {
-    "d-build": "docker build -t sammlerio/auth-service .",
-    "dc-up:dev": "docker-compose --f=./docker-compose.dev.yml up",
-    "dc-up:devb": "docker-compose --f=./docker-compose.dev.yml up --build",
-    "dc-up:devd": "docker-compose --f=./docker-compose.dev.yml up -d",
-    "dc-down:dev": "docker-compose --f=./docker-compose.dev.yml down",
     "lint": "npm run lint:src && npm run lint:test",
     "lint:fix": "npm run lint:src:fix && npm run lint:test:fix",
     "lint:src": "eslint src",
