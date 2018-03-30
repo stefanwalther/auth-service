@@ -15,17 +15,17 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 - [ ] Password reset
 - [ ] Return the user's profile
 
-## Documentation
+### Documentation
 
 Every endpoint is documented using Swagger/OpenApi:
 
 http://localhost:3010/api-docs
 
-## Authentication Providers
+### Authentication Providers
 
 - [x] Local
 
-## Social Authentication Providers
+### Social Authentication Providers
 
 As currently only GitHub is implemented, is should be pretty straightforward to extend _{%= name%}_ with other authentication provider, such as:
 

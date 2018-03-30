@@ -12,7 +12,7 @@
 <br/>
 ---
 
-## About
+## Summary
 _auth-service_ is a tiny, re-usable authentication service to be used in any microservices environment.
 
 It is built on top of [express](https://expressjs.com/) , [passport](http://passportjs.org/) and [JWT](https://jwt.io/), therefore easy to extend and integrate.
@@ -30,17 +30,17 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 - [ ] Password reset
 - [ ] Return the user's profile
 
-## Documentation
+### Documentation
 
 Every endpoint is documented using Swagger/OpenApi:
 
 http://localhost:3010/api-docs
 
-## Authentication Providers
+### Authentication Providers
 
 - [x] Local
 
-## Social Authentication Providers
+### Social Authentication Providers
 
 As currently only GitHub is implemented, is should be pretty straightforward to extend _auth-service_ with other authentication provider, such as:
 
@@ -85,7 +85,10 @@ Nodemailer settings only need to be set if **one** of the following options are 
 - `ENABLE_ACCOUNT_VERIFICATION` - Force users to verify their accounts.
 - `ENABLE_PWD_RESET` - Allow to reset the account's password.
 
-## Usage
+## Installation
+```bash
+$ docker run -it sammlerio/auth-service
+```
 
 ### Routes
 Once the Http server is up and listening, the following routes can be used:
