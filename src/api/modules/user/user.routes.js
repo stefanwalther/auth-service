@@ -12,6 +12,12 @@ const UserController = require('./user.controller.js');
  *       - password
  *       - email
  *     properties:
+ *       firstname:
+ *         type: string
+ *         example: "Max"
+ *       lastname:
+ *         type: string
+ *         example: "Mustermann"
  *       local:
  *         $ref: "#/definitions/UserLocal"
  *

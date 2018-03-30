@@ -23,7 +23,11 @@ const localStrategySchema = new Schema({
     unique: false
   },
   hash: String,
-  salt: String
+  salt: String,
+  is_verified: {
+    type: Boolean,
+    default: false
+  }
 });
 
 /* eslint-disable camelcase */
