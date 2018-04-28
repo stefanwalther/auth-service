@@ -1,6 +1,7 @@
 const superTest = require('supertest');
 const HttpStatus = require('http-status-codes');
 const mongoose = require('mongoose');
+const _ = require('lodash');
 
 const AppServer = require('./../../src/api/app-server');
 const UserModel = mongoose.models.User || require('./../../src/api/modules/user/user.model').Model;
@@ -26,7 +27,7 @@ describe('auth-service => user', () => {
   });
 
   afterEach(async () => {
-    return await appServer.stop();
+    await appServer.stop();
   });
 
   describe('UserModel', () => {
@@ -68,7 +69,7 @@ describe('auth-service => user', () => {
         }
       });
       let u = await user1.save();
-      // console.log('user1', u);
+      // Console.log('user1', u);
 
       let user2 = new UserModel({
         local: {
@@ -80,12 +81,28 @@ describe('auth-service => user', () => {
 
       try {
         let u2 = await user2.save();
-        // console.log(u2);
+        // Console.log(u2);
       } catch (e) {
-        // console.error(e);
+        // Console.error(e);
         expect(e).to.not.exist;
       }
     });
+
+    it('saves the password correctly', async () => {
+
+      let user = new UserModel({
+        local: {
+          username: 'foo',
+          email: 'foo@bar.com',
+          password: 'baz'
+        }
+      });
+
+      let newUser = await user.save();
+      // Console.log('new user after saving', newUser);
+      expect(newUser.verifyLocalPassword('baz')).to.be.true;
+    });
+
   });
 
   describe('POST /user/register/local', () => {
@@ -183,7 +200,7 @@ describe('auth-service => user', () => {
       };
 
       const newUser = new UserModel(user);
-      newUser.setPassword(user.local.password);
+      newUser.setLocalPassword(user.local.password);
 
       return newUser.save()
         .then(() => {
@@ -206,8 +223,7 @@ describe('auth-service => user', () => {
         }
       };
 
-      const newUser = new UserModel(doc);
-      newUser.setPassword(doc.local.password);
+      const newUser = new UserModel(_.clone(doc));
 
       return newUser.save()
         .then(() => {
@@ -217,9 +233,9 @@ describe('auth-service => user', () => {
               username: doc.local.username,
               password: doc.local.password
             })
-            // .expect(res => {
-            //   console.log(res);
-            // })
+            .expect(res => {
+              console.log(res);
+            })
             .expect(HttpStatus.OK)
             .expect(userAssertions.hasToken);
         });
@@ -327,7 +343,7 @@ describe('auth-service => user', () => {
       };
 
       const user = new UserModel(doc);
-      user.setPassword(doc.local.password);
+      user.setLocalPassword(doc.local.password);
 
       let newUser = await user.save();
       let body = {
@@ -354,7 +370,7 @@ describe('auth-service => user', () => {
       };
 
       const user = new UserModel(doc);
-      user.setPassword(doc.local.password);
+      user.setLocalPassword(doc.local.password);
 
       await user.save();
       let body = {
@@ -417,7 +433,7 @@ describe('auth-service => user', () => {
         .delete(`/v1/user/${newUser._id}`)
         .expect(HttpStatus.OK)
         .then(updateResult => {
-          // console.log(updateResult);
+          // Console.log(updateResult);
           expect(updateResult.body).to.have.property('n').to.be.equal(1);
           expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
           expect(updateResult.body).to.have.property('ok').to.be.equal(1);
@@ -443,7 +459,7 @@ describe('auth-service => user', () => {
         .post(`/v1/user/${newUser._id}/undelete`)
         .expect(HttpStatus.OK)
         .then(updateResult => {
-          // console.log(updateResult);
+          // Console.log(updateResult);
           expect(updateResult.body).to.have.property('n').to.be.equal(1);
           expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
           expect(updateResult.body).to.have.property('ok').to.be.equal(1);

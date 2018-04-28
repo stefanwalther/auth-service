@@ -43,7 +43,9 @@ class UserController {
     }
 
     const user = new UserModel(req.body);
-    user.setPassword(req.body.local.password);
+
+    console.log('------');
+    console.log('save user', user);
 
     return user.save()
       .then(user => {
@@ -57,7 +59,7 @@ class UserController {
         ExpressResult.created(res, result);
       })
       .catch(err => {
-        // console.error(err);
+        // Console.error(err);
         ExpressResult.error(res, err);
       });
   }
@@ -81,7 +83,7 @@ class UserController {
       return ExpressResult.error(res, validationErrors);
     }
 
-    passport.authenticate('local', (err, user, info) => {
+    passport.authenticate('local', function (err, user, info) {
 
       // If Passport throws/catches an error
       if (err) {

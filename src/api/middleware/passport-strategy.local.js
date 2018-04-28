@@ -23,7 +23,7 @@ passport.use(new LocalStrategy(localStrategyOpts, function (username, password, 
       });
     }
     // Return if password is wrong
-    if (!user.validPassword(password)) {
+    if (!user.verifyLocalPassword(password)) {
       return done(null, false, {
         message: 'Password is wrong'
       });

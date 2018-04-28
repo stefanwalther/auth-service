@@ -22,8 +22,9 @@ const localStrategySchema = new Schema({
     required: false,
     unique: false
   },
-  hash: String,
+  password: String,
   salt: String,
+  hash: String,
   is_verified: {
     type: Boolean,
     default: false
@@ -62,7 +63,7 @@ const schema = new Schema({
 // schema.index({"local.username": 1});
 schema.plugin(timeStamps, {createdAt: mongooseConfig.FIELD_CREATED_AT, updatedAt: mongooseConfig.FIELD_UPDATED_AT});
 
-schema.methods.setPassword = password => {
+schema.methods.setLocalPassword = function (password) {
   if (!this.local) {
     this.local = {};
   }
@@ -70,25 +71,30 @@ schema.methods.setPassword = password => {
     throw new Error('Password must be set');
   }
   this.local.salt = crypto.randomBytes(16).toString('hex');
-  this.hash = crypto.pbkdf2Sync(
+  let pwd = this.local.hash = crypto.pbkdf2Sync( // eslint-disable-line no-multi-assign
     password,
     this.local.salt,
     1000,
     64,
     'sha1').toString('hex');
+
+  console.log('---');
+  console.log('hash', this.local.hash);
+  console.log('---');
+  this.local.password = pwd;
 };
 
-schema.methods.validPassword = password => {
+schema.methods.verifyLocalPassword = function (password) {
   const hash = crypto.pbkdf2Sync(
     password,
     this.local.salt,
     1000,
     64,
     'sha1').toString('hex');
-  return this.hash === hash;
+  return this.local.hash === hash;
 };
 
-schema.methods.generateJwt = () => {
+schema.methods.generateJwt = function () {
 
   return jwt.sign({
     _id: this._id,
@@ -141,6 +147,31 @@ schema.statics.purge = () => {
     .remove({is_deleted: true})
     .exec();
 };
+
+// http://devsmash.com/blog/password-authentication-with-mongoose-and-bcrypt
+schema.pre('save', function (next) {
+  let user = this;
+
+  // Only hash the password if it has been modified (or is new)
+  if (!user.isModified('local.password')) {
+    console.log('do nothing, not modified');
+    return next;
+  }
+  console.log('change password');
+  console.log('user', user);
+
+  console.log('OK ... next');
+  console.log('----');
+
+  if (user.local && user.local.password) {
+    console.log('OK; set a password', user.local);
+    user.setLocalPassword(user.local.password);
+  } else {
+    console.log('no', user);
+    console.log('---');
+  }
+  next();
+});
 
 module.exports = {
   Schema: schema,

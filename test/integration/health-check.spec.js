@@ -17,7 +17,7 @@ describe('auth-service => health-check', () => {
   });
 
   afterEach(async () => {
-    return await appServer.stop();
+    await appServer.stop();
   });
 
   it('returns OK and a timestamp', () => {
