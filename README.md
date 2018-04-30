@@ -86,6 +86,12 @@ Nodemailer settings only need to be set if **one** of the following options are 
 
 ## Usage
 
+## API
+
+All endpoints are documented through OpenApi/Swagger using
+
+http://localhost:3010/api-docs
+
 ## Contribute
 
 <details>
