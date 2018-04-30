@@ -3,7 +3,7 @@ version: '2'
 services:
 
   mongo:
-    image: sammlerio/mongo
+    image: sammlerio/mongo:latest@sha256:c8a1941d19da89eaa84b30276ec350e54f2e80bcd3bdd81f69a8f13070e8b333
     ports:
       - 27017:27017
 
@@ -23,5 +23,5 @@ services:
       - ./coverage:/opt/auth-service/coverage
 
   rabbitmq:
-    image: sammlerio/rabbitmq
+    image: sammlerio/rabbitmq:latest@sha256:7a295c01e08647990a8037be06c8dbd21824e688cdd2f3c56ff0a12f7353bcbe
 
