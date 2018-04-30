@@ -95,10 +95,5 @@
   },
   "winster": {
     "configFile": "./src/api/config/winster-config.js"
-  },
-  "renovate": {
-    "extends": [
-      "config:base"
-    ]
   }
 }
