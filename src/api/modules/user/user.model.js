@@ -7,6 +7,7 @@ const _ = require('lodash');
 
 const mongooseConfig = require('./../../config/mongoose-config');
 const jwtConfig = require('./../../config/jwt-config');
+const logger = require('winster').instance();
 
 const Schema = mongoose.Schema;
 
@@ -78,9 +79,7 @@ schema.methods.setLocalPassword = function (password) {
     64,
     'sha1').toString('hex');
 
-  console.log('---');
-  console.log('hash', this.local.hash);
-  console.log('---');
+  logger.trace('hash', this.local.hash);
   this.local.password = pwd;
 };
 
@@ -154,21 +153,18 @@ schema.pre('save', function (next) {
 
   // Only hash the password if it has been modified (or is new)
   if (!user.isModified('local.password')) {
-    console.log('do nothing, not modified');
+    logger.trace('do nothing, not modified');
     return next;
   }
-  console.log('change password');
-  console.log('user', user);
-
-  console.log('OK ... next');
-  console.log('----');
+  logger.trace('change password');
+  logger.trace('user', user);
 
   if (user.local && user.local.password) {
-    console.log('OK; set a password', user.local);
+    logger.trace('OK; set a password', user.local);
     user.setLocalPassword(user.local.password);
   } else {
-    console.log('no', user);
-    console.log('---');
+    logger.trace('no', user);
+    logger.trace('---');
   }
   next();
 });

@@ -25,7 +25,6 @@ describe('auth-service => api-docs', () => {
       .get('/api-docs/raw')
       .expect(HttpStatus.OK)
       .then(result => {
-        // Console.log(result.body);
         expect(result).to.exist;
         expect(result).to.have.a.property('body').to.exist;
         expect(result.body).to.deep.include({swagger: '2.0'});
@@ -40,7 +39,6 @@ describe('auth-service => api-docs', () => {
       .get('/api-docs/raw')
       .expect(HttpStatus.OK)
       .then(result => {
-        // Console.log(result.body);
         expect(result).to.exist;
         expect(result).to.have.a.property('body').to.exist;
         expect(result.body).to.have.a.property('definitions');

@@ -1,7 +1,8 @@
 const AppServer = require('./app-server');
 const serverConfig = require('./config/server-config');
+const logger = require('winster').instance();
 
-console.log('serverConfig', serverConfig);
+logger.trace('serverConfig', serverConfig);
 
 (async () => {
   const server = new AppServer(serverConfig);

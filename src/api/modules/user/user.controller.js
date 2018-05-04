@@ -44,8 +44,7 @@ class UserController {
 
     const user = new UserModel(req.body);
 
-    console.log('------');
-    console.log('save user', user);
+    logger.trace('save user', user);
 
     return user.save()
       .then(user => {
@@ -59,7 +58,7 @@ class UserController {
         ExpressResult.created(res, result);
       })
       .catch(err => {
-        // Console.error(err);
+        logger.error('Err in registerLocal', err);
         ExpressResult.error(res, err);
       });
   }
