@@ -71,7 +71,8 @@ class AppServer {
 
     if (mongoose.connection) {
       try {
-        await mongoose.connection.close();
+        // Await mongoose.disconnect();
+        await mongoose.connection.close(); // Needed?
         this.logger.trace('Closed mongoose connection');
       } catch (e) {
         this.logger.trace('Could not close mongoose connection', e);

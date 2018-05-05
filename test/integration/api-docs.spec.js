@@ -1,6 +1,7 @@
 const superTest = require('supertest');
 const HttpStatus = require('http-status-codes');
 const AppServer = require('./../../src/api/app-server');
+const mongoose = require('mongoose');
 
 const defaultConfig = require('./../test-lib/default-config');
 const pkg = require('read-pkg-up').sync().pkg;
@@ -18,6 +19,8 @@ describe('auth-service => api-docs', () => {
 
   afterEach(async () => {
     await appServer.stop();
+    mongoose.models = {};
+    mongoose.modelSchemas = {};
   });
 
   it('GET /api-docs/raw => returns the raw api-docs', () => {

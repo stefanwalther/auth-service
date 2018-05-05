@@ -28,6 +28,8 @@ describe('auth-service => user', () => {
 
   afterEach(async () => {
     await appServer.stop();
+    mongoose.models = {};
+    mongoose.modelSchemas = {};
   });
 
   describe('UserModel', () => {
@@ -283,7 +285,6 @@ describe('auth-service => user', () => {
         })
         .expect(HttpStatus.UNAUTHORIZED)
         .expect(userAssertions.userNotFound);
-
     });
 
   });
@@ -465,7 +466,6 @@ describe('auth-service => user', () => {
           expect(result.body).to.have.a.property('is_deleted').to.be.false;
         });
     });
-
   });
 
 });

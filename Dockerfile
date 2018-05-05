@@ -58,5 +58,6 @@ COPY --from=dependencies $HOME_DIR/prod_node_modules ./node_modules
 COPY /src ./src/
 
 EXPOSE $PORT
+CMD ["echo", "Running auth-service at port", $PORT]
 
 CMD ["npm", "run", "start"]
