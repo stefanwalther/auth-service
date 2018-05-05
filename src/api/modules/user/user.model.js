@@ -25,7 +25,6 @@ const localStrategySchema = new Schema({
   },
   password: String,
   salt: String,
-  hash: String,
   is_verified: {
     type: Boolean,
     default: false
@@ -72,14 +71,13 @@ schema.methods.setLocalPassword = function (password) {
     throw new Error('Password must be set');
   }
   this.local.salt = crypto.randomBytes(16).toString('hex');
-  let pwd = this.local.hash = crypto.pbkdf2Sync( // eslint-disable-line no-multi-assign
+  let pwd = crypto.pbkdf2Sync( // eslint-disable-line no-multi-assign
     password,
     this.local.salt,
     1000,
     64,
     'sha1').toString('hex');
 
-  logger.trace('hash', this.local.hash);
   this.local.password = pwd;
 };
 
@@ -90,7 +88,7 @@ schema.methods.verifyLocalPassword = function (password) {
     1000,
     64,
     'sha1').toString('hex');
-  return this.local.hash === hash;
+  return this.local.password === hash;
 };
 
 schema.methods.generateJwt = function () {

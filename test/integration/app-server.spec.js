@@ -9,5 +9,4 @@ describe('app-server', () => {
     };
     expect(fn).to.throw(Error, 'PORT is not a number: abc');
   });
-
 });
