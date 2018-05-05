@@ -19,8 +19,6 @@ describe('auth-service => health-check', () => {
 
   afterEach(async () => {
     await appServer.stop();
-    mongoose.models = {};
-    mongoose.modelSchemas = {};
   });
 
   it('returns OK and a timestamp', () => {

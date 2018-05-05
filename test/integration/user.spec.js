@@ -28,8 +28,6 @@ describe('auth-service => user', () => {
 
   afterEach(async () => {
     await appServer.stop();
-    mongoose.models = {};
-    mongoose.modelSchemas = {};
   });
 
   describe('UserModel', () => {

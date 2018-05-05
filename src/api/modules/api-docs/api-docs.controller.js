@@ -5,7 +5,7 @@ const swaggerConfig = require('./../../config/swagger-config');
 
 class ApiDocsController {
 
-  static getDocs() {
+  static getDocs(/* req, res */) {
     return swaggerJsDocs(swaggerConfig);
   }
 

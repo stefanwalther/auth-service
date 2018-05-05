@@ -11,6 +11,10 @@ const defaultConfig = require('./config/server-config');
 
 class AppServer {
 
+  /**
+   * @constructor
+   * @param  {} config
+   */
   constructor(config) {
     this.config = _.extend(defaultConfig, config || {});
     this._validateConfig();
@@ -50,6 +54,7 @@ class AppServer {
 
   /**
    * Start the auth-server.
+   * @async
    */
   async start() {
 
@@ -66,13 +71,15 @@ class AppServer {
 
   /**
    * Stop the auth-server.
+   * @async
    */
   async stop() {
 
     if (mongoose.connection) {
       try {
-        // Await mongoose.disconnect();
-        await mongoose.connection.close(); // Needed?
+        await mongoose.connection.close(); // Using Moongoose >5.0.4 connection.close is preferred over mongoose.disconnect();
+        mongoose.models = {};
+        mongoose.modelSchemas = {};
         this.logger.trace('Closed mongoose connection');
       } catch (e) {
         this.logger.trace('Could not close mongoose connection', e);
