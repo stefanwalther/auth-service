@@ -12,6 +12,7 @@ const swaggerConfig = {
       'application/json'
     ]
   },
+  // Todo: make this dynamic
   apis: [
     './src/api/config/swagger-definitions.js',
     './src/api/modules/api-docs/api-docs.routes.js',
