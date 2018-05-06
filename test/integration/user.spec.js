@@ -408,6 +408,9 @@ describe('auth-service => user', () => {
   });
 
   describe('DELETE /v1/user:id', () => {
+
+    xit('can only be performed by either the user himself or an admin');
+
     it('marks a user as deleted', async () => {
 
       const doc = {

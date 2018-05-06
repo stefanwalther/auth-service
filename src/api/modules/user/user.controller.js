@@ -1,7 +1,6 @@
 const ExpressResult = require('express-result');
 const passport = require('passport');
 const _ = require('lodash');
-const HttpStatusCode = require('http-status-codes');
 
 const UserModel = require('./user.model').Model;
 const logger = require('winster').instance();
@@ -187,11 +186,9 @@ class UserController {
     try {
       const props = UserModel.verifyToken(token);
       let ret = _.pick(props, ['_id', 'username', 'email']);
-      res.status(200);
-      res.json(ret);
+      ExpressResult.ok(res, ret);
     } catch (err) {
-      res.status(HttpStatusCode.UNAUTHORIZED);
-      res.json({message: `Invalid request: ${err.message}`});
+      ExpressResult.unauthorized(res, {message: `Invalid request: ${err.message}`});
     }
     next();
   }
