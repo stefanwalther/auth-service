@@ -3,6 +3,7 @@ _{%=name%}_ can be configured by the following environment variables:
 
 - `PORT` - The port to run the REST API (defaults to `3010`).
 - `JWT_SECRET` - The secret used for JWT.
+- `AUDIT_LOG` - Whether to enable the audit log or not, can be `true` or `false`, defaults to `true`.
 
 **MongoDB:**
 
