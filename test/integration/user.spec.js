@@ -11,7 +11,8 @@ const userAssertions = require('./../test-lib/user-assertions');
 const ENDPOINTS = {
   REGISTER_LOCAL: '/v1/user/register/local',
   USER_LOGIN: '/v1/user/login',
-  VERIFY_TOKEN: '/v1/user/verify-token'
+  VERIFY_TOKEN: '/v1/user/verify-token',
+  ME: '/v1/me'
 };
 
 describe('auth-service => user', () => {
@@ -112,9 +113,9 @@ describe('auth-service => user', () => {
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(result => {
           expect(result.body).to.have.a.property('ValidationErrors');
-          expect(result.body.ValidationErrors).to.contain('Property <username> missing.');
-          expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
-          expect(result.body.ValidationErrors).to.contain('Property <email> missing.');
+          expect(result.body.ValidationErrors).to.contain('Property <local.username> missing.');
+          expect(result.body.ValidationErrors).to.contain('Property <local.password> missing.');
+          expect(result.body.ValidationErrors).to.contain('Property <local.email> missing.');
         });
     });
 
@@ -289,7 +290,7 @@ describe('auth-service => user', () => {
 
   describe('POST /verify-token', () => {
 
-    it('returns an error if not token is passed', () => {
+    it('returns an error if no token is passed', () => {
       return server
         .post(ENDPOINTS.VERIFY_TOKEN)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -407,7 +408,6 @@ describe('auth-service => user', () => {
   });
 
   describe('DELETE /v1/user:id', () => {
-
     it('marks a user as deleted', async () => {
 
       const doc = {
@@ -462,6 +462,46 @@ describe('auth-service => user', () => {
         .expect(HttpStatus.OK)
         .then(result => {
           expect(result.body).to.have.a.property('is_deleted').to.be.false;
+        });
+    });
+  });
+
+  describe('GET /v1/me', () => {
+    it('returns my data if it is me', async () => {
+      const doc = {
+        is_deleted: false,
+        is_active: true,
+        local: {
+          username: 'foo-user',
+          password: 'passw0rd',
+          email: 'foo@bar.com'
+        }
+      };
+
+      let user = await new UserModel(doc).save();
+      let token = user.generateJwt();
+
+      await server
+        .get(`${ENDPOINTS.ME}`)
+        .set('x-access-token', token)
+        .expect(HttpStatus.OK)
+        .then(result => {
+          expect(result.body).to.exist;
+          expect(result.body).to.have.property('_id');
+          expect(result.body).to.have.property('email');
+          expect(result.body).to.have.deep.property('username');
+          expect(result.body).to.not.have.deep.property('exp');
+          expect(result.body).to.not.have.deep.property('iat');
+        });
+    });
+
+    it('returns an error if I cannot be recognized', async () => {
+      await server
+        .get(`${ENDPOINTS.ME}`)
+        .set('x-access-token', 'foobarbaz')
+        .expect(HttpStatus.UNAUTHORIZED)
+        .then(result => {
+          expect(result.body.message).to.contain('jwt malformed');
         });
     });
   });

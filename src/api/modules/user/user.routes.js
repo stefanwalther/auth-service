@@ -19,10 +19,30 @@ const UserController = require('./user.controller.js');
  *         type: string
  *         example: "Mustermann"
  *       local:
- *         $ref: "#/definitions/UserLocal"
+ *         $ref: "#/definitions/LocalStrategy"
  *
  *   UserLocal:
+ *     description: A user (using the local strategy).
+ *     required:
+ *       - username
+ *       - password
+ *       - email
+ *     properties:
+ *       firstname:
+ *         type: string
+ *         example: "Max"
+ *       lastname:
+ *         type: string
+ *         example: "Mustermann"
+ *       local:
+ *         $ref: "#/definitions/LocalStrategy"
+ *
+ *   LocalStrategy:
  *     description: Local authentication strategy
+ *     required:
+ *       - username
+ *       - password
+ *       - email
  *     properties:
  *       username:
  *         type: string
@@ -80,6 +100,7 @@ const UserController = require('./user.controller.js');
 // Todo: Document possible Validation Errors
 // Todo: Centralize tags (see https://apihandyman.io/writing-openapi-swagger-specification-tutorial-part-3-simplifying-specification-file/)
 // Todo: Registration date should definitely be saved explicitly
+// Todo: Reference to a global definition of the validation error
 /**
  * @swagger
  * /v1/user/register/local:
@@ -90,19 +111,21 @@ const UserController = require('./user.controller.js');
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: User
+ *       - name: UserLocal
  *         in: body
- *         description: The user to create.
+ *         description: The user to create (using the local strategy).
  *         schema:
  *           $ref: "#/definitions/UserLocal"
  *     responses:
  *       201:
  *         description: Confirmation that the user has been created successfully.
+ *       500:
+ *         description: Validation Error.
  */
 router.post('/v1/user/register/local', UserController.registerLocal);
 
-// Todo: Login date (in case of successful login should be saved).
-// Todo: Login attempt (in case of failed login should be saved).
+// Todo: Login date (in case of successful login should be saved) => goes to audit + one function is neede to get the last login date.
+// Todo: Login attempt (in case of failed login should be saved) => goes to audit + one function is needed to get the last login attempt.
 /**
  * @swagger
  * /v1/user/login:
@@ -178,17 +201,49 @@ router.get('/v1/user/password-reset-request', UserController.status);
 router.post('/v1/user/verify-token', UserController.verifyToken);
 
 /**
- * @wagger
- * /v1/user/:id
+ * @swagger
+ * /v1/me:
+ *   get:
+ *     description: Get information about the current (authenticated user).
+ *     tags:
+ *       - user
+ *   produces:
+ *     - application/json
+ *   parameters:
+ *     - name: _id
+ *       type: string
+ *       description: The user id.
+ *       example: 5aee4655ddb60e7e2de107ba
+ *     - name: email
+ *       type: string
+ *       description: The user's email address.
+ *       example: foo@bar.com
+ *     - name: username
+ *       type: string
+ *       description: The user's username.
+ *       example: foo
+ *   responses:
+ *     200:
+ *       description: Information about the current authenticated user.
+ *     401:
+ *       description: Unauthorized
+ */
+router.get('/v1/me', UserController.me);
+
+/**
+ * @swagger
+ * /v1/user/:id:
  *   delete:
- *     description: Remove a user (which essentially just marks the user as `deleted`).
-*      tags:
+ *     description: Remove a user (which essentially just marks the user as `deleted`). This can only be executed by the user himself or by an admin.
+ *     tags:
  *       - user
  *   produces:
  *     - application/json
  *   responses:
  *     200:
  *       description: User removed
+ *     403:
+ *       description: Permission denied
  *     500:
  *       description: Server error
  */

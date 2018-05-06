@@ -1,6 +1,7 @@
 const ExpressResult = require('express-result');
 const passport = require('passport');
 const _ = require('lodash');
+const HttpStatusCode = require('http-status-codes');
 
 const UserModel = require('./user.model').Model;
 const logger = require('winster').instance();
@@ -29,13 +30,13 @@ class UserController {
 
     const validationErrors = new ExpressResult.ValidationErrors();
     if (!_.has(req.body, 'local.username')) {
-      validationErrors.add('Property <username> missing.');
+      validationErrors.add('Property <local.username> missing.');
     }
     if (!_.has(req.body, 'local.password')) {
-      validationErrors.add('Property <password> missing.');
+      validationErrors.add('Property <local.password> missing.');
     }
     if (!_.has(req.body, 'local.email')) {
-      validationErrors.add('Property <email> missing.');
+      validationErrors.add('Property <local.email> missing.');
     }
 
     if (validationErrors.length > 0) {
@@ -180,8 +181,18 @@ class UserController {
 
   // Todo: Nice idea, but figure out how this could be of help?
   // Reference: https://github.com/binocarlos/passport-service
-  static details(req, res, next) {
+  static me(req, res, next) {
 
+    const token = (req.body && req.body.token) || req.headers['x-access-token'];
+    try {
+      const props = UserModel.verifyToken(token);
+      let ret = _.pick(props, ['_id', 'username', 'email']);
+      res.status(200);
+      res.json(ret);
+    } catch (err) {
+      res.status(HttpStatusCode.UNAUTHORIZED);
+      res.json({message: `Invalid request: ${err.message}`});
+    }
     next();
   }
 
