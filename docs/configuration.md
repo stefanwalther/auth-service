@@ -11,18 +11,21 @@ _{%=name%}_ can be configured by the following environment variables:
 - `MONGODB_PORT` - MongoDB port, defaults to `27017`. 
 
 **RabbitMQ:**
+
 - `RABBITMQ_EVENTS` - Whether to send events to RabbitMQ or not, defaults to `false`.
+- `RABBITMQ_HOST`
 
-
-**Nodemailer:**   
+**Nodemailer:**
 (e.g for sending an account verification message):
 
-- `NODEMAILER_API_USER` - 
-- `NODEMAILER_API_KEY` - 
-- `NODEMAILER_FROM` - 
-- `NODEMAILER_BCC` - 
+- `NODEMAILER_API_USER` - Nodemailer's API user.
+- `NODEMAILER_API_KEY` - Nodemailer's API key.
+- `NODEMAILER_FROM` - eMail-address to send messages from.
+- `NODEMAILER_BCC` - (optional) eMail-address(es) to send the message BCC.
 
 Nodemailer settings only need to be set if **one** of the following options are set to `true`:
+
+**General Settings:**
 
 - `ENABLE_ACCOUNT_VERIFICATION` - Force users to verify their accounts.
 - `ENABLE_PWD_RESET` - Allow to reset the account's password.

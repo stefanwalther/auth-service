@@ -4,6 +4,13 @@ const UserController = require('./user.controller.js');
 
 /**
  * @swagger
+ * securityDefinitions:
+ *   JWT:
+ *     description: ""
+ *     type: "apiKey"
+ *     name: "Authorization"
+ *     in: "header"
+ *
  * definitions:
  *   User:
  *     description: The user definition.
