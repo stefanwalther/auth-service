@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router(); // eslint-disable-line new-cap
 const UserController = require('./user.controller.js');
+const passport = require('passport');
 
 /**
  * @swagger
@@ -242,6 +243,8 @@ router.post('/v1/user/verify-token', UserController.verifyToken);
  */
 router.get('/v1/me', UserController.me);
 
+// Todo: Test
+// Todo: Document
 /**
  * @swagger
  * /v1/user/:id:
@@ -263,10 +266,27 @@ router.delete('/v1/user/:id', UserController.delete);
 
 // Todo: Test
 // Todo: Document
-router.patch('/v1/user/:id/delete', UserController.delete);
-
-// Todo: Test
-// Todo: Document
 router.post('/v1/user/:id/undelete', UserController.unDelete);
+
+/**
+ * @swagger
+ * /v1/user/:id/purge:
+ *   delete:
+ *     description: Purge a user entirely. (Can only be executed by an admin).
+ *     tags:
+ *       - user
+ *   security:
+ *     - JWT: [admin]
+ *   produces:
+ *     - application/json
+ *   responses:
+ *     200:
+ *       description: User has been purged.
+ *     403:
+ *       description: Permission denied.
+ *     500:
+ *       description: Unhandled server error.
+ */
+router.delete('/v1/user/:id/purge', passport.authenticate('jwt', {session: false}), UserController.purge);
 
 module.exports = router;

@@ -9,6 +9,7 @@ const jwtConfig = require('./../config/jwt-config');
 
 const params = {
   secretOrKey: jwtConfig.JWT_SECRET,
+  // Todo: needs to be changed to ExtractJwt.fromAuthHeaderAsBearerToken()? => https://jonathanmh.com/express-passport-json-web-token-jwt-authentication-beginners/
   jwtFromRequest: ExtractJwt.fromAuthHeader()
 };
 

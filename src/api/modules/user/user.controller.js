@@ -4,6 +4,8 @@ const _ = require('lodash');
 
 const UserModel = require('./user.model').Model;
 const logger = require('winster').instance();
+// Todo: Remove eslint disabler
+const guard = require('express-jwt-permissions'); // eslint-disable-line no-unused-vars
 
 class UserController {
 
@@ -157,6 +159,19 @@ class UserController {
       });
   }
 
+  static purge(req, res) {
+
+    return UserModel
+      .remove({_id: req.params.id})
+      .exec()
+      .then(result => {
+        return ExpressResult.ok(res, result);
+      })
+      .catch(err => {
+        return ExpressResult.error(res, err);
+      });
+  }
+
   // Todo: Standardize results
   static verifyToken(req, res, next) {
 
@@ -175,9 +190,7 @@ class UserController {
     } catch (err) {
       ExpressResult.error(res, {message: 'Invalid token.'});
     }
-
     next();
-
   }
 
   // Todo: Nice idea, but figure out how this could be of help?

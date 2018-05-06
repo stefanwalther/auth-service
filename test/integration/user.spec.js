@@ -338,7 +338,7 @@ describe('auth-service => user', () => {
       };
 
       const user = new UserModel(doc);
-      user.setLocalPassword(doc.local.password);
+      user.setLocalPassword(doc.local.password); // Todo: really needed? Don't think so.
 
       let newUser = await user.save();
       let body = {
@@ -506,6 +506,89 @@ describe('auth-service => user', () => {
         .then(result => {
           expect(result.body.message).to.contain('jwt malformed');
         });
+    });
+  });
+
+  xdescribe('DELETE /v1/:id/purge', () => {
+
+    let user1Saved = null;
+    let user1Token = null;
+    let user2Saved = null;
+    let user2Token = null;
+    let adminSaved = null;
+    let adminToken = null;
+
+    beforeEach(async () => {
+
+      const user1Doc = {
+        local: {
+          username: 'user1',
+          password: 'passw0rd',
+          email: 'user1@bar.com'
+        }
+      };
+
+      const user2Doc = {
+        local: {
+          username: 'user2',
+          password: 'passw0rd',
+          email: 'user2@bar.com'
+        }
+      };
+
+      const adminDoc = {
+        local: {
+          username: 'admin',
+          password: 'passw0rd',
+          email: 'admin@bar.com'
+        }
+      };
+
+      // Create the users, one being the admin, one the user to delete.
+      let user1 = new UserModel(user1Doc);
+      user1Saved = await user1.save();
+      user1Token = user1Saved.generateJwt();
+      let user2 = new UserModel(user2Doc);
+      user2Saved = await user2.save();
+      let admin = new UserModel(adminDoc);
+      adminSaved = await admin.save();
+
+    });
+
+    it('without a JWT token we should be in any case screwed', async () => {
+      await server
+        .delete(`/v1/user/${user1Saved._id.toString()}/purge`)
+        // .expect(HttpStatus.UNAUTHORIZED)
+        .then(result => {
+          console.log(result);
+          expect(result.res.statusCode).to.be.equal(500);
+        });
+    });
+
+    it('is not allowed by a user without admin scope', async () => {
+      await server
+        .delete(`/v1/user/${user2Saved._id}/purge`)
+        .set('x-access-token', user1Token)
+        // .expect(HttpStatus.UNAUTHORIZED)
+        .then(result => {
+          console.log(result);
+          expect(result.res.statusCode).to.be.equal(500);
+        });
+    });
+
+    it('is allowed by a user with admin scope', async () => {
+
+    });
+
+    xit('is never allowed by the current user (cannot purge my own account)', async () => {
+      expect(true).to.be.false;
+    });
+
+    xit('can be executed by an admin', async () => {
+      expect(true).to.be.false;
+    });
+    xit('One admin account needs to remain', async () => {
+      expect(true).to.be.false;
     });
   });
 

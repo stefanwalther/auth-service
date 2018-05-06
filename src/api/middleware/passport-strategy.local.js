@@ -31,6 +31,5 @@ passport.use(new LocalStrategy(localStrategyOpts, function (username, password, 
     // If credentials are correct, return the user object
     return done(null, user);
   });
-
 }
 ));
