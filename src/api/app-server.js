@@ -16,7 +16,7 @@ class AppServer {
    * @param  {} config
    */
   constructor(config) {
-    this.config = _.extend(defaultConfig, config || {});
+    this.config = _.extend(_.clone(defaultConfig), config || {});
     this._validateConfig();
 
     this.server = null;

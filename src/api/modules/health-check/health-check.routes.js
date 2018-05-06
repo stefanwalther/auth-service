@@ -36,6 +36,7 @@ const HealthCheckController = require('./health-check.controller.js');
  * /health-check:
  *   get:
  *     description: Get the status of the auth-server.
+ *     security: []
  *     produces:
  *       - application/json
  *     tags:
@@ -45,7 +46,6 @@ const HealthCheckController = require('./health-check.controller.js');
  *         description: Returned health-check status.
  *         schema:
  *           $ref: '#/definitions/HealthCheckResult'
- *
  */
 router.get('/health-check', HealthCheckController.get);
 

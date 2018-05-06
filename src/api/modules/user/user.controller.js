@@ -86,12 +86,14 @@ class UserController {
 
       // If Passport throws/catches an error
       if (err) {
+        // Todo: Trigger audit-log
         return ExpressResult.error(err);
       }
 
       // If a user is found
       if (user) {
         const token = user.generateJwt();
+        // Todo: Here we have to trigger the audit-log
         return ExpressResult.ok(res, {token});
       }
 

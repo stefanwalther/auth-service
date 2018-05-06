@@ -41,6 +41,10 @@ const schema = new Schema({
     type: String,
     required: false
   },
+  scope: {
+    type: Array,
+    required: false
+  },
   is_active: {
     type: Boolean,
     default: true
