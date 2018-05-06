@@ -167,6 +167,7 @@ router.post('/v1/user/logout', UserController.logout); // Todo: Decide whether t
 // Todo: Implement this
 router.get('/v1/user/status', UserController.status);
 
+// Todo: Only possible to be fetched by the user himself or by the admin
 router.get('/v1/user/:id', UserController.getById);
 
 // Todo: Implement this
