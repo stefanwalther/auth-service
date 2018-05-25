@@ -10,7 +10,7 @@
   ],
   "license": "MIT",
   "author": "Stefan Walther",
-  "main": "index.js",
+  "main": "./src/api/index.js",
   "repository": "https://github.com/sammler/auth-service",
   "scripts": {
     "lint": "npm run lint:src && npm run lint:test",
