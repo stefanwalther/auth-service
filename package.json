@@ -34,7 +34,7 @@
     "compression": "^1.7.2",
     "cors": "2.8.4",
     "crypto": "^1.0.1",
-    "email-templates": "^3.6.0",
+    "email-templates": "^4.0.0",
     "express": "^4.16.3",
     "express-initializers": "^0.0.1",
     "express-jwt-permissions": "^1.2.0",
