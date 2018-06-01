@@ -57,7 +57,7 @@
     "sammler-nodelib-logger": "^0.2.2",
     "serve-favicon": "^2.5.0",
     "swagger-jsdoc": "1.9.7",
-    "swagger-ui-express": "3.0.8",
+    "swagger-ui-express": "3.0.9",
     "winster": "0.2.11"
   },
   "devDependencies": {
