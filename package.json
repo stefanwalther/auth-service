@@ -34,7 +34,7 @@
     "compression": "^1.7.2",
     "cors": "2.8.4",
     "crypto": "^1.0.1",
-    "email-templates": "^3.6.0",
+    "email-templates": "^4.0.0",
     "express": "^4.16.3",
     "express-initializers": "^0.0.1",
     "express-jwt-permissions": "^1.2.0",
@@ -53,24 +53,24 @@
     "passport": "^0.4.0",
     "passport-jwt": "4.0.0",
     "passport-local": "^1.0.0",
-    "read-pkg-up": "^3.0.0",
+    "read-pkg-up": "^4.0.0",
     "sammler-nodelib-logger": "^0.2.2",
     "serve-favicon": "^2.5.0",
     "swagger-jsdoc": "1.9.7",
-    "swagger-ui-express": "3.0.8",
-    "winster": "0.2.10"
+    "swagger-ui-express": "3.0.10",
+    "winster": "0.2.11"
   },
   "devDependencies": {
     "chai": "4.1.2",
     "codeclimate-test-reporter": "0.5.0",
-    "codecov": "3.0.1",
-    "eslint": "4.19.1",
+    "codecov": "3.0.2",
+    "eslint": "5.0.1",
     "eslint-config-space-single": "0.3.3",
     "eslint-plugin-mocha": "5.0.0",
     "husky": "0.14.3",
-    "mocha": "5.1.1",
-    "nyc": "11.7.1",
-    "supertest": "3.0.0"
+    "mocha": "5.2.0",
+    "nyc": "12.0.2",
+    "supertest": "3.1.0"
   },
   "verb": {
     "run": true,
