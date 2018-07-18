@@ -31,7 +31,7 @@ up:												## Get the stack up and running - dev environment (docker-compose
 .PHONY: up
 
 down:											## Stop the stack - dev environment (docker-compose down)
-	docker-compose --f=docker-compose.dev.yml down
+	docker-compose --f=docker-compose.dev.yml down -t 0
 .PHONY: down
 
 rs: down up
@@ -65,7 +65,7 @@ build-run-integration-tests: build build-test 		## Run integration tests
 	docker-compose --f=docker-compose.integration-tests.yml run auth-service-test npm run test:integration
 .PHONY: build-run-integration-tests
 
-down-test:
+down-test:								## Tear down the test environment (docker-compose down => docker-compose.test.yml)
 	docker-compose --f=docker-compose.test.yml down
 .PHONY: down-test
 

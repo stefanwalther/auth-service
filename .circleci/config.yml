@@ -60,13 +60,13 @@ jobs:
           command: make run-unit-tests
       - run:
           name: CodeCov (upload unit tests)
-          command: bash <(curl -s https://codecov.io/bash) -t cad03271-0cf0-49bd-8b82-a8d3639bda4f
+          command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
       - run:
           name: Integration tests
           command: make run-integration-tests
       - run:
           name: CodeCov (upload integration tests)
-          command: bash <(curl -s https://codecov.io/bash) -t cad03271-0cf0-49bd-8b82-a8d3639bda4f
+          command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
       - add_ssh_keys
       - deploy:
           name: Push image to Docker Hub
