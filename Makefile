@@ -77,7 +77,7 @@ rs-deps: down-deps up-deps
 .PHONY: rs-deps
 
 down-deps:								## Stop services being dependent on
-	docker-compose --f=docker-compose.deps.yml down
+	docker-compose --f=docker-compose.deps.yml down -t 0
 .PHONY: down-deps
 
 setup:
