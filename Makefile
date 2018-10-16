@@ -26,7 +26,7 @@ build-test:								## Build the docker image (test image)
 	docker build --force-rm -t sammlerio/auth-service-test -f Dockerfile.test .
 .PHONY: build-test
 
-up:												## Get the stack up and running - dev environment (docker-compose up)
+up:												## Get the stack up and running (docker-compose.dev.yml)
 	docker-compose --f=docker-compose.dev.yml up
 .PHONY: up
 

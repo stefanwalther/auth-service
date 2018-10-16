@@ -2,19 +2,12 @@ version: '2'
 services:
 
   mongo:
-    image: sammlerio/mongo:latest@sha256:c8a1941d19da89eaa84b30276ec350e54f2e80bcd3bdd81f69a8f13070e8b333
+    image: mongo:3.4.7
     ports:
       - "27017:27017"
     logging:
       driver: none
 
-  rabbitmq:
-    image: sammlerio/rabbitmq:latest@sha256:7a295c01e08647990a8037be06c8dbd21824e688cdd2f3c56ff0a12f7353bcbe
-    ports:
-      - "15672:15672"
-      - "5672:5672"
-    logging:
-      driver: none
 
 
 

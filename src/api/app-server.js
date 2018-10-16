@@ -80,17 +80,17 @@ class AppServer {
         await mongoose.connection.close(); // Using Moongoose >5.0.4 connection.close is preferred over mongoose.disconnect();
         mongoose.models = {};
         mongoose.modelSchemas = {};
-        this.logger.trace('Closed mongoose connection');
+        this.logger.verbose('Closed mongoose connection');
       } catch (e) {
-        this.logger.trace('Could not close mongoose connection', e);
+        this.logger.verbose('Could not close mongoose connection', e);
       }
     }
     if (this.server) {
       try {
         await this.server.close();
-        this.logger.trace('Server closed');
+        this.logger.verbose('Server closed');
       } catch (e) {
-        this.logger.trace('Could not close server', e);
+        this.logger.verbose('Could not close server', e);
       }
     }
   }

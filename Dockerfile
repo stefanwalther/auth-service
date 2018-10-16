@@ -1,4 +1,5 @@
 ARG NODE_VER="10.9.0"
+ARG PORT=3010
 
 # --------------------------------------
 #               BASE NODE
@@ -43,7 +44,6 @@ RUN  npm run lint:fix && npm run lint && npm run test:unit
 # --------------------------------------
 FROM node:${NODE_VER}-alpine as RELEASE
 
-ARG PORT=3010
 ENV PORT=${PORT}
 
 ARG HOME_DIR="opt/auth-service"
@@ -58,6 +58,6 @@ COPY --from=dependencies $HOME_DIR/prod_node_modules ./node_modules
 COPY /src ./src/
 
 EXPOSE $PORT
-CMD ["echo", "Running auth-service at port", $PORT]
+CMD ["echo", "Running auth-service at port", "$PORT"]
 
 CMD ["npm", "run", "start"]

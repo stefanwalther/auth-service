@@ -155,18 +155,18 @@ schema.pre('save', function (next) {
 
   // Only hash the password if it has been modified (or is new)
   if (!user.isModified('local.password')) {
-    logger.trace('do nothing, not modified');
+    logger.verbose('do nothing, not modified');
     return next;
   }
-  logger.trace('change password');
-  logger.trace('user', user);
+  logger.verbose('change password');
+  logger.verbose('user', user);
 
   if (user.local && user.local.password) {
-    logger.trace('OK; set a password', user.local);
+    logger.verbose('OK; set a password', user.local);
     user.setLocalPassword(user.local.password);
   } else {
-    logger.trace('no', user);
-    logger.trace('---');
+    logger.verbose('no', user);
+    logger.verbose('---');
   }
   next();
 });

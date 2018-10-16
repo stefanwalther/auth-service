@@ -46,7 +46,7 @@ class UserController {
 
     const user = new UserModel(req.body);
 
-    logger.trace('save user', user);
+    logger.verbose('save user', user);
 
     return user.save()
       .then(user => {
