@@ -71,6 +71,8 @@ class UserController {
   // Todo: Send event
   static login(req, res) {
 
+    logger.verbose('Login with ', req.body.username, req.body.password);
+
     const validationErrors = new ExpressResult.ValidationErrors();
     if (!req.body.username) {
       validationErrors.add('Property <username> missing.');
@@ -81,6 +83,7 @@ class UserController {
     }
 
     if (validationErrors.length > 0) {
+      logger.verbose('ValidationErrors', validationErrors);
       return ExpressResult.error(res, validationErrors);
     }
 
@@ -89,6 +92,7 @@ class UserController {
       // If Passport throws/catches an error
       if (err) {
         // Todo: Trigger audit-log
+        logger.verbose('Passport threw an error', err);
         return ExpressResult.error(err);
       }
 
@@ -96,10 +100,12 @@ class UserController {
       if (user) {
         const token = user.generateJwt();
         // Todo: Here we have to trigger the audit-log
+        logger.verbose('OK, we have a result', token);
         return ExpressResult.ok(res, {token});
       }
 
       // No user found
+      logger.verbose('no user was found', info);
       return ExpressResult.unauthorized(res, info);
 
     })(req, res);
