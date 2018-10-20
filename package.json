@@ -55,6 +55,7 @@
     "passport-jwt": "4.0.0",
     "passport-local": "^1.0.0",
     "read-pkg-up": "^4.0.0",
+    "sammler-io-audit-logs": "0.0.1",
     "sammler-nodelib-logger": "^0.2.2",
     "serve-favicon": "^2.5.0",
     "swagger-jsdoc": "1.9.7",

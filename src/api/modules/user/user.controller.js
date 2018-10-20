@@ -7,6 +7,9 @@ const logger = require('winster').instance();
 // Todo: Remove eslint disabler
 const guard = require('express-jwt-permissions'); // eslint-disable-line no-unused-vars
 
+const auditLogService = require('sammler-io-audit-logs').instance();
+const auditLogActions = require('../../config/audit-log-actions');
+
 class UserController {
 
   // Todo: Standardize results
@@ -101,6 +104,7 @@ class UserController {
         const token = user.generateJwt();
         // Todo: Here we have to trigger the audit-log
         logger.verbose('OK, we have a result', token);
+        auditLogService.log(auditLogActions.AUTH_LOGIN);
         return ExpressResult.ok(res, {token});
       }
 

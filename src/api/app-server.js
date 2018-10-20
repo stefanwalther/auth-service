@@ -88,7 +88,7 @@ class AppServer {
     if (this.server) {
       try {
         await this.server.close();
-        this.logger.verbose('Server closed');
+        this.logger.info('Server closed');
       } catch (e) {
         this.logger.verbose('Could not close server', e);
       }

@@ -1,12 +1,30 @@
 version: '2'
 services:
 
+  # --------------------------------------
+  #              Infrastructure
+  # --------------------------------------
   mongo:
     image: mongo:3.4.7
     ports:
       - "27017:27017"
     logging:
       driver: none
+
+  nats-streaming:
+    image: nats-streaming
+    ports:
+    - "4222:4222"
+    - "4223:4223"
+    - "8223:8223"
+    - "8222:8222"
+    volumes:
+    - ./.datastore:/datastore
+    command: [
+      "-m", "8222",
+      "--store", "FILE",
+      "--dir", "datastore"
+  ]
 
 
 
