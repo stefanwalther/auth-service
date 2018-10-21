@@ -7,7 +7,9 @@ const logger = require('winster').instance();
 // Todo: Remove eslint disabler
 const guard = require('express-jwt-permissions'); // eslint-disable-line no-unused-vars
 
-const auditLogService = require('sammler-io-audit-logs').instance();
+const auditLogsConfig = require('./../../config/audit-logs-config');
+
+const auditLogService = require('sammler-io-audit-logs').instance(auditLogsConfig.connectionOpts);
 const auditLogActions = require('../../config/audit-log-actions');
 
 class UserController {
@@ -60,6 +62,7 @@ class UserController {
           is_verified: user.is_verified || false,
           email: user.email
         };
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterEvent());
         ExpressResult.created(res, result);
       })
       .catch(err => {
@@ -71,7 +74,6 @@ class UserController {
   // Todo: What should a failed login return, 400
   // Todo: Investigate how to properly use next() here
   // Todo: Standardize results
-  // Todo: Send event
   static login(req, res) {
 
     logger.verbose('Login with ', req.body.username, req.body.password);
@@ -104,7 +106,8 @@ class UserController {
         const token = user.generateJwt();
         // Todo: Here we have to trigger the audit-log
         logger.verbose('OK, we have a result', token);
-        auditLogService.log(auditLogActions.AUTH_LOGIN);
+
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent());
         return ExpressResult.ok(res, {token});
       }
 
@@ -120,13 +123,13 @@ class UserController {
    *
    * @Todo: Make configurable where to redirect to.
    * @Todo: Standardize results
-   * @Todo: Send event
    *
    * @param req
    * @param res
    * @param next
    */
   static logout(req, res, next) {
+    auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLogoutEvent());
     next();
   }
 
