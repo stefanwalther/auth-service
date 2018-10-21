@@ -3,8 +3,8 @@ version: '2'
 services:
 
   mongo:
+    image: mongo
     container_name: mongo
-    image: mongo:3.4.7
     ports:
       - "27017:27017"
 

@@ -15,7 +15,7 @@ gen-readme:								## Generate README.md (using docker-verb)
 .PHONY: gen-readme
 
 build:										## Build the docker image (production)
-	docker build --force-rm -t sammlerio/auth-service -f Dockerfile.prod .
+	docker build --no-cache --force-rm -t sammlerio/auth-service -f Dockerfile.prod .
 .PHONY: build
 
 run:											## Run the docker image
@@ -69,9 +69,13 @@ down-test:								## Tear down the test environment (docker-compose down => dock
 	docker-compose --f=docker-compose.test.yml down
 .PHONY: down-test
 
-up-deps:									## Run services being dependent on
-	docker-compose --f=docker-compose.deps.yml up
+up-deps:									## Run services being dependent on (daemon mode)
+	docker-compose --f=docker-compose.deps.yml up -d
 .PHONY: up-deps
+
+up-deps-i:									## Run services being dependent on (interactive mode)
+	docker-compose --f=docker-compose.deps.yml up
+.PHONY: up-deps-i
 
 rs-deps: down-deps up-deps
 .PHONY: rs-deps
