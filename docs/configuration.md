@@ -13,6 +13,10 @@ _{%=name%}_ can be configured by the following environment variables:
 - `MONGODB_HOST` - MongoDB host, defaults to `localhost`.
 - `MONGODB_PORT` - MongoDB port, defaults to `27017`. 
 
+**NATS-Streaming**
+- `NATS_STREAMIING_SERVER`
+- `NATS_STREAMING_CLUSTER`
+
 **RabbitMQ:**
 
 - `RABBITMQ_EVENTS` - Whether to send events to RabbitMQ or not, defaults to `false`.
