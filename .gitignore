@@ -7,6 +7,7 @@ log-test.log
 .vscode
 .idea
 package-lock.json
+.datastore
 
 # always ignore files
 *.DS_Store
