@@ -24,7 +24,7 @@ describe('auth-service => user', () => {
     appServer = new AppServer(defaultConfig);
     await appServer.start();
     server = superTest(appServer.server);
-    await UserModel.remove();
+    await UserModel.deleteMany();
   });
 
   afterEach(async () => {
@@ -56,7 +56,8 @@ describe('auth-service => user', () => {
         await user2.save();
       } catch (e) {
         expect(e).to.exist;
-        expect(e.name).to.be.equal('BulkWriteError');
+        expect(e.name).to.be.equal('MongoError');
+        expect(e).to.have.property('code').to.equal(11000);
       }
     });
 
