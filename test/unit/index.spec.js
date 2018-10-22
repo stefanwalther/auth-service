@@ -1,6 +1,6 @@
 const AppServer = require('./../../src/api/app-server');
 
-describe('AppServer => unit tests', () => {
+describe('[unit] AppServer', () => {
 
   let server = null;
   beforeEach(() => {

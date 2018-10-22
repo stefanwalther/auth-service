@@ -1,7 +1,7 @@
 const AppServer = require('./../../src/api/app-server');
 const _ = require('lodash');
 
-describe('AppServer => unit tests', () => {
+describe('[unit] AppServer', () => {
 
   let server = null;
 

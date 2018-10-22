@@ -1,6 +1,6 @@
 const AppServer = require('./../../src/api/app-server');
 
-describe('app-server', () => {
+describe('[unit] app-server', () => {
 
   it('ctor => throws an error if the port is invalid', () => {
 

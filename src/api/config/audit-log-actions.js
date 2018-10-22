@@ -1,35 +1,37 @@
+const BASE_PROPS = {
+  event_domain: 'auth',
+  source: '/auth-service'
+};
+
 module.exports = {
   SUBJECT_AUDIT_LOGS: 'audit-logs',
   cloudEvents: {
-    getRegisterEvent: user_id => {
-      return {
-        event_domain: 'AUTH',
-        event_name: 'AUTH_REGISTER',
-        user_id,
-        description: 'Register account.',
-        source: '/auth-service',
-        action_type: 'C'
-      };
+    getRegisterEvent: props => {
+      return Object.assign({
+        event: 'register',
+        actor: props.actor,
+        actor_group: props.actor_group,
+        action_type: 'C',
+        description: 'Register account.'
+      }, BASE_PROPS);
     },
-    getLoginEvent: user_id => {
-      return {
-        event_domain: 'AUTH',
-        event_name: 'AUTH_LOGIN',
-        user_id,
-        description: 'Log into account.',
-        source: '/auth-service',
-        action_type: 'R'
-      };
+    getLoginEvent: props => {
+      return Object.assign({
+        event: 'login',
+        actor: props.actor,
+        actor_group: props.actor_group,
+        action_type: 'R',
+        description: 'Log into account.'
+      }, BASE_PROPS);
     },
-    getLogoutEvent: user_id => {
-      return {
-        event_domain: 'AUTH',
-        event_name: 'AUTH_LOGOUT',
-        user_id,
-        description: 'Log out.',
-        source: '/auth-service',
-        action_type: 'R'
-      };
+    getLogoutEvent: props => {
+      return Object.assign({
+        event: 'logout',
+        actor: props.actor,
+        actor_group: props.actor_group,
+        action_type: 'R',
+        description: 'Log out.'
+      }, BASE_PROPS);
     }
   }
 };

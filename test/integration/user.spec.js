@@ -15,7 +15,7 @@ const ENDPOINTS = {
   ME: '/v1/me'
 };
 
-describe('auth-service => user', () => {
+describe('[integration] auth-service => user', () => {
 
   let server;
   let appServer;

@@ -1,6 +1,6 @@
 const AppServer = require('./../../src/api/app-server');
 
-describe('app-server', () => {
+describe('[unit] app-server', () => {
 
   let server = null;
 

@@ -62,7 +62,7 @@ class UserController {
           is_verified: user.is_verified || false,
           email: user.email
         };
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterEvent(user._id));
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterEvent({actor: user._id}));
         ExpressResult.created(res, result);
       })
       .catch(err => {
@@ -105,7 +105,7 @@ class UserController {
       if (user) {
         const token = user.generateJwt();
         logger.verbose('OK, we have a result', token);
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent(user._id));
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({actor: user._id}));
         return ExpressResult.ok(res, {token});
       }
 
@@ -121,13 +121,14 @@ class UserController {
    *
    * @Todo: Make configurable where to redirect to.
    * @Todo: Standardize results
+   * @Todo: Send audit-log event
    *
    * @param req
    * @param res
    * @param next
    */
   static logout(req, res, next) {
-    auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLogoutEvent());
+    // AuditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLogoutEvent());
     next();
   }
 
