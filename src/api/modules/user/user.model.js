@@ -15,7 +15,7 @@ const localStrategySchema = new Schema({
   username: {
     type: String,
     required: false,
-    unique: false,
+    unique: true,
     minlength: [3, 'Username too short, 3 characters required.']
   },
   email: {

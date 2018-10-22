@@ -62,7 +62,7 @@ class UserController {
           is_verified: user.is_verified || false,
           email: user.email
         };
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterEvent());
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterEvent(user._id));
         ExpressResult.created(res, result);
       })
       .catch(err => {
@@ -104,10 +104,8 @@ class UserController {
       // If a user is found
       if (user) {
         const token = user.generateJwt();
-        // Todo: Here we have to trigger the audit-log
         logger.verbose('OK, we have a result', token);
-
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent());
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent(user._id));
         return ExpressResult.ok(res, {token});
       }
 
