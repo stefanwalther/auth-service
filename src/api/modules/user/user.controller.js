@@ -57,12 +57,14 @@ class UserController {
       .then(user => {
         const result = {
           _id: user._id,
-          username: user.username,
+          local: {
+            username: user.local.username,
+            email: user.local.email
+          },
           is_active: user.is_active || false,
-          is_verified: user.is_verified || false,
-          email: user.email
+          is_verified: user.is_verified || false
         };
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterEvent({actor: user._id}));
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterLocalEvent({user}));
         ExpressResult.created(res, result);
       })
       .catch(err => {
@@ -105,7 +107,7 @@ class UserController {
       if (user) {
         const token = user.generateJwt();
         logger.verbose('OK, we have a result', token);
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({actor: user._id}));
+        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({user}));
         return ExpressResult.ok(res, {token});
       }
 
