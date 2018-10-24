@@ -65,7 +65,7 @@ class UserController {
           is_active: user.is_active || false,
           is_verified: user.is_verified || false
         };
-        if (serverConfig.AUDIT_LOG === 'true') {
+        if (serverConfig.AUDIT_LOG === true) {
           auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterLocalEvent({user}));
         }
         ExpressResult.created(res, result);
@@ -110,7 +110,7 @@ class UserController {
       if (user) {
         const token = user.generateJwt();
         logger.verbose('OK, we have a result', token);
-        if (serverConfig.AUDIT_LOG === 'true') {
+        if (serverConfig.AUDIT_LOG === true) {
           auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({user}));
         }
         return ExpressResult.ok(res, {token});
