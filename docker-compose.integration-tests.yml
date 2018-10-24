@@ -13,6 +13,7 @@ services:
     environment:
       - PORT=3010
       - JWT_SECRET=foo
+      - AUDIT_LOG=false
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017

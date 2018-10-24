@@ -7,6 +7,7 @@ const logger = require('winster').instance();
 // Todo: Remove eslint disabler
 const guard = require('express-jwt-permissions'); // eslint-disable-line no-unused-vars
 
+const serverConfig = require('./../../config/server-config');
 const auditLogsConfig = require('./../../config/audit-logs-config');
 
 const auditLogService = require('sammler-io-audit-logs').instance(auditLogsConfig.connectionOpts);
@@ -64,7 +65,9 @@ class UserController {
           is_active: user.is_active || false,
           is_verified: user.is_verified || false
         };
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterLocalEvent({user}));
+        if (serverConfig.AUDIT_LOG === 'true') {
+          auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterLocalEvent({user}));
+        }
         ExpressResult.created(res, result);
       })
       .catch(err => {
@@ -107,7 +110,9 @@ class UserController {
       if (user) {
         const token = user.generateJwt();
         logger.verbose('OK, we have a result', token);
-        auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({user}));
+        if (serverConfig.AUDIT_LOG === 'true') {
+          auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({user}));
+        }
         return ExpressResult.ok(res, {token});
       }
 

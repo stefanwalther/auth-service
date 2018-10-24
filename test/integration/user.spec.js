@@ -456,6 +456,7 @@ describe('[integration] auth-service => user', () => {
         .post(`/v1/user/${newUser._id}/undelete`)
         .expect(HttpStatus.OK)
         .then(updateResult => {
+          // Console.log(updateResult.body);
           expect(updateResult.body).to.have.property('n').to.be.equal(1);
           expect(updateResult.body).to.have.property('nModified').to.be.equal(1);
           expect(updateResult.body).to.have.property('ok').to.be.equal(1);

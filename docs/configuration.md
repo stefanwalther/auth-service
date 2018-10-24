@@ -15,6 +15,7 @@ _{%=name%}_ can be configured by the following environment variables:
 - `MONGODB_DATABASE` - The MongoDB database, defaults to `sammlerio`.
 
 **NATS-Streaming**
+
 - `NATS_STREAMIING_SERVER`
 - `NATS_STREAMING_CLUSTER`
 
