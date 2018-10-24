@@ -16,6 +16,7 @@ services:
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
+      - MONGODB_DATABASE=sammlerio_integration
       - NODE_ENV=test
       - WINSTER_SUPRESS_LOGGING='true'
     depends_on:

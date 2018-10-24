@@ -18,6 +18,7 @@ services:
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
+      - MONGODB_DATABASE=sammlerio_dev
     ports:
       - "3010:3010"
     volumes:
