@@ -15,7 +15,7 @@ gen-readme:																																													## Generate README.md (u
 .PHONY: gen-readme
 
 build:																																															## Build the docker image (production)
-	docker build --no-cache --force-rm -t sammlerio/auth-service -f Dockerfile.prod .
+	docker build -t sammlerio/auth-service -f Dockerfile.prod .
 .PHONY: build
 
 run:																																																## Run the docker image

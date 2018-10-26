@@ -5,7 +5,6 @@ _{%=name%}_ can be configured by the following environment variables:
 
 - `PORT` - The port to run the REST API (defaults to `3010`).
 - `JWT_SECRET` - The secret used for JWT.
-- `AUDIT_LOG` - Whether to enable the audit log or not, can be `true` or `false`, defaults to `true`.
 
 **MongoDB:**
 
@@ -19,11 +18,6 @@ _{%=name%}_ can be configured by the following environment variables:
 - `NATS_STREAMIING_SERVER`
 - `NATS_STREAMING_CLUSTER`
 
-**RabbitMQ:**
-
-- `RABBITMQ_EVENTS` - Whether to send events to RabbitMQ or not, defaults to `false`.
-- `RABBITMQ_HOST`
-
 **Nodemailer:**
 (e.g for sending an account verification message):
 
@@ -34,7 +28,10 @@ _{%=name%}_ can be configured by the following environment variables:
 
 Nodemailer settings only need to be set if **one** of the following options are set to `true`:
 
-**General Settings:**
+---
+
+**Behavior:**
 
 - `ENABLE_ACCOUNT_VERIFICATION` - Force users to verify their accounts.
 - `ENABLE_PWD_RESET` - Allow to reset the account's password.
+- `ENABLE_AUDIT_LOG` - Whether to enable the audit log or not, can be `true` or `false`, defaults to `true`.
