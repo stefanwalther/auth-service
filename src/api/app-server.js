@@ -85,6 +85,7 @@ class AppServer {
         this.logger.verbose('Could not close mongoose connection', e);
       }
     }
+
     if (this.server) {
       try {
         await this.server.close();
