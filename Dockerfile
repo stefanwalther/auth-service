@@ -11,7 +11,6 @@ ENV HOME_DIR $HOME_DIR
 RUN mkdir -p $HOME_DIR
 WORKDIR $HOME_DIR
 
-#COPY package.json package-lock.json ./
 COPY package.json ./
 
 # --------------------------------------

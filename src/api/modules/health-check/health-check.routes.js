@@ -35,7 +35,7 @@ const HealthCheckController = require('./health-check.controller.js');
  *
  * /health-check:
  *   get:
- *     description: Get the status of the auth-server.
+ *     description: Get the status of the server.
  *     security: []
  *     produces:
  *       - application/json
