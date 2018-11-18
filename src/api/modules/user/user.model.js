@@ -99,10 +99,14 @@ schema.methods.generateJwt = function () {
 
   return jwt.sign({
     _id: this._id,
+    user_id: this._id,
     email: this.local.email,
     username: this.local.username,
     firstname: this.firstname,
     lastname: this.lastname,
+    groups: [
+      'user'
+    ],
     exp: moment().add(7, 'days').valueOf()
   }, jwtConfig.JWT_SECRET);
 };

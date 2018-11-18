@@ -2,6 +2,7 @@ CODECLIMATE = $(MOD_BIN)/codeclimate-test-reporter
 MOD_BIN = ./node_modules/.bin
 MOCHA = $(MOD_BIN)/_mocha
 NYC = $(MOD_BIN)/nyc
+NODE_VER := $(shell cat .nvmrc)
 
 help:																																																## Show this help.
 	@echo ''
@@ -15,7 +16,7 @@ gen-readme:																																													## Generate README.md (u
 .PHONY: gen-readme
 
 build:																																															## Build the docker image (production)
-	docker build -t sammlerio/auth-service -f Dockerfile.prod .
+	docker build --build-arg NODE_VER=$(NODE_VER) -t sammlerio/auth-service -f Dockerfile.prod .
 .PHONY: build
 
 run:																																																## Run the docker image
@@ -23,7 +24,7 @@ run:																																																## Run the docker image
 .PHONY: run
 
 build-test:																																													## Build the docker image (test image)
-	docker build --force-rm -t sammlerio/auth-service-test -f Dockerfile.test .
+	docker build --force-rm --build-arg NODE_VER=$(NODE_VER) -t sammlerio/auth-service-test -f Dockerfile.test .
 .PHONY: build-test
 
 up:																																																	## Get the stack up and running (docker-compose.dev.yml)
