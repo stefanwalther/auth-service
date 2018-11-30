@@ -59,7 +59,7 @@ class AppServer {
   async start() {
 
     await initializer(this.app, {directory: path.join(__dirname, 'config/initializers')});
-    await mongoose.connect(mongoUri);
+    await mongoose.connect(mongoUri, {useNewUrlParser: true});
 
     try {
       this.server = await this.app.listen(this.config.PORT);
