@@ -3,6 +3,7 @@
 > Auth service (for sammler).
 
 [![CircleCI](https://img.shields.io/circleci/project/github/sammler/auth-service.svg)](https://circleci.com/gh/sammler/auth-service)
+[![XO code style](https://img.shields.io/badge/code_style-XO--space-5ed9c7.svg)](https://github.com/sindresorhus/eslint-config-xo-space)
 
 ---
 <br/>
@@ -59,30 +60,41 @@ $ docker run -it sammlerio/auth-service
 ## Configuration
 _auth-service_ can be configured by the following environment variables:
 
+**General:**
+
 - `PORT` - The port to run the REST API (defaults to `3010`).
 - `JWT_SECRET` - The secret used for JWT.
+- `NODE_ENV` - Environment settings for the service (`production`, `development` or `test`), defaults to `development`.
 
 **MongoDB:**
 
 - `MONGODB_DEBUG` - Whether to use the Mongoose debug mode or not, defaults to `false`.
 - `MONGODB_HOST` - MongoDB host, defaults to `localhost`.
 - `MONGODB_PORT` - MongoDB port, defaults to `27017`. 
+- `MONGODB_DATABASE` - The MongoDB database, defaults to `db`.
 
-**RabbitMQ:**
-- `RABBITMQ_EVENTS` - Whether to send events to RabbitMQ or not, defaults to `false`.
+**NATS-Streaming:**
 
-**Nodemailer:**   
+- `NATS_STREAMING_HOST` - The NATS-Streaming host, defaults to `localhost`.
+- `NATS_STREAMING_PORT` - The NATS-Streaming port, defaults to `4222`.
+
+**Nodemailer:**
 (e.g for sending an account verification message):
 
-- `NODEMAILER_API_USER` - 
-- `NODEMAILER_API_KEY` - 
-- `NODEMAILER_FROM` - 
-- `NODEMAILER_BCC` - 
+- `NODEMAILER_API_USER` - Nodemailer's API user.
+- `NODEMAILER_API_KEY` - Nodemailer's API key.
+- `NODEMAILER_FROM` - eMail-address to send messages from.
+- `NODEMAILER_BCC` - (optional) eMail-address(es) to send the message BCC.
 
 Nodemailer settings only need to be set if **one** of the following options are set to `true`:
 
+---
+
+**Behavior:**
+
 - `ENABLE_ACCOUNT_VERIFICATION` - Force users to verify their accounts.
 - `ENABLE_PWD_RESET` - Allow to reset the account's password.
+- `ENABLE_AUDIT_LOG` - Whether to enable the audit log or not, can be `true` or `false`, defaults to `true`.
 
 ## Usage
 

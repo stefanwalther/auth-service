@@ -5,18 +5,19 @@ _{%=name%}_ can be configured by the following environment variables:
 
 - `PORT` - The port to run the REST API (defaults to `3010`).
 - `JWT_SECRET` - The secret used for JWT.
+- `NODE_ENV` - Environment settings for the service (`production`, `development` or `test`), defaults to `development`.
 
 **MongoDB:**
 
 - `MONGODB_DEBUG` - Whether to use the Mongoose debug mode or not, defaults to `false`.
 - `MONGODB_HOST` - MongoDB host, defaults to `localhost`.
 - `MONGODB_PORT` - MongoDB port, defaults to `27017`. 
-- `MONGODB_DATABASE` - The MongoDB database, defaults to `sammlerio`.
+- `MONGODB_DATABASE` - The MongoDB database, defaults to `db`.
 
-**NATS-Streaming**
+**NATS-Streaming:**
 
-- `NATS_STREAMIING_SERVER`
-- `NATS_STREAMING_CLUSTER`
+- `NATS_STREAMING_HOST` - The NATS-Streaming host, defaults to `localhost`.
+- `NATS_STREAMING_PORT` - The NATS-Streaming port, defaults to `4222`.
 
 **Nodemailer:**
 (e.g for sending an account verification message):
