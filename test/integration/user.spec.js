@@ -33,9 +33,13 @@ describe('[integration] auth-service => user', () => {
 
   describe('UserModel', () => {
 
+    // Todo: We potentially have a problem here, or at least we have to think about it:
+    //  - Is a user unique globally
+    //  - Is a user only unique within a tenant
     it('registering a new user throws an error if user already exists', async () => {
 
       let user1 = new UserModel({
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           password: 'test',
           email: 'test@bar.com',
@@ -45,6 +49,7 @@ describe('[integration] auth-service => user', () => {
       await user1.save();
 
       let user2 = new UserModel({
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           password: 'test',
           email: 'test@foobar.com',
@@ -64,6 +69,7 @@ describe('[integration] auth-service => user', () => {
     it('is fine registering multiple users (with different usernames)', async () => {
 
       let user1 = new UserModel({
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           username: 'foo',
           email: 'foo@bar.com',
@@ -73,6 +79,7 @@ describe('[integration] auth-service => user', () => {
       let u = await user1.save();
 
       let user2 = new UserModel({
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           username: 'foo2',
           email: 'foo2@bar.com',
@@ -90,6 +97,7 @@ describe('[integration] auth-service => user', () => {
     it('saves the password correctly', async () => {
 
       let user = new UserModel({
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           username: 'foo',
           email: 'foo@bar.com',
@@ -122,6 +130,7 @@ describe('[integration] auth-service => user', () => {
 
     it('creates a new user', () => {
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           password: 'bar',
           username: 'foofoo',
@@ -138,6 +147,7 @@ describe('[integration] auth-service => user', () => {
 
     it('does not return any sensitive information', () => {
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           password: 'bar',
           username: 'foofoo',
@@ -185,6 +195,7 @@ describe('[integration] auth-service => user', () => {
     it('returns 401/Unauthorized if login fails (user found, password does not match)', () => {
 
       const user = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           username: 'foo-user',
           password: 'passw0rd',
@@ -214,6 +225,7 @@ describe('[integration] auth-service => user', () => {
 
       const doc = {
         is_active: true,
+        tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
           username: 'foo-user',
           email: 'foo@bar.com',
@@ -241,6 +253,7 @@ describe('[integration] auth-service => user', () => {
     it('will not allow deactivated users to login', async () => {
 
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
         is_active: false,
         local: {
@@ -266,6 +279,7 @@ describe('[integration] auth-service => user', () => {
     it('will not allow deleted users to login', async () => {
 
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: true,
         local: {
           password: 'passw0rd',
@@ -329,6 +343,7 @@ describe('[integration] auth-service => user', () => {
     it('returns OK if the token is valid', async () => {
 
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
         is_verified: true,
         local: {
@@ -356,6 +371,7 @@ describe('[integration] auth-service => user', () => {
     it('returns OK if the token is NOT valid', async () => {
 
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
         is_verified: true,
         local: {
@@ -384,6 +400,7 @@ describe('[integration] auth-service => user', () => {
     it('will not verify if a user is marked as deleted', async () => {
 
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         username: 'foo-user',
         password: 'passw0rd',
         is_deleted: true,
@@ -415,6 +432,7 @@ describe('[integration] auth-service => user', () => {
     it('marks a user as deleted', async () => {
 
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
         is_active: false,
         local: {
@@ -440,6 +458,7 @@ describe('[integration] auth-service => user', () => {
     it('unmarks a user as deleted', async () => {
 
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
         is_active: false,
         local: {
@@ -474,6 +493,7 @@ describe('[integration] auth-service => user', () => {
   describe('GET /v1/me', () => {
     it('returns my data if it is me', async () => {
       const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
         is_active: true,
         local: {
