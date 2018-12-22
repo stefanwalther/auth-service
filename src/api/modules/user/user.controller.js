@@ -79,6 +79,7 @@ class UserController {
   // Todo: What should a failed login return, 400
   // Todo: Investigate how to properly use next() here
   // Todo: Standardize results
+  // Todo: Break out validation
   static login(req, res) {
 
     logger.verbose('Login with ', req.body.username, req.body.password);

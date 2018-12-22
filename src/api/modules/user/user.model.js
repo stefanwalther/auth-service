@@ -33,6 +33,10 @@ const localStrategySchema = new Schema({
 
 /* eslint-disable camelcase */
 const schema = new Schema({
+  tenant_id: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
   firstname: {
     type: String,
     required: false
@@ -41,6 +45,7 @@ const schema = new Schema({
     type: String,
     required: false
   },
+  // Todo: What is `scope` ... is it used?
   scope: {
     type: Array,
     required: false
@@ -99,6 +104,7 @@ schema.methods.generateJwt = function () {
 
   return jwt.sign({
     _id: this._id,
+    tenant_id: this.tenant_id,
     user_id: this._id,
     email: this.local.email,
     username: this.local.username,
