@@ -45,11 +45,6 @@ const schema = new Schema({
     type: String,
     required: false
   },
-  // Todo: What is `scope` ... is it used?
-  scope: {
-    type: Array,
-    required: false
-  },
   is_active: {
     type: Boolean,
     default: true
