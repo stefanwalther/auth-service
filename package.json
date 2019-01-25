@@ -24,9 +24,9 @@
     "start": "node ./src/api/index.js",
     "start:watch": "nodemon ./src/api/index.js",
     "test": "npm run test:unit && npm run test:integration && npm run coverage",
-    "test:integration": "export JWT_SECRET='My Secret' && nyc --reporter=lcov mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000",
+    "test:integration": "export JWT_SECRET='My Secret' && nyc --reporter=lcov mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --timeout 6000 --exit",
     "test:integration:watch": "export JWT_SECRET='My Secret' && npm run test:unit && nyc --reporter=lcov mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --reporter=min --timeout 6000 --watch",
-    "test:unit": "nyc --reporter=lcov mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js'",
+    "test:unit": "nyc --reporter=lcov mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js' --exit",
     "test:watch": "export JWT_SECRET='My Secret' && nyc --reporter=lcov mocha './test/**/*.spec.js' --require './test/mocha.conf.js' --reporter=min --timeout 6000 --watch"
   },
   "dependencies": {
