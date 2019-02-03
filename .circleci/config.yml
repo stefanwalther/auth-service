@@ -17,13 +17,13 @@ jobs:
             curl -sSL $DOCKER_URL | sudo tar -xz --strip-components=1 -C /usr/bin/
             sudo service docker restart
       - run:
-          name: Login to Docker
-          command: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
-      - run:
           name: Pull public docker images in the background
           background: true
           command: |
-            docker pull node:8.9.4-alpine
+            NODE_VER=$(cat ./.nvmrc)
+            docker pull "node:${NODE_VER}-alpine"
+            docker pull sammlerio/mongo
+            docker pull sammlerio/nats-streaming
       - run:
           name: Upgrade Docker Compose
           command: |
@@ -59,6 +59,9 @@ jobs:
           name: CodeCov (upload unit tests)
           command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
       - add_ssh_keys
+      - run:
+          name: Login to Docker
+          command: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
       - deploy:
           name: Push image to Docker Hub
           command: |
