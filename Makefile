@@ -100,4 +100,9 @@ lint-fix: 																																													## lint & fix everything
 	npm run lint:fix
 .PHONY: lint-fix
 
-
+circleci:																																														## Simulate the CircleCI tests
+	$(MAKE) build
+	$(MAKE) build-test
+	$(MAKE) run-unit-tests
+	$(MAKE) run-integration-tests
+.PHONY: circleci

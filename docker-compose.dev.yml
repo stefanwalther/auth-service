@@ -3,14 +3,14 @@ version: '2'
 services:
 
   mongo:
-    image: mongo
+    image: sammlerio/mongo
     container_name: mongo
     ports:
       - "27017:27017"
 
   auth-service:
-    container_name: auth-service
     image: sammlerio/auth-service
+    container_name: auth-service
     environment:
       - NODE_ENV=development
       - PORT=3010
