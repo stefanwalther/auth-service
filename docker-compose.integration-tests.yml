@@ -26,5 +26,5 @@ services:
       - ./coverage:/opt/auth-service/coverage
 
   rabbitmq:
-    image: sammlerio/rabbitmq:latest@sha256:7a295c01e08647990a8037be06c8dbd21824e688cdd2f3c56ff0a12f7353bcbe
+    image: sammlerio/rabbitmq:latest@sha256:791b8cff36733be7ef12bde13c61e670888302220a8dd76b0d05336a5843b98c
 
