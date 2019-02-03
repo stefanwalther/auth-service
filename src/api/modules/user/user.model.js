@@ -35,7 +35,8 @@ const localStrategySchema = new Schema({
 const schema = new Schema({
   tenant_id: {
     type: Schema.Types.ObjectId,
-    required: true
+    required: true,
+    auto: true
   },
   firstname: {
     type: String,

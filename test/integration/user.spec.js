@@ -33,6 +33,22 @@ describe('[integration] auth-service => user', () => {
 
   describe('UserModel', () => {
 
+    it('provides a tenant_id by default', async () => {
+
+      let user1 = new UserModel({
+        local: {
+          password: 'test',
+          email: 'test@bar.com',
+          username: 'test'
+        }
+      });
+      await user1.save();
+
+      expect(user1).to.have.property('_id').to.not.be.empty;
+      expect(user1).to.have.property('tenant_id').to.not.be.empty;
+
+    });
+
     // Todo: We potentially have a problem here, or at least we have to think about it:
     //  - Is a user unique globally
     //  - Is a user only unique within a tenant
