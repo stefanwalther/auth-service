@@ -51,7 +51,7 @@ jobs:
           command: make build-test
       - run:
           name: Lint
-          command: docker-compose --f=docker-compose.unit-tests.yml run auth-service-test npm run lint
+          command: docker-compose --f=docker-compose.test.yml run auth-service-test npm run lint
       - run:
           name: Tests (unit + integration tests)
           command: make run-unit-tests
