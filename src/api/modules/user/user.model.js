@@ -2,10 +2,9 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const mongoose = require('mongoose');
-const timeStamps = require('mongoose-timestamp');
 const _ = require('lodash');
 
-const mongooseConfig = require('./../../config/mongoose-config');
+const MongooseConfig = require('./../../config/mongoose-config');
 const jwtConfig = require('./../../config/jwt-config');
 const logger = require('winster').instance();
 
@@ -60,13 +59,11 @@ const schema = new Schema({
   },
   local: localStrategySchema
 }, {
-  collection: mongooseConfig.COLLECTION_PREFIX + mongooseConfig.COLLECTION_USER,
-  strict: true
+  collection: MongooseConfig.COLLECTION_PREFIX + MongooseConfig.COLLECTION_USER,
+  strict: true,
+  timestamps: {createdAt: MongooseConfig.FIELD_CREATED_AT, updatedAt: MongooseConfig.FIELD_UPDATED_AT}
 });
 /* eslint-enable camelcase */
-
-// schema.index({"local.username": 1});
-schema.plugin(timeStamps, {createdAt: mongooseConfig.FIELD_CREATED_AT, updatedAt: mongooseConfig.FIELD_UPDATED_AT});
 
 schema.methods.setLocalPassword = function (password) {
   if (!this.local) {
@@ -119,7 +116,7 @@ schema.statics.verifyToken = token => {
 
 schema.statics.markAsDeleted = id => {
 
-  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+  return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
     .update(
       {_id: id},
       {$set: {is_deleted: true}}
@@ -128,7 +125,7 @@ schema.statics.markAsDeleted = id => {
 };
 
 schema.statics.unMarkAsDeleted = id => {
-  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+  return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
     .update(
       {_id: id},
       {$set: {is_deleted: false}}
@@ -137,7 +134,7 @@ schema.statics.unMarkAsDeleted = id => {
 };
 
 schema.statics.getById = id => {
-  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+  return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
     .findById(id)
     .exec();
 };
@@ -145,14 +142,14 @@ schema.statics.getById = id => {
 // Todo: needs testing
 schema.statics.getDeleted = () => {
 
-  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+  return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
     .find({is_deleted: true})
     .exec();
 };
 
 // Todo: needs testing
 schema.statics.purge = () => {
-  return mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+  return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
     .remove({is_deleted: true})
     .exec();
 };
@@ -181,6 +178,6 @@ schema.pre('save', function (next) {
 
 module.exports = {
   Schema: schema,
-  Model: mongoose.model(mongooseConfig.COLLECTION_USER, schema)
+  Model: mongoose.model(MongooseConfig.COLLECTION_USER, schema)
 };
 

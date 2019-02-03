@@ -7,8 +7,8 @@ module.exports = {
 
   COLLECTION_PREFIX: process.env.MONGODB_COLLECTION_PREFIX || 'auth-service~~',
 
-  FIELD_CREATED_AT: 'created_at',
-  FIELD_UPDATED_AT: 'updated_at',
+  FIELD_CREATED_AT: 'createdAt',
+  FIELD_UPDATED_AT: 'updatedAt',
 
   COLLECTION_USER: 'user',
   COLLECTION_USER_AUDIT: 'user-audit'

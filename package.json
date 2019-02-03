@@ -45,7 +45,6 @@
     "moment": "^2.22.2",
     "mongoose": "^5.3.5",
     "mongoose-connection-config": "^0.1.2",
-    "mongoose-timestamp": "^0.6.0",
     "ms": "^2.1.1",
     "nodemailer": "^4.6.8",
     "nodemailer-sendgrid-transport": "^0.2.0",
