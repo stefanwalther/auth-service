@@ -58,6 +58,7 @@ class UserController {
       .then(user => {
         const result = {
           _id: user._id,
+          tenant_id: user.tenant_id,
           local: {
             username: user.local.username,
             email: user.local.email
