@@ -5,7 +5,7 @@ services:
   #              Infrastructure
   # --------------------------------------
   mongo:
-    image: mongo
+    image: sammlerio/mongo
     container_name: mongo
     ports:
       - "27017:27017"
@@ -13,7 +13,7 @@ services:
       driver: none
 
   nats-streaming:
-    image: nats-streaming
+    image: sammlerio/nats-streaming
     container_name: nats-streaming
     ports:
       - "4222:4222"
