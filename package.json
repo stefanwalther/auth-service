@@ -46,7 +46,7 @@
     "mongoose": "^5.3.5",
     "mongoose-connection-config": "^0.1.2",
     "ms": "^2.1.1",
-    "nodemailer": "^4.6.8",
+    "nodemailer": "^5.0.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nodemon": "^1.18.4",
     "passport": "^0.4.0",
