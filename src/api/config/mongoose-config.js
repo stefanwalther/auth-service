@@ -10,6 +10,6 @@ module.exports = {
   FIELD_CREATED_AT: 'createdAt',
   FIELD_UPDATED_AT: 'updatedAt',
 
-  COLLECTION_USER: 'user',
+  COLLECTION_USER: 'users',
   COLLECTION_USER_AUDIT: 'user-audit'
 };
