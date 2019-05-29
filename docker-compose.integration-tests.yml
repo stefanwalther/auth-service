@@ -9,7 +9,7 @@ services:
       - 27017:27017
 
   auth-service-test:
-    image: sammlerio/auth-service-test
+    image: stefanwalther/auth-service-test
     environment:
       - PORT=3010
       - JWT_SECRET=foo
@@ -17,7 +17,7 @@ services:
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
-      - MONGODB_DATABASE=sammlerio_integration
+      - MONGODB_DATABASE=auth-service_integration
       - NODE_ENV=test
       - WINSTER_SUPRESS_LOGGING='true'
     depends_on:

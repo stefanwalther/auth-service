@@ -9,7 +9,7 @@ services:
       - "27017:27017"
 
   auth-service:
-    image: sammlerio/auth-service
+    image: stefanwalther/auth-service
     container_name: auth-service
     environment:
       - NODE_ENV=development
@@ -18,7 +18,7 @@ services:
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
-      - MONGODB_DATABASE=sammlerio_dev
+      - MONGODB_DATABASE=auth-service_dev
     ports:
       - "3010:3010"
     volumes:

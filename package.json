@@ -1,14 +1,14 @@
 {
   "name": "auth-service",
   "version": "0.1.0",
-  "description": "Auth service (for sammler).",
+  "description": "Auth service.",
   "keywords": [
     "auth",
     "auth0",
     "authentication",
     "microservice"
   ],
-  "repository": "https://github.com/sammler/auth-service",
+  "repository": "https://github.com/stefanwalther/auth-service",
   "license": "MIT",
   "author": "Stefan Walther",
   "main": "./src/api/index.js",

@@ -26,7 +26,7 @@ const HealthCheckController = require('./health-check.controller.js');
  *             example: "git"
  *           url:
  *             type: string
- *             example: "https://github.com/sammler/auth-service"
+ *             example: "https://github.com/stefanwalther/auth-service"
  *       version:
  *         type: string
  *         description: "The current version of the service."

@@ -1,6 +1,6 @@
 
 module.exports = {
-  database: process.env.MONGODB_DATABASE || 'sammlerio',
+  database: process.env.MONGODB_DATABASE || 'auth-service',
   host: process.env.MONGODB_HOST || 'localhost',
   port: process.env.MONGODB_PORT || 27017,
   debug: process.env.MONGODB_DEBUG || false,

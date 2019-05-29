@@ -5,7 +5,7 @@ jobs:
     machine: true
     environment:
       SERVICE_NAME: auth-service
-      DOCKER_REPO: sammlerio/auth-service
+      DOCKER_REPO: stefanwalther/auth-service
       DOCKER_URL: https://download.docker.com/linux/static/edge/x86_64/docker-18.02.0-ce.tgz
       DOCKER_COMPOSE_URL: https://github.com/docker/compose/releases/download/1.19.0/docker-compose-Linux-x86_64
     steps:

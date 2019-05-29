@@ -1,4 +1,4 @@
 
 ```bash
-$ docker run -it sammlerio/auth-service
+$ docker run -it stefanwalther/auth-service
 ```

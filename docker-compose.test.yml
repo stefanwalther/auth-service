@@ -9,7 +9,7 @@ services:
       - 27017:27017
 
   auth-service-test:
-    image: sammlerio/auth-service-test
+    image: stefanwalther/auth-service-test
     environment:
       - NODE_ENV=test
       - PORT=3010
@@ -17,7 +17,7 @@ services:
       - MONGODB_DEBUG=false
       - MONGODB_HOST=mongo
       - MONGODB_PORT=27017
-      - MONGODB_DATABASE=sammlerio_test
+      - MONGODB_DATABASE=auth-service_test
     depends_on:
       - mongo
     volumes:

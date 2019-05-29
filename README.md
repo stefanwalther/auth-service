@@ -1,8 +1,8 @@
 # auth-service
 
-> Auth service (for sammler).
+> Auth service.
 
-[![CircleCI](https://img.shields.io/circleci/project/github/sammler/auth-service.svg)](https://circleci.com/gh/sammler/auth-service)
+[![CircleCI](https://img.shields.io/circleci/project/github/stefanwalther/auth-service.svg)](https://circleci.com/gh/stefanwalther/auth-service)
 [![XO code style](https://img.shields.io/badge/code_style-XO--space-5ed9c7.svg)](https://github.com/sindresorhus/eslint-config-xo-space)
 
 ---
@@ -54,7 +54,7 @@ Just have a look at [passports.js](http://passportjs.org/) and the supported str
 
 ## Installation
 ```bash
-$ docker run -it sammlerio/auth-service
+$ docker run -it stefanwalther/auth-service
 ```
 
 ## Configuration

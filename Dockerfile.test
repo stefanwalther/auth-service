@@ -1,4 +1,4 @@
-FROM sammlerio/auth-service:latest
+FROM stefanwalther/auth-service:latest
 
 RUN npm config set loglevel warn
 RUN npm install --quiet

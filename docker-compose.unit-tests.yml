@@ -2,7 +2,7 @@ version: '2'
 
 services:
   auth-service-test:
-    image: sammlerio/auth-service-test
+    image: stefanwalther/auth-service-test
     command: npm run test:unit
     environment:
       - NODE_ENV=test
