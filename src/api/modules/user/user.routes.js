@@ -5,17 +5,6 @@ const passport = require('passport');
 
 /**
  * @swagger
- * components:
- *   securitySchemes:
- *     JWT:
- *       description: ""
- *       type: apiKey
- *       in: "header"
- *       name: "x-access-token"
- *
- * security:
- *   - JWT: []
- *
  * definitions:
  *   User:
  *     description: The user definition.
