@@ -97,6 +97,10 @@ const passport = require('passport');
  *
  */
 
+const API_VERSION = 'v1';
+
+router.patch(`/${API_VERSION}/user/:id`, UserController.patchUser);
+
 // Todo: Document result
 // Todo: Document possible Validation Errors
 // Todo: Centralize tags (see https://apihandyman.io/writing-openapi-swagger-specification-tutorial-part-3-simplifying-specification-file/)

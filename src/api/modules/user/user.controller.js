@@ -1,3 +1,4 @@
+const HttpStatus = require('http-status-codes');
 const ExpressResult = require('express-result');
 const passport = require('passport');
 const _ = require('lodash');
@@ -229,6 +230,21 @@ class UserController {
       ExpressResult.unauthorized(res, {message: `Invalid request: ${err.message}`});
     }
     next();
+  }
+
+  static patchUser(req, res, next) {
+
+    // Const token = (req.body && req.body.token) || req.headers['x-access-token'];
+    // const userId = req.params.id;
+    try {
+      // Let user = UserModel.findById(userId);
+      res.status(HttpStatus.NO_CONTENT);
+
+    } catch (err) {
+      ExpressResult.unauthorized(res, {message: `Invalid request: ${err.message}`});
+    }
+    next();
+
   }
 
 }

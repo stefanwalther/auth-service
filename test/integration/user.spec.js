@@ -12,7 +12,8 @@ const ENDPOINTS = {
   REGISTER_LOCAL: '/v1/user/register/local',
   USER_LOGIN: '/v1/user/login',
   VERIFY_TOKEN: '/v1/user/verify-token',
-  ME: '/v1/me'
+  ME: '/v1/me',
+  PATCH_USER: '/v1/user/:id'
 };
 
 describe('[integration] auth-service => user', () => {
@@ -441,7 +442,7 @@ describe('[integration] auth-service => user', () => {
 
   });
 
-  describe('DELETE /v1/user:id', () => {
+  describe('DELETE /v1/user/:id', () => {
 
     xit('can only be performed by either the user himself or an admin');
 
@@ -627,6 +628,49 @@ describe('[integration] auth-service => user', () => {
     });
     xit('One admin account needs to remain', async () => {
       expect(true).to.be.false;
+    });
+  });
+
+  xdescribe('PATCH /v1/user/:id', () => {
+    it('should allow to patch the roles', async () => {
+
+      const user = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        local: {
+          password: 'bar',
+          username: 'foofoo',
+          email: 'foo@bar.com'
+        }
+      };
+
+      await server
+        .post(ENDPOINTS.REGISTER_LOCAL)
+        .send(user)
+        .expect(HttpStatus.CREATED)
+        .then(result => {
+          console.log('created user', result.body);
+          expect(result.body).to.exist;
+        });
+
+      // Const userModified = {
+      //   roles: ['role1', 'role2']
+      // };
+      //
+      // await server
+      //   .patch(ENDPOINTS.PATCH_USER.replace(':id', user._id))
+      //   .send(userModified)
+      //   .expect(HttpStatus.NO_CONTENT);
+      //
+      // await server
+      //   .get(ENDPOINTS.ME)
+      //   .expect(HttpStatus.OK)
+      //   .then(result => {
+      //
+      //   });
+    });
+
+    it('should throw an error if not performed by a user being admin', async () => {
+
     });
   });
 

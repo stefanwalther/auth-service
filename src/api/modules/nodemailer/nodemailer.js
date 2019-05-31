@@ -1,4 +1,4 @@
-const nodemailer = require('nodemailer');
+const nodeMailer = require('nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
 const path = require('path');
 const emailTemplates = require('email-templates');
@@ -15,7 +15,7 @@ const options = {
     api_key: nodeMailerConfig.api_key
   }
 };
-const mailer = nodemailer.createTransport(sgTransport(options));
+const mailer = nodeMailer.createTransport(sgTransport(options));
 
 function sendVerificationMail(user, callback) {
 

@@ -41,6 +41,7 @@ const schema = new Schema({
     type: String,
     required: false
   },
+  roles: [String],
   lastname: {
     type: String,
     required: false
@@ -103,9 +104,7 @@ schema.methods.generateJwt = function () {
     username: this.local.username,
     firstname: this.firstname,
     lastname: this.lastname,
-    groups: [
-      'user'
-    ],
+    roles: this.roles,
     exp: moment().add(7, 'days').valueOf()
   }, jwtConfig.JWT_SECRET);
 };
