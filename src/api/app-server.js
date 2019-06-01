@@ -49,7 +49,6 @@ class AppServer {
     if (!_.isNumber(n) || isNaN(n)) {
       throw new Error(`PORT is not a number: ${this.config.PORT}`);
     }
-
   }
 
   /**
@@ -59,6 +58,8 @@ class AppServer {
   async start() {
 
     await initializer(this.app, {directory: path.join(__dirname, 'config/initializers')});
+
+    // Do not use `await`, otherwise buffering will not be used by mongoose.
     await mongoose.connect(mongoUri, {useNewUrlParser: true});
 
     try {

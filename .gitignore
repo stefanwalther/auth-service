@@ -1,5 +1,6 @@
 # project
 log-test.log
+docker-compose.test-online.yaml
 .cache
 .yarn
 .config

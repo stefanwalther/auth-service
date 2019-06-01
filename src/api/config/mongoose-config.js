@@ -1,5 +1,6 @@
 
 module.exports = {
+  connection_string: process.env.MONGODB_CONNECTION_STRING,
   database: process.env.MONGODB_DATABASE || 'auth-service',
   host: process.env.MONGODB_HOST || 'localhost',
   port: process.env.MONGODB_PORT || 27017,

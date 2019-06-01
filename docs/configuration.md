@@ -9,6 +9,12 @@ _{%=name%}_ can be configured by the following environment variables:
 
 **MongoDB:**
 
+Provide the connection to MongoDB either by providing a full connection string:
+
+- `MONGODB_CONNECTION_STRING` - The full MongoDB connection string.
+
+or by providing details of the connection:
+
 - `MONGODB_DATABASE` - The MongoDB database, defaults to `db`.
 - `MONGODB_HOST` - MongoDB host, defaults to `localhost`.
 - `MONGODB_PORT` - MongoDB port, defaults to `27017`. 
