@@ -132,7 +132,7 @@ schema.statics.markAsDeleted = id => {
 schema.statics.verifyEmail = (userId, emailVerificationCode) => {
 
   return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
-    .update(
+    .updateOne(
       {
         _id: userId,
         'local.email_verification_code': emailVerificationCode

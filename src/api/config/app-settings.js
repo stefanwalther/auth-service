@@ -1,6 +1,8 @@
 module.exports = {
   app: {
-    tile: 'auth-service'
+    title: 'auth-service',
+    emailFrom: 'spam@walthers.me',
+    emailReply: 'spam@walthers.me'
   },
   registration: {
     isActiveDefault: true,
@@ -8,6 +10,7 @@ module.exports = {
     local: {
       isEmailVerifiedDefault: false,
       sendActivationMail: true
-    }
+    },
+    verificationUrl: 'http://localhost:4002/verify/?code=::code::'
   }
 };

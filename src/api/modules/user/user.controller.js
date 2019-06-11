@@ -248,8 +248,8 @@ class UserController {
     const {userId, code} = req.params;
 
     return UserModel.verifyEmail(userId, code)
-      .then(result => {
-        return ExpressResult.ok(res, result);
+      .then(() => {
+        return ExpressResult.ok(res);
       })
       .catch(err => {
         return ExpressResult.error(res, err);
