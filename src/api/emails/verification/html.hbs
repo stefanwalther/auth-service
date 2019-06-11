@@ -37,14 +37,13 @@
 
             Hello {{user.first_name}},<br/><br/>
 
-            thanks for being interested in {{application.name}}.<br/>
-            You have successfully registered a new account using the username "{{user.sso_id}}"<br/><br/>
+            thanks for being interested in {{app.name}}.<br/>
+            You have successfully registered a new account using the username "{{user.local.username}}"<br/><br/>
 
             Please click here to activate your account:<br/>
-            {{verificationUrl}}<br/><br/>
+            {{app.verificationUrl}}<br/><br/>
 
             <br/>
-
         </td>
         <td width="20px;">&nbsp;</td>
     <tr/>

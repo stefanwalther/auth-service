@@ -1,0 +1,6 @@
+v0.3.0:
+  date: 2019-06-11
+  features:
+    - Newly registered users are not verified by default
+    - Add endpoint to verify a user with it's email_verification_code
+

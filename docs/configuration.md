@@ -28,17 +28,12 @@ or by providing details of the connection:
 **Nodemailer:**
 (e.g for sending an account verification message):
 
-- `NODEMAILER_API_USER` - Nodemailer's API user.
-- `NODEMAILER_API_KEY` - Nodemailer's API key.
-- `NODEMAILER_FROM` - eMail-address to send messages from.
-- `NODEMAILER_BCC` - (optional) eMail-address(es) to send the message BCC.
+- `NODEMAILER_TRANSPORT` - The transport for Nodemailer (possible options: `postmark`).
+
+Depending on the transporter for Nodemailer the following options can be set:
+
+Postmark:
+
+- `POSTMARK_API_TOKEN` - Postmark`s Server API Token.
 
 Nodemailer settings only need to be set if **one** of the following options are set to `true`:
-
----
-
-**Behavior:**
-
-- `ENABLE_ACCOUNT_VERIFICATION` - Force users to verify their accounts (_not working, yet_).
-- `ENABLE_PWD_RESET` - Allow to reset the account's password (_not working, yet_).
-- `ENABLE_AUDIT_LOG` - Whether to enable the audit log or not, can be `true` or `false`, defaults to `true`.

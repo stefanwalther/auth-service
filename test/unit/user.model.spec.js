@@ -21,4 +21,35 @@ describe('UserModel => unit tests', () => {
     });
   });
 
+  xit('throws an error if `email` is not unique', async () => {
+
+    const tenantId = mongoose.Types.ObjectId().toString();
+
+    const userDoc1 = {
+      tenant_id: tenantId,
+      local: {
+        password: 'bar',
+        username: 'foofoo',
+        email: 'foo@bar.com'
+      }
+    };
+
+    new UserModel(userDoc1).save();
+
+    const userDoc2 = {
+      tenant_id: tenantId,
+      local: {
+        password: 'bar',
+        username: 'foofoo',
+        email: 'foo@bar.com'
+      }
+    };
+
+    new UserModel(userDoc2).save()
+      .catch(err => {
+        expect(err).to.exist;
+      });
+
+  });
+
 });
