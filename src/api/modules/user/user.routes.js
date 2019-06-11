@@ -129,7 +129,7 @@ router.patch(`/${API_VERSION}/user/:id`, UserController.patchUser);
  */
 router.post('/v1/user/register/local', UserController.registerLocal);
 
-// Todo: Login date (in case of successful login should be saved) => goes to audit + one function is neede to get the last login date.
+// Todo: Login date (in case of successful login should be saved) => goes to audit + one function is needed to get the last login date.
 // Todo: Login attempt (in case of failed login should be saved) => goes to audit + one function is needed to get the last login attempt.
 /**
  * @swagger
@@ -180,6 +180,7 @@ router.get('/v1/user/password-reset-request', UserController.status);
 
 // Todo: Questionable whether the endpoint should include "user", could also just be "/v1/verify-token"
 // Todo: Document 200 and 500 message in detail
+// Todo: Change to `GET`
 /**
  * @swagger
  * /v1/user/verify-token:
@@ -259,7 +260,10 @@ router.delete('/v1/user/:id', UserController.delete);
 
 // Todo: Test
 // Todo: Document
+// Todo: Should be a `PUT` as this needs to be idempotent
 router.post('/v1/user/:id/undelete', UserController.unDelete);
+
+router.put(`/v1/user/:userId/actions/verify/:code`, UserController.verify);
 
 /**
  * @swagger
