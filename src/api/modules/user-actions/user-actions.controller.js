@@ -34,7 +34,7 @@ class UserActionsController {
 const transport = nodemailer.createTransport(
   nodeMailerPostmarkTransport({
     auth: {
-      apiKey: serverConfig.POSTMARK_API_KEY
+      apiKey: serverConfig.POSTMARK_API_TOKEN
     }
   })
 );
