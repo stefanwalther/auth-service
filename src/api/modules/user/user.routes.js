@@ -129,7 +129,7 @@ router.patch(`/${API_VERSION}/user/:id`, UserController.patchUser);
  */
 router.post('/v1/user/register/local', UserController.registerLocal);
 
-// Todo: Login date (in case of successful login should be saved) => goes to audit + one function is neede to get the last login date.
+// Todo: Login date (in case of successful login should be saved) => goes to audit + one function is needed to get the last login date.
 // Todo: Login attempt (in case of failed login should be saved) => goes to audit + one function is needed to get the last login attempt.
 /**
  * @swagger
