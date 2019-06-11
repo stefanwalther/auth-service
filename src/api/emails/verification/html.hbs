@@ -41,7 +41,10 @@
             You have successfully registered a new account using the username "{{user.local.username}}"<br/><br/>
 
             Please click here to activate your account:<br/>
-            {{app.verificationUrl}}<br/><br/>
+            <a href="{{app.verificationUrl}}">{{app.verificationUrl}}</a><br/><br/>
+
+            Your verification code:<br/>
+            <b>{{user.local.email_verification_code}}</b>
 
             <br/>
         </td>
