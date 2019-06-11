@@ -13,7 +13,8 @@ const ENDPOINTS = {
   USER_LOGIN: '/v1/user/login',
   VERIFY_TOKEN: '/v1/user/verify-token',
   ME: '/v1/me',
-  PATCH_USER: '/v1/user/:id'
+  PATCH_USER: '/v1/user/:id',
+  VERIFY_EMAIL: '/v1/user/:userId/actions/verify/:code'
 };
 
 describe('[integration] auth-service => user', () => {
@@ -128,7 +129,7 @@ describe('[integration] auth-service => user', () => {
 
   });
 
-  describe('POST /user/register/local', () => {
+  describe('POST `/user/register/local`', () => {
 
     it('throws validation errors for required fields', async () => {
 
@@ -145,6 +146,17 @@ describe('[integration] auth-service => user', () => {
         });
     });
 
+    it('throws an error if `email` is not unique', async () => {
+      const user1 = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        local: {
+          password: 'bar',
+          username: 'foofoo',
+          email: 'foo@bar.com'
+        }
+      };
+    });
+
     it('creates a new user', () => {
       const doc = {
         tenant_id: mongoose.Types.ObjectId().toString(),
@@ -159,7 +171,28 @@ describe('[integration] auth-service => user', () => {
         .post(ENDPOINTS.REGISTER_LOCAL)
         .send(doc)
         .expect(HttpStatus.CREATED)
-        .expect(userAssertions.hasNoToken);
+        .expect(userAssertions.hasNoToken)
+        .expect(userAssertions.hasNoVerfificationToken);
+    });
+
+    it('creates a new user with the appropriate defaults', () => {
+
+      const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        local: {
+          password: 'bar',
+          username: 'foofoo',
+          email: 'foo@bar.com'
+        }
+      };
+
+      return server
+        .post(ENDPOINTS.REGISTER_LOCAL)
+        .send(doc)
+        .expect(HttpStatus.CREATED)
+        .expect(userAssertions.hasNoToken)
+        .expect(userAssertions.hasNoVerfificationToken);
+
     });
 
     it('does not return any sensitive information', () => {
@@ -179,6 +212,8 @@ describe('[integration] auth-service => user', () => {
         .expect(userAssertions.hasNoToken)
         .expect(userAssertions.hasNoPassword);
     });
+
+    it('does not allow to set sensitive information');
 
   });
 
@@ -246,7 +281,8 @@ describe('[integration] auth-service => user', () => {
         local: {
           username: 'foo-user',
           email: 'foo@bar.com',
-          password: 'passw0rd'
+          password: 'passw0rd',
+          email_verified: true
         }
       };
 
@@ -291,6 +327,31 @@ describe('[integration] auth-service => user', () => {
         })
         .expect(HttpStatus.UNAUTHORIZED)
         .expect(userAssertions.userNotFound);
+    });
+
+    it('should not allow non-verified users to login', async () => {
+      const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        is_deleted: false,
+        is_active: true,
+        local: {
+          username: 'foo-user',
+          password: 'passw0rd',
+          email: 'foo@bar.com'
+        }
+      };
+
+      let user = new UserModel(doc);
+      await user.save();
+
+      await server
+        .post('/v1/user/login')
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.UNAUTHORIZED)
+        .expect(userAssertions.emailNotVerified);
     });
 
     it('will not allow deleted users to login', async () => {
@@ -414,7 +475,10 @@ describe('[integration] auth-service => user', () => {
         .expect(userAssertions.invalidToken);
     });
 
-    it('will not verify if a user is marked as deleted', async () => {
+  });
+
+  describe('Using the user cache, verify-token', () => {
+    xit('will not verify if a user is marked as deleted', async () => {
 
       const doc = {
         tenant_id: mongoose.Types.ObjectId().toString(),
@@ -436,10 +500,60 @@ describe('[integration] auth-service => user', () => {
         .post(`${ENDPOINTS.VERIFY_TOKEN}`)
         .send(body)
         .expect(HttpStatus.OK)
-        .expect(userAssertions.validToken);
+        .expect(userAssertions.invalidToken);
 
     });
 
+    xit('will not verify if a user is not active', async () => {
+
+      const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        username: 'foo-user',
+        password: 'passw0rd',
+        is_active: false,
+        local: {
+          email: 'foo@bar.com'
+        }
+      };
+
+      let user = new UserModel(doc);
+      await user.save();
+      const body = {
+        token: user.generateJwt()
+      };
+
+      await server
+        .post(`${ENDPOINTS.VERIFY_TOKEN}`)
+        .send(body)
+        .expect(HttpStatus.OK)
+        .expect(userAssertions.invalidToken);
+    });
+
+    xit('will not verify if a user is not verified', async () => {
+      const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        username: 'foo-user',
+        password: 'passw0rd',
+        is_active: true,
+        is_verified: false,
+        is_deleted: false,
+        local: {
+          email: 'foo@bar.com'
+        }
+      };
+
+      let user = new UserModel(doc);
+      await user.save();
+      const body = {
+        token: user.generateJwt()
+      };
+
+      await server
+        .post(`${ENDPOINTS.VERIFY_TOKEN}`)
+        .send(body)
+        .expect(HttpStatus.OK)
+        .expect(userAssertions.invalidToken);
+    });
   });
 
   describe('DELETE /v1/user/:id', () => {
@@ -672,6 +786,44 @@ describe('[integration] auth-service => user', () => {
     it('should throw an error if not performed by a user being admin', async () => {
 
     });
+  });
+
+  describe('PUT `/v1/user/:id/actions/verify/:code', () => {
+
+    it('should verify a user and allow login', async () => {
+      const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        is_deleted: false,
+        is_verified: true,
+        local: {
+          password: 'passw0rd',
+          username: 'foo-user',
+          email: 'foo@bar.com'
+        }
+      };
+      let user = await new UserModel(doc).save();
+
+      await server
+        .post(ENDPOINTS.USER_LOGIN)
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.UNAUTHORIZED);
+
+      await server
+        .put(ENDPOINTS.VERIFY_EMAIL.replace(':userId', user._id).replace(':code', user.local.email_verification_code))
+        .expect(HttpStatus.OK);
+
+      await server
+        .post(ENDPOINTS.USER_LOGIN)
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.OK);
+    });
+
   });
 
 });

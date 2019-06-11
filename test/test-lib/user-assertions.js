@@ -17,9 +17,22 @@ module.exports = {
   },
   userNotFound: result => {
     expect(result.body).to.exist;
-    expect(result.body).to.contain.a.property('message', 'User not found');
+    expect(result.body).to.contain.a.property('message', 'User not found.');
+  },
+  emailNotVerified: result => {
+    expect(result.body).to.exist;
+    expect(result.body).to.contain.a.property('message', 'Email not verified.');
   },
   hasNoPassword: result => {
     expect(result.body).to.not.contain.a.deep.property('password');
+  },
+  hasNoVerfificationToken: result => {
+    expect(result.body).to.exist;
+    expect(result.body).to.not.contain.a.deep.property('email_verification_code');
+  },
+  local: {
+    isNotVerified: result => {
+      expect(result.body).to.exist;
+    }
   }
 };

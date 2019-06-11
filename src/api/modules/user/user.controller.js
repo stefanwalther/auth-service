@@ -53,8 +53,6 @@ class UserController {
 
     const user = new UserModel(req.body);
 
-    logger.verbose('save user', user);
-
     return user.save()
       .then(user => {
         const result = {
@@ -64,8 +62,7 @@ class UserController {
             username: user.local.username,
             email: user.local.email
           },
-          is_active: user.is_active || false,
-          is_verified: user.is_verified || false
+          is_active: user.is_active || false
         };
         if (serverConfig.ENABLE_AUDIT_LOG === true) {
           auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterLocalEvent({user}));
@@ -244,7 +241,19 @@ class UserController {
       ExpressResult.unauthorized(res, {message: `Invalid request: ${err.message}`});
     }
     next();
+  }
 
+  static verify(req, res) {
+
+    const {userId, code} = req.params;
+
+    return UserModel.verifyEmail(userId, code)
+      .then(result => {
+        return ExpressResult.ok(res, result);
+      })
+      .catch(err => {
+        return ExpressResult.error(res, err);
+      });
   }
 
 }

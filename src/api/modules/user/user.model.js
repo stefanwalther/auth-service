@@ -3,10 +3,15 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const logger = require('winster').instance();
 
+// Libs
+const utils = require('./../../lib/utils');
+
+// Configs
 const MongooseConfig = require('./../../config/mongoose-config');
 const jwtConfig = require('./../../config/jwt-config');
-const logger = require('winster').instance();
+const appSettings = require('./../../config/app-settings');
 
 const Schema = mongoose.Schema;
 
@@ -24,9 +29,14 @@ const localStrategySchema = new Schema({
   },
   password: String,
   salt: String,
-  is_verified: {
+  email_verification_code: {
+    type: String,
+    required: true,
+    default: utils.randomString(16, '#A')
+  },
+  email_verified: {
     type: Boolean,
-    default: false
+    default: appSettings.registration.local.isEmailVerifiedDefault
   }
 });
 
@@ -48,15 +58,11 @@ const schema = new Schema({
   },
   is_active: {
     type: Boolean,
-    default: true
-  },
-  is_verified: {
-    type: Boolean,
-    default: false
+    default: appSettings.registration.isActiveDefault
   },
   is_deleted: {
     type: Boolean,
-    default: false
+    default: appSettings.registration.isDeletedDefault
   },
   local: localStrategySchema
 }, {
@@ -121,6 +127,25 @@ schema.statics.markAsDeleted = id => {
       {$set: {is_deleted: true}}
     )
     .exec();
+};
+
+schema.statics.verifyEmail = (userId, emailVerificationCode) => {
+
+  return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
+    .update(
+      {
+        _id: userId,
+        'local.email_verification_code': emailVerificationCode
+      },
+      {
+        $set:
+          {
+            'local.email_verified': true
+          }
+      }
+    )
+    .exec();
+
 };
 
 schema.statics.unMarkAsDeleted = id => {
