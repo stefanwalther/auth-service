@@ -255,7 +255,6 @@ class UserController {
         return ExpressResult.error(res, err);
       });
   }
-
 }
 
 module.exports = UserController;

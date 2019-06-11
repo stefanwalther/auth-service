@@ -25,7 +25,7 @@ const localStrategySchema = new Schema({
   email: {
     type: String,
     required: false,
-    unique: false
+    unique: true
   },
   password: String,
   salt: String,

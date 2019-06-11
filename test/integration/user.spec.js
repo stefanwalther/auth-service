@@ -146,17 +146,6 @@ describe('[integration] auth-service => user', () => {
         });
     });
 
-    it('throws an error if `email` is not unique', async () => {
-      const user1 = {
-        tenant_id: mongoose.Types.ObjectId().toString(),
-        local: {
-          password: 'bar',
-          username: 'foofoo',
-          email: 'foo@bar.com'
-        }
-      };
-    });
-
     it('creates a new user', () => {
       const doc = {
         tenant_id: mongoose.Types.ObjectId().toString(),
