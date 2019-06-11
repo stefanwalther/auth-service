@@ -5,8 +5,9 @@ const logger = require('winster').instance();
 const MongooseConnectionConfig = require('mongoose-connection-config');
 const mongoose = require('mongoose');
 const path = require('path');
+const mongooseConfig = require('./config/mongoose-config');
 
-const mongoUri = new MongooseConnectionConfig(require('./config/mongoose-config')).getMongoUri();
+const mongoUri = new MongooseConnectionConfig(mongooseConfig).getMongoUri();
 const defaultConfig = require('./config/server-config');
 
 class AppServer {
