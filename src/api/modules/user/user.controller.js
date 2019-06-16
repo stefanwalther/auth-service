@@ -34,8 +34,6 @@ class UserController {
   // Todo: Send event
   static registerLocal(req, res) {
 
-    logger.info('Registering using local strategy', req.body);
-
     const validationErrors = new ExpressResult.ValidationErrors();
     if (!_.has(req.body, 'local.username')) {
       validationErrors.add('Property <local.username> missing.');

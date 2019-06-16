@@ -216,16 +216,14 @@ schema.pre('save', function (next) {
 
   // Only hash the password if it has been modified (or is new)
   if (!user.isModified('local.password')) {
-    logger.verbose('do nothing, not modified');
+    logger.verbose('[user:pre:save] do nothing, not modified');
     return next();
   }
 
   if (user.local && user.local.password) {
-    logger.verbose('OK; set a password', user.local);
     user.setLocalPassword(user.local.password);
   } else {
-    logger.verbose('no', user);
-    logger.verbose('---');
+    logger.verbose('[user:pre:save]] => do nothing');
   }
   return next();
 });
