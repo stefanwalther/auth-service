@@ -14,7 +14,9 @@ const ENDPOINTS = {
   VERIFY_TOKEN: '/v1/user/verify-token',
   ME: '/v1/me',
   PATCH_USER: '/v1/user/:id',
-  VERIFY_EMAIL: '/v1/user/:userId/actions/verify/:code'
+  VERIFY_EMAIL_BY_ID: '/v1/user/:userId/actions/verify-with-id/:code',
+  VERIFY_EMAIL_BY_USERIDENTIFIER: '/v1/user/:IdOrEmail/actions/verify/:code'
+
 };
 
 describe('[integration] auth-service => user', () => {
@@ -779,7 +781,7 @@ describe('[integration] auth-service => user', () => {
 
   describe('PUT `/v1/user/:id/actions/verify/:code', () => {
 
-    it('should verify a user and allow login', async () => {
+    it('should verify a user by the `userId` and allow login', async () => {
       const doc = {
         tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
@@ -801,7 +803,7 @@ describe('[integration] auth-service => user', () => {
         .expect(HttpStatus.UNAUTHORIZED);
 
       await server
-        .put(ENDPOINTS.VERIFY_EMAIL.replace(':userId', user._id).replace(':code', user.local.email_verification_code))
+        .put(ENDPOINTS.VERIFY_EMAIL_BY_ID.replace(':userId', user._id).replace(':code', user.local.email_verification_code))
         .expect(HttpStatus.OK);
 
       await server
@@ -811,6 +813,75 @@ describe('[integration] auth-service => user', () => {
           password: doc.local.password
         })
         .expect(HttpStatus.OK);
+    });
+
+    it('should verify a user by `username` and allow login', async () => {
+      const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        is_deleted: false,
+        is_verified: true,
+        local: {
+          password: 'passw0rd',
+          username: 'foo-user',
+          email: 'foo@bar.com'
+        }
+      };
+      let user = await new UserModel(doc).save();
+
+      await server
+        .post(ENDPOINTS.USER_LOGIN)
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.UNAUTHORIZED);
+
+      await server
+        .put(ENDPOINTS.VERIFY_EMAIL_BY_USERIDENTIFIER.replace(':IdOrEmail', user.local.username).replace(':code', user.local.email_verification_code))
+        .expect(HttpStatus.OK);
+
+      await server
+        .post(ENDPOINTS.USER_LOGIN)
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.OK);
+    });
+    it('should verify a user by `email` and allow login', async () => {
+
+      const doc = {
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        is_deleted: false,
+        is_verified: true,
+        local: {
+          password: 'passw0rd',
+          username: 'foo-user',
+          email: 'foo@bar.com'
+        }
+      };
+      let user = await new UserModel(doc).save();
+
+      await server
+        .post(ENDPOINTS.USER_LOGIN)
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.UNAUTHORIZED);
+
+      await server
+        .put(ENDPOINTS.VERIFY_EMAIL_BY_USERIDENTIFIER.replace(':IdOrEmail', user.local.email).replace(':code', user.local.email_verification_code))
+        .expect(HttpStatus.OK);
+
+      await server
+        .post(ENDPOINTS.USER_LOGIN)
+        .send({
+          username: doc.local.username,
+          password: doc.local.password
+        })
+        .expect(HttpStatus.OK);
+
     });
 
   });

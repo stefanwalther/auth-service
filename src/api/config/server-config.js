@@ -21,6 +21,6 @@ module.exports = {
   NATS_STREAMING_SERVER: getNatsStreamingServer(),
 
   NODEMAILER_TRANSPORT: process.env.NODEMAILER_TRANSPORT || 'postmark',
-  POSTMARK_API_TOKEN: process.env.POSTMARK_API_TOKEN
+  POSTMARK_API_TOKEN: process.env.POSTMARK_API_TOKEN || 'POSTMARK_API_TEST'
 };
 
