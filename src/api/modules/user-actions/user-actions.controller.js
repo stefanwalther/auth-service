@@ -69,9 +69,7 @@ async function _sendVerificationEmail(user) {
           .replace('::code::', user.local.email_verification_code)
           .replace('::email::', user.local.email)
           .replace('::username::', user.local.username),
-        app: {
-          name: appSettings.app.title
-        }
+        app: appSettings.app
       }
     })
     .then(result => {
