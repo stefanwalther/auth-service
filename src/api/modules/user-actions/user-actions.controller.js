@@ -65,7 +65,10 @@ async function _sendVerificationEmail(user) {
       },
       locals: {
         user,
-        verificationUrl: appSettings.registration.verificationUrl.replace('::code::', user.local.email_verification_code),
+        verificationUrl: appSettings.registration.verificationUrl
+          .replace('::code::', user.local.email_verification_code)
+          .replace('::email::', user.local.email)
+          .replace('::username::', user.local.username),
         app: {
           name: appSettings.app.title
         }
