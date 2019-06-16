@@ -129,7 +129,7 @@ schema.statics.markAsDeleted = id => {
     .exec();
 };
 
-schema.statics.verifyEmail = (userId, emailVerificationCode) => {
+schema.statics.verifyByUserId = (userId, emailVerificationCode) => {
 
   return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
     .updateOne(
@@ -145,7 +145,39 @@ schema.statics.verifyEmail = (userId, emailVerificationCode) => {
       }
     )
     .exec();
+};
 
+/**
+ * Verify the user
+ *
+ * @param userIdentifiers {string} - Either the user's email or the user's id.
+ * @param emailVerificationCode {string} - The verification code.
+ * @returns {Promise<any>}
+ */
+schema.statics.verifyByUserIdentifiers = (userIdentifiers, emailVerificationCode) => {
+
+  return mongoose.model(MongooseConfig.COLLECTION_USER, schema)
+    .updateOne(
+      {
+        $or: [
+          {
+            'local.email': userIdentifiers,
+            'local.email_verification_code': emailVerificationCode
+          },
+          {
+            'local.username': userIdentifiers,
+            'local.email_verification_code': emailVerificationCode
+          }
+        ]
+      },
+      {
+        $set:
+          {
+            'local.email_verified': true
+          }
+      }
+    )
+    .exec();
 };
 
 schema.statics.unMarkAsDeleted = id => {
@@ -185,10 +217,8 @@ schema.pre('save', function (next) {
   // Only hash the password if it has been modified (or is new)
   if (!user.isModified('local.password')) {
     logger.verbose('do nothing, not modified');
-    return next;
+    return next();
   }
-  logger.verbose('change password');
-  logger.verbose('user', user);
 
   if (user.local && user.local.password) {
     logger.verbose('OK; set a password', user.local);
@@ -197,7 +227,7 @@ schema.pre('save', function (next) {
     logger.verbose('no', user);
     logger.verbose('---');
   }
-  next();
+  return next();
 });
 
 module.exports = {

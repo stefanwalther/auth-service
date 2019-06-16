@@ -243,11 +243,11 @@ class UserController {
     next();
   }
 
-  static verify(req, res) {
+  static verifyByUserId(req, res) {
 
     const {userId, code} = req.params;
 
-    return UserModel.verifyEmail(userId, code)
+    return UserModel.verifyByUserId(userId, code)
       .then(() => {
         return ExpressResult.ok(res);
       })
@@ -255,6 +255,21 @@ class UserController {
         return ExpressResult.error(res, err);
       });
   }
+
+  static verifyByUserIdentifiers(req, res) {
+
+    const code = req.params.code;
+    const userIdentifier = req.params.IdOrEmail;
+
+    return UserModel.verifyByUserIdentifiers(userIdentifier, code)
+      .then(() => {
+        return ExpressResult.ok(res);
+      })
+      .catch(err => {
+        return ExpressResult.error(res, err);
+      });
+  }
+
 }
 
 module.exports = UserController;

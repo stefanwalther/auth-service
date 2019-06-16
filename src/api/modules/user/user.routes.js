@@ -263,7 +263,9 @@ router.delete('/v1/user/:id', UserController.delete);
 // Todo: Should be a `PUT` as this needs to be idempotent
 router.post('/v1/user/:id/undelete', UserController.unDelete);
 
-router.put(`/v1/user/:userId/actions/verify/:code`, UserController.verify);
+router.put(`/v1/user/:userId/actions/verify-with-id/:code`, UserController.verifyByUserId);
+
+router.put('/v1/user/:IdOrEmail/actions/verify/:code', UserController.verifyByUserIdentifiers);
 
 /**
  * @swagger
