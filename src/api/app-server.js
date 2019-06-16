@@ -18,6 +18,12 @@ class AppServer {
    */
   constructor(config) {
     this.config = _.extend(_.clone(defaultConfig), config || {});
+
+    if (['dev', 'development'].indexOf(this.config.NODE_ENV) > -1 && this.config.DEBUG_CONFIG === 'true') {
+      console.log(this.config);
+      console.log(mongooseConfig);
+    }
+
     this._validateConfig();
 
     this.server = null;

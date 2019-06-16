@@ -13,6 +13,7 @@ function getNatsStreamingServer() {
 module.exports = {
   PORT: process.env.PORT || 3010,
   NODE_ENV: process.env.NODE_ENV || 'development',
+  DEBUG_CONFIG: process.env.DEBUG_CONFIG || 'false',
 
   ENABLE_AUDIT_LOG: process.env.ENABLE_AUDIT_LOG === 'true',
 
