@@ -32,7 +32,7 @@ const localStrategySchema = new Schema({
   email_verification_code: {
     type: String,
     required: true,
-    default: utils.randomString(16, '#A')
+    default: utils.randomString(8, '#A')
   },
   email_verified: {
     type: Boolean,
