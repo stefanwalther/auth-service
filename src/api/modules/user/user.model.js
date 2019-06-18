@@ -4,6 +4,7 @@ const moment = require('moment');
 const mongoose = require('mongoose');
 const _ = require('lodash');
 const logger = require('winster').instance();
+const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 // Libs
 const utils = require('./../../lib/utils');
@@ -19,13 +20,13 @@ const localStrategySchema = new Schema({
   username: {
     type: String,
     required: false,
-    unique: true,
+    unique: 'The field <username> is already used ({VALUE}).',
     minlength: [3, 'Username too short, 3 characters required.']
   },
   email: {
     type: String,
     required: false,
-    unique: true
+    unique: 'The field <email> is already used ({VALUE}).'
   },
   password: String,
   salt: String,
@@ -71,6 +72,8 @@ const schema = new Schema({
   timestamps: {createdAt: MongooseConfig.FIELD_CREATED_AT, updatedAt: MongooseConfig.FIELD_UPDATED_AT}
 });
 /* eslint-enable camelcase */
+
+schema.plugin(beautifyUnique);
 
 schema.methods.setLocalPassword = function (password) {
   if (!this.local) {
