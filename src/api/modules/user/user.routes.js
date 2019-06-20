@@ -77,12 +77,12 @@ const passport = require('passport');
  *
  *   Login:
  *     required:
- *       - username
+ *       - emailOrUsername
  *       - password
  *     properties:
- *       username:
- *         type: String
- *         example: "foo-user"
+ *       emailOrUsername:
+ *         type: string
+ *         example: foo@bar.com
  *       password:
  *         type: String
  *         example: "passw0rd"

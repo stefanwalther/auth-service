@@ -56,6 +56,7 @@ describe('[integration] auth-service => user', () => {
     // Todo: We potentially have a problem here, or at least we have to think about it:
     //  - Is a user unique globally
     //  - Is a user only unique within a tenant
+    //  - If we start validating by tenant, it should be possible to have the same username/email in several tenants
     it('registering a new user throws an error if user already exists', async () => {
 
       let user1 = new UserModel({
@@ -80,9 +81,9 @@ describe('[integration] auth-service => user', () => {
       try {
         await user2.save();
       } catch (e) {
+        console.log(e);
         expect(e).to.exist;
-        expect(e.name).to.be.equal('MongoError');
-        expect(e).to.have.property('code').to.equal(11000);
+        expect(e.name).to.be.equal('ValidationError');
       }
     });
 
@@ -219,14 +220,14 @@ describe('[integration] auth-service => user', () => {
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(result => {
           expect(result.body).to.have.a.property('ValidationErrors');
-          expect(result.body.ValidationErrors).to.contain('Property <username> missing.');
+          expect(result.body.ValidationErrors).to.contain('Property <emailOrUsername> missing.');
           expect(result.body.ValidationErrors).to.contain('Property <password> missing.');
         });
     });
 
     it('returns 401/Unauthorized if login fails (no user found)', () => {
       const doc = {
-        username: 'foo-user',
+        emailOrUsername: 'foo-user',
         password: 'passw0rd'
       };
       return server
@@ -247,7 +248,7 @@ describe('[integration] auth-service => user', () => {
       };
 
       const login = {
-        username: 'foo-user',
+        emailOrUsername: 'foo-user',
         password: 'other-password'
       };
 
@@ -264,7 +265,7 @@ describe('[integration] auth-service => user', () => {
 
     });
 
-    it('does return a token if successfully logged in', () => {
+    it('does return a token if successfully logged in (log-in with `username`)', () => {
 
       const doc = {
         is_active: true,
@@ -284,11 +285,40 @@ describe('[integration] auth-service => user', () => {
           return server
             .post(ENDPOINTS.USER_LOGIN)
             .send({
-              username: doc.local.username,
+              emailOrUsername: doc.local.username,
               password: doc.local.password
             })
-            // .expect(res => {
+            .expect(HttpStatus.OK)
+            // .then(result => {
+            //   console.log(result.body);
             // })
+            .expect(userAssertions.hasToken);
+        });
+    });
+
+    it('does return a token if successfully logged in (log-in with `email`)', () => {
+
+      const doc = {
+        is_active: true,
+        tenant_id: mongoose.Types.ObjectId().toString(),
+        local: {
+          username: 'foo-user',
+          email: 'foo@bar.com',
+          password: 'passw0rd',
+          email_verified: true
+        }
+      };
+
+      const newUser = new UserModel(_.clone(doc));
+
+      return newUser.save()
+        .then(() => {
+          return server
+            .post(ENDPOINTS.USER_LOGIN)
+            .send({
+              emailOrUsername: doc.local.email,
+              password: doc.local.password
+            })
             .expect(HttpStatus.OK)
             .expect(userAssertions.hasToken);
         });
@@ -303,17 +333,18 @@ describe('[integration] auth-service => user', () => {
         local: {
           username: 'foo-user',
           password: 'passw0rd',
-          email: 'foo@bar.com'
+          email: 'foo@bar.com',
+          email_verified: true
         }
       };
 
       let user = new UserModel(doc);
-      let newUser = await user.save();
+      await user.save();
 
       await server
         .post('/v1/user/login')
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.UNAUTHORIZED)
@@ -338,7 +369,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post('/v1/user/login')
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.UNAUTHORIZED)
@@ -363,7 +394,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post('/v1/user/login')
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.UNAUTHORIZED)
@@ -797,7 +828,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post(ENDPOINTS.USER_LOGIN)
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.UNAUTHORIZED);
@@ -809,7 +840,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post(ENDPOINTS.USER_LOGIN)
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.OK);
@@ -831,7 +862,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post(ENDPOINTS.USER_LOGIN)
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.UNAUTHORIZED);
@@ -843,7 +874,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post(ENDPOINTS.USER_LOGIN)
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.OK);
@@ -865,7 +896,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post(ENDPOINTS.USER_LOGIN)
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.UNAUTHORIZED);
@@ -877,7 +908,7 @@ describe('[integration] auth-service => user', () => {
       await server
         .post(ENDPOINTS.USER_LOGIN)
         .send({
-          username: doc.local.username,
+          emailOrUsername: doc.local.username,
           password: doc.local.password
         })
         .expect(HttpStatus.OK);
