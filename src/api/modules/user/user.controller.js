@@ -79,11 +79,9 @@ class UserController {
   // Todo: Break out validation
   static login(req, res) {
 
-    logger.verbose('Login with ', req.body.username, req.body.password);
-
     const validationErrors = new ExpressResult.ValidationErrors();
-    if (!req.body.username) {
-      validationErrors.add('Property <username> missing.');
+    if (!req.body.emailOrUsername) {
+      validationErrors.add('Property <emailOrUsername> missing.');
     }
 
     if (!req.body.password) {
