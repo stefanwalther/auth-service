@@ -66,7 +66,7 @@ jobs:
           name: Push image(s) to Docker Hub
           command: |
             PKG_VER=$(cat ./version.txt)
-            BUILD_NR="0.0.${CIRCLE_BUILD_NUM}"
+            BUILD_NR="${CIRCLE_BUILD_NUM}"
 
             # Always push the build-nr
             docker tag $DOCKER_REPO $DOCKER_REPO:$PKG_VER.$BUILD_NR
