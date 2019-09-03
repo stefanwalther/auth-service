@@ -25,8 +25,10 @@ describe('[integration] => app-settings', () => {
       .get('/app-settings')
       .expect(HttpStatus.OK)
       .then(result => {
+        console.log(result.body);
         expect(result).to.exist;
         expect(result).to.have.property('body');
+        expect(result.body).to.have.property('app').to.deep.equal(AppSettings.app);
       });
   });
 });

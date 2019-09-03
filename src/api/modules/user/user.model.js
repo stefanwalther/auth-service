@@ -114,6 +114,7 @@ schema.methods.generateJwt = function () {
     firstname: this.firstname,
     lastname: this.lastname,
     roles: this.roles,
+    // Todo: expiration needs to be configurable
     exp: moment().add(7, 'days').valueOf()
   }, jwtConfig.JWT_SECRET);
 };
