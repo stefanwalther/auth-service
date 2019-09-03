@@ -53,16 +53,13 @@ up-test-online:
 	docker-compose --f=docker-compose.test-online.yml up -d
 .PHONY: up-test-online
 
-
 up-test-online-i:
 	docker-compose --f=docker-compose.test-online.yml up
 .PHONY: up-test-online-i
 
-
 down-test-online:
 	docker-compose --f=docker-compose.test-online.yml down -t 0
 .PHONY: down-test-online
-
 
 run-test:																																														## Run tests
 	docker-compose --f=docker-compose.test.yml run auth-service-test npm run test
