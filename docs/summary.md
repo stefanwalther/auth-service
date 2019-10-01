@@ -10,7 +10,7 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 - [x] Logout
 - [x] Mark a user as deleted (cannot login anymore)
 - [x] Mark a user as undeleted (can login again)
-- [ ] Verify the users email
+- [x] Verify the users email
 - [ ] Send password reset email
 - [ ] Password reset
 - [ ] Return the user's profile
