@@ -67,7 +67,7 @@ class AppServer {
     await initializer(this.app, {directory: path.join(__dirname, 'config/initializers')});
 
     // Do not use `await`, otherwise buffering will not be used by mongoose.
-    await mongoose.connect(mongoUri, {useNewUrlParser: true});
+    await mongoose.connect(mongoUri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 
     try {
       this.server = await this.app.listen(this.config.PORT);

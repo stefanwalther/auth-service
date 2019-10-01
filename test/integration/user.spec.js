@@ -500,6 +500,7 @@ describe('[integration] auth-service => user', () => {
   });
 
   describe('Using the user cache, verify-token', () => {
+
     xit('will not verify if a user is marked as deleted', async () => {
 
       const doc = {
@@ -576,6 +577,7 @@ describe('[integration] auth-service => user', () => {
         .expect(HttpStatus.OK)
         .expect(userAssertions.invalidToken);
     });
+
   });
 
   describe('DELETE /v1/user/:id', () => {
@@ -641,9 +643,11 @@ describe('[integration] auth-service => user', () => {
           expect(result.body).to.have.a.property('is_deleted').to.be.false;
         });
     });
+
   });
 
   describe('GET /v1/me', () => {
+
     it('returns my data if it is me', async () => {
       const doc = {
         tenant_id: mongoose.Types.ObjectId().toString(),
@@ -682,6 +686,7 @@ describe('[integration] auth-service => user', () => {
           expect(result.body.message).to.contain('jwt malformed');
         });
     });
+
   });
 
   xdescribe('DELETE /v1/:id/purge', () => {
@@ -879,6 +884,7 @@ describe('[integration] auth-service => user', () => {
         })
         .expect(HttpStatus.OK);
     });
+
     it('should verify a user by `email` and allow login', async () => {
 
       const doc = {
