@@ -1,6 +1,6 @@
 {
   "name": "auth-service",
-  "version": "0.4.3",
+  "version": "0.4.5",
   "description": "Auth service.",
   "keywords": [
     "auth",
