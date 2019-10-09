@@ -105,7 +105,7 @@ class UserController {
       // If a user is found
       if (user) {
         const token = user.generateJwt();
-        logger.verbose('OK, we have a result', token);
+        logger.verbose('OK, we have a token');
         if (serverConfig.ENABLE_AUDIT_LOG === true) {
           auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({user}));
         } else {
