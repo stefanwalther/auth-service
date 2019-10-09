@@ -1,4 +1,4 @@
-const pkg = require('read-pkg-up').sync().package;
+const pkg = require('read-pkg-up').sync().packageJson;
 
 class HealthCheckController {
 

@@ -4,7 +4,7 @@ const AppServer = require('./../../src/api/app-server');
 const mongoose = require('mongoose');
 
 const defaultConfig = require('./../test-lib/default-config');
-const pkg = require('read-pkg-up').sync().package;
+const pkg = require('read-pkg-up').sync().packageJson;
 
 describe('[integration] auth-service => api-docs', () => {
 
