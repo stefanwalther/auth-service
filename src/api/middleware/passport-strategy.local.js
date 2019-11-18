@@ -1,6 +1,7 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const UserModel = require('./../modules/user/user.model').Model;
+const logger = require('winster').instance();
 
 const localStrategyOpts = {
   usernameField: 'emailOrUsername',
@@ -8,8 +9,6 @@ const localStrategyOpts = {
 };
 
 passport.use(new LocalStrategy(localStrategyOpts, function (emailOrUsername, password, done) {
-
-  console.log('passport.use');
 
   UserModel.findOne(
     {
@@ -49,7 +48,7 @@ passport.use(new LocalStrategy(localStrategyOpts, function (emailOrUsername, pas
         });
       }
       // If credentials are correct, return the user object
-      console.log('passport.local: we have a user');
+      logger.verbose('passport.local: we have a user');
       return done(null, user);
     });
 }
