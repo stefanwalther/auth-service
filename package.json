@@ -60,7 +60,7 @@
     "sammler-io-audit-logs": "0.0.4",
     "sammler-nodelib-logger": "^0.2.4",
     "serve-favicon": "^2.5.0",
-    "swagger-jsdoc": "3.4.0",
+    "swagger-jsdoc": "3.5.0",
     "swagger-ui-express": "4.1.2",
     "winster": "^0.2.13"
   },
