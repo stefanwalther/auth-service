@@ -33,7 +33,7 @@
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "cors": "2.8.5",
-    "email-templates": "^6.0.0",
+    "email-templates": "^7.0.4",
     "express": "^4.16.4",
     "express-initializers": "^0.0.1",
     "express-jwt-permissions": "^1.2.1",
