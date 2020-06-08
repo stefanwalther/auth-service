@@ -1,4 +1,4 @@
-_{%= name%}_ is a tiny, re-usable authentication service to be used in any microservices environment.
+_{%= name%}_ is a tiny, re-usable authentication service to be used in any microservices' environment.
 
 It is built on top of [express](https://expressjs.com/) , [passport](http://passportjs.org/) and [JWT](https://jwt.io/), therefore easy to extend and integrate.
 
@@ -17,11 +17,11 @@ It is built on top of [express](https://expressjs.com/) , [passport](http://pass
 
 ### Authentication Providers
 
-- [x] Local
+- [x] Local database (MongoDB)
 
 ### Social Authentication Providers
 
-As currently only GitHub is implemented, is should be pretty straightforward to extend _{%= name%}_ with other authentication provider, such as:
+Current, only the local strategy is implemented (saving the user in the given MongoDB instance), but it should be pretty straightforward to extend _{%= name%}_ with other authentication provider, such as:
 
 - GitHub 
 - auth0
