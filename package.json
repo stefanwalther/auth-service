@@ -76,7 +76,7 @@
     "eslint-plugin-mocha": "6.3.0",
     "husky": "4.2.5",
     "mocha": "7.2.0",
-    "nyc": "14.1.1",
+    "nyc": "15.1.0",
     "supertest": "4.0.2"
   },
   "verb": {
