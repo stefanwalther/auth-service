@@ -1,3 +1,7 @@
+v0.4.6:
+  date: 2020-06-08
+  features:
+    - Add an environment flag to filter by domains when registering a user
 v0.4.5:
   date: 2019-10-09
   features:

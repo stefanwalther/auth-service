@@ -66,6 +66,10 @@ _auth-service_ can be configured by the following environment variables:
 - `JWT_SECRET` - The secret used for JWT, defaults to `foo`'
 - `NODE_ENV` - Environment settings for the service (`production`, `development` or `test`), defaults to `development`.
 
+**Features:**
+- `ENABLE_AUDIT_LOG` - Enable or disable audit-log.
+- `REGISTRATION__DOMAIN_FILTER` - Filter domains for the registration process, can be a wildcard ('*'), a single domain (e.g. 'foo.bar') or a list of domains (e.g. 'foo.com,bar.com')
+
 **MongoDB:**
 
 Provide the connection to MongoDB either by providing a full connection string:
