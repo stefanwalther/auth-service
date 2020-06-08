@@ -13,7 +13,6 @@
   "author": "Stefan Walther",
   "main": "./src/api/index.js",
   "scripts": {
-    "precommit": "npm run lint",
     "coverage": "nyc report",
     "lint": "npm run lint:src && npm run lint:test",
     "lint:fix": "npm run lint:src:fix && npm run lint:test:fix",
@@ -28,6 +27,11 @@
     "test:integration:watch": "export JWT_SECRET='My Secret' && npm run test:unit && nyc --reporter=lcov mocha './test/integration/**/*.spec.js' --require './test/mocha.conf.js' --reporter=min --timeout 6000 --watch",
     "test:unit": "nyc --reporter=lcov mocha './test/unit/**/*.spec.js' --require './test/mocha.conf.js' --exit",
     "test:watch": "export JWT_SECRET='My Secret' && nyc --reporter=lcov mocha './test/**/*.spec.js' --require './test/mocha.conf.js' --reporter=min --timeout 6000 --watch"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "dependencies": {
     "body-parser": "^1.18.3",
