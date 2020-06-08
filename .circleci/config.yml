@@ -54,9 +54,9 @@ jobs:
           command: docker-compose --f=docker-compose.test.yml run auth-service-test npm run lint
       - run:
           name: Tests (unit + integration tests)
-          command: make run-unit-tests
+          command: make run-test
       - run:
-          name: CodeCov (upload unit tests)
+          name: CodeCov (upload unit + integration tests)
           command: bash <(curl -s https://codecov.io/bash) -t $CODECOV_TOKEN
       - add_ssh_keys
       - run:
