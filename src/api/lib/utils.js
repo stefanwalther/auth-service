@@ -52,7 +52,7 @@ function eMailInDomain(allowedDomains, eMail) {
     return true;
   }
   if (!eMail || _.isEmpty(eMail)) {
-    throw new Error('email cannot be null or empty');
+    return false;
   }
   const allowedDomainsArray = allowedDomains.split(',');
   for (let i = 0; i < allowedDomainsArray.length; i++) {

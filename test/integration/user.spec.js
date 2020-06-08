@@ -134,14 +134,23 @@ describe('[integration] auth-service => user', () => {
   describe('POST `/user/register/local`', () => {
 
     it('does not throw an error if domainValidation equals *', async () => {
-      const doc = {};
+
+      appServer.config.REGISTRATION__DOMAIN_FILTER = '*';
+
+      const doc = {
+        local: {
+          password: 'bar',
+          username: 'foofoo',
+          email: 'foo@bar.com'
+        }
+      };
       await server
         .post(ENDPOINTS.REGISTER_LOCAL)
         .send(doc)
-        // .expect(HttpStatus.UNPROCESSABLE_ENTITY)
+        .expect(HttpStatus.CREATED)
         .then(result => {
-          expect(result.body).to.have.a.property('ValidationErrors');
-          expect(result.body.ValidationErrors).to.contain('Property <local.email> missing.');
+          expect(result).to.have.property('body').to.exist;
+          expect(result).to.have.property('body').to.not.be.empty;
         });
     });
 
@@ -153,10 +162,32 @@ describe('[integration] auth-service => user', () => {
         .send(doc)
         .expect(HttpStatus.UNPROCESSABLE_ENTITY)
         .then(result => {
+          expect(result).to.have.property('body');
           expect(result.body).to.have.a.property('ValidationErrors');
           expect(result.body.ValidationErrors).to.contain('Property <local.username> missing.');
-          expect(result.body.ValidationErrors).to.contain('Property <local.password> missing.');
-          expect(result.body.ValidationErrors).to.contain('Property <local.email> missing.');
+          expect(result.body.ValidationErrors).to.deep.include('Property <local.password> missing.');
+          expect(result.body.ValidationErrors).to.deep.include('Property <local.email> missing.');
+        });
+    });
+
+    it('throws validation errors if domain white-list is not matched', async () => {
+
+      const doc = {
+        local: {
+          password: 'bar',
+          username: 'foofoo',
+          email: 'foo@baz.com'
+        }
+      };
+      await server
+        .post(ENDPOINTS.REGISTER_LOCAL)
+        .send(doc)
+        .expect(HttpStatus.UNPROCESSABLE_ENTITY)
+        .then(result => {
+          expect(result.body).to.have.a.property('ValidationErrors');
+          expect(result.body).to.have.property('ValidationErrors').to.be.an('array');
+          expect(result.body.ValidationErrors).to.deep.include('<local.email> is outside of one of the allowed domains (foo.com,bar.com).');
+
         });
     });
 

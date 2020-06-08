@@ -42,22 +42,42 @@ class UserController {
     if (!_.has(req.body, 'local.password')) {
       validationErrors.add('Property <local.password> missing.');
     }
+    // eslint-disable-next-line no-negated-condition
     if (!_.has(req.body, 'local.email')) {
       validationErrors.add('Property <local.email> missing.');
-    }
-    if (!utils.validateEmail(req.body.local.email)) {
-      validationErrors.add('<local.email> is an invalid email-address');
-    }
-    const domainFilter = req.app.settings.config.REGISTRATION__DOMAIN_FILTER || '*';
-    if (!utils.eMailInDomain(domainFilter, req.body.local.email)) {
-      validationErrors.add('<local.email> is outside of one of the allowed domains (' + domainFilter + ').');
-    }
-    if (validationErrors.length > 0) {
-      res.setHeader('Content-Type', 'application/json');
-      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(validationErrors);
+    } else {
+
+      // eslint-disable-next-line no-lonely-if,no-negated-condition
+      if (!utils.validateEmail(req.body.local.email)) {
+        validationErrors.add('<local.email> is an invalid email-address');
+      } else {
+        const domainFilter = req.app.settings.config.REGISTRATION__DOMAIN_FILTER || '*';
+        if (!utils.eMailInDomain(domainFilter, req.body.local.email)) {
+          validationErrors.add('<local.email> is outside of one of the allowed domains (' + domainFilter + ').');
+        }
+      }
     }
 
-    const user = new UserModel(req.body);
+    if (validationErrors.length > 0) {
+      res.setHeader('Content-Type', 'application/json');
+      res
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .json(validationErrors)
+        .end();
+      return;
+    }
+
+    let user;
+    try {
+      user = new UserModel(req.body);
+    } catch (err) {
+      res.setHeader('Content-Type', 'application/json');
+      res
+        .status(HttpStatus.UNPROCESSABLE_ENTITY)
+        .json(err)
+        .end();
+      return;
+    }
 
     return user.save()
       .then(user => {
@@ -77,7 +97,11 @@ class UserController {
       })
       .catch(err => {
         logger.error('Err in registerLocal', err);
-        return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(err).end();
+        res.setHeader('Content-Type', 'application/json');
+        res
+          .status(HttpStatus.UNPROCESSABLE_ENTITY)
+          .json(err)
+          .end();
       });
   }
 
