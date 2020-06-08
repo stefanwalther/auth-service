@@ -1,8 +1,0 @@
-
-function clearUsers() {
-
-}
-
-module.exports = {
-
-};
