@@ -90,8 +90,10 @@ class AppServer {
     if (mongoose.connection) {
       try {
         await mongoose.connection.close(); // Using Moongoose >5.0.4 connection.close is preferred over mongoose.disconnect();
-        mongoose.models = {};
-        mongoose.modelSchemas = {};
+
+        mongoose.models = {}; // eslint-disable-line require-atomic-updates
+        mongoose.modelSchemas = {}; // eslint-disable-line require-atomic-updates
+
         this.logger.verbose('Closed mongoose connection');
       } catch (e) {
         this.logger.verbose('Could not close mongoose connection', e);
