@@ -9,6 +9,7 @@ const mongooseConfig = require('./config/mongoose-config');
 
 const mongoUri = new MongooseConnectionConfig(mongooseConfig).getMongoUri();
 const defaultConfig = require('./config/server-config');
+const defaultAppSettings = require('./config/app-settings');
 
 class AppServer {
 
@@ -16,8 +17,9 @@ class AppServer {
    * @constructor
    * @param  {} config
    */
-  constructor(config) {
+  constructor(config, appSettings) {
     this.config = _.extend(_.clone(defaultConfig), config || {});
+    this.appSettings = _.extend(_.clone(defaultAppSettings), appSettings || {});
 
     if (['dev', 'development'].indexOf(this.config.NODE_ENV) > -1 && this.config.DEBUG_CONFIG === 'true') {
       console.log(this.config);
@@ -39,6 +41,8 @@ class AppServer {
    */
   _initApp() {
     this.app = express();
+    this.app.set('config', this.config);
+    this.app.set('appSettings', this.appSettings);
   }
 
   /**
