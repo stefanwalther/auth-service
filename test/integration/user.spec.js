@@ -16,7 +16,6 @@ const ENDPOINTS = {
   PATCH_USER: '/v1/user/:id',
   VERIFY_EMAIL_BY_ID: '/v1/user/:userId/actions/verify-with-id/:code',
   VERIFY_EMAIL_BY_USERIDENTIFIER: '/v1/user/:IdOrEmail/actions/verify/:code'
-
 };
 
 describe('[integration] auth-service => user', () => {
@@ -134,13 +133,25 @@ describe('[integration] auth-service => user', () => {
 
   describe('POST `/user/register/local`', () => {
 
+    it('does not throw an error if domainValidation equals *', async () => {
+      const doc = {};
+      await server
+        .post(ENDPOINTS.REGISTER_LOCAL)
+        .send(doc)
+        // .expect(HttpStatus.UNPROCESSABLE_ENTITY)
+        .then(result => {
+          expect(result.body).to.have.a.property('ValidationErrors');
+          expect(result.body.ValidationErrors).to.contain('Property <local.email> missing.');
+        });
+    });
+
     it('throws validation errors for required fields', async () => {
 
       const doc = {};
       await server
         .post(ENDPOINTS.REGISTER_LOCAL)
         .send(doc)
-        .expect(HttpStatus.INTERNAL_SERVER_ERROR)
+        .expect(HttpStatus.UNPROCESSABLE_ENTITY)
         .then(result => {
           expect(result.body).to.have.a.property('ValidationErrors');
           expect(result.body.ValidationErrors).to.contain('Property <local.username> missing.');
@@ -150,6 +161,7 @@ describe('[integration] auth-service => user', () => {
     });
 
     it('creates a new user', () => {
+
       const doc = {
         tenant_id: mongoose.Types.ObjectId().toString(),
         local: {
@@ -163,6 +175,9 @@ describe('[integration] auth-service => user', () => {
         .post(ENDPOINTS.REGISTER_LOCAL)
         .send(doc)
         .expect(HttpStatus.CREATED)
+        // .then(result => {
+        //   console.log('result', result.body);
+        // })
         .expect(userAssertions.hasNoToken)
         .expect(userAssertions.hasNoVerfificationToken);
     });

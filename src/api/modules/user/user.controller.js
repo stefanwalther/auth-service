@@ -2,6 +2,7 @@ const HttpStatus = require('http-status-codes');
 const ExpressResult = require('express-result');
 const passport = require('passport');
 const _ = require('lodash');
+const utils = require('./../../lib/utils');
 
 const UserModel = require('./user.model').Model;
 const logger = require('winster').instance();
@@ -44,9 +45,16 @@ class UserController {
     if (!_.has(req.body, 'local.email')) {
       validationErrors.add('Property <local.email> missing.');
     }
-
+    if (!utils.validateEmail(req.body.local.email)) {
+      validationErrors.add('<local.email> is an invalid email-address');
+    }
+    const domainFilter = req.app.settings.config.REGISTRATION__DOMAIN_FILTER || '*';
+    if (!utils.eMailInDomain(domainFilter, req.body.local.email)) {
+      validationErrors.add('<local.email> is outside of one of the allowed domains (' + domainFilter + ').');
+    }
     if (validationErrors.length > 0) {
-      return ExpressResult.error(res, validationErrors);
+      res.setHeader('Content-Type', 'application/json');
+      return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(validationErrors);
     }
 
     const user = new UserModel(req.body);
@@ -69,7 +77,7 @@ class UserController {
       })
       .catch(err => {
         logger.error('Err in registerLocal', err);
-        ExpressResult.error(res, err);
+        return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(err).end();
       });
   }
 
