@@ -61,7 +61,7 @@ jobs:
       - add_ssh_keys
       - run:
           name: Login to Docker
-          command: docker login -u "$DOCKER_USER" -p "$DOCKER_PASS"
+          command: echo "$DOCKER_PASS" | docker login --username "$DOCKER_USER" --password-stdin
       - deploy:
           name: Push image(s) to Docker Hub
           command: |
