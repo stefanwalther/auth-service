@@ -49,7 +49,7 @@ class UserController {
 
       // eslint-disable-next-line no-lonely-if,no-negated-condition
       if (!utils.validateEmail(req.body.local.email)) {
-        validationErrors.add('<local.email> is an invalid email-address');
+        validationErrors.add('<local.email> is an invalid email-address.');
       } else {
         const domainFilter = req.app.settings.config.REGISTRATION__DOMAIN_FILTER || '*';
         if (!utils.eMailInDomain(domainFilter, req.body.local.email)) {
