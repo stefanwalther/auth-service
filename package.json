@@ -47,7 +47,7 @@
     "http-status-codes": "^1.4.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "4.17.15",
-    "moment": "2.26.0",
+    "moment": "2.27.0",
     "mongoose": "5.9.20",
     "mongoose-beautiful-unique-validation": "^7.1.1",
     "mongoose-connection-config": "0.2.5",
