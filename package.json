@@ -48,7 +48,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "4.17.15",
     "moment": "2.27.0",
-    "mongoose": "5.9.20",
+    "mongoose": "5.9.21",
     "mongoose-beautiful-unique-validation": "^7.1.1",
     "mongoose-connection-config": "0.2.5",
     "nodemailer": "6.4.10",
