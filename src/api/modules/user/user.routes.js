@@ -127,7 +127,7 @@ router.patch(`/${API_VERSION}/user/:id`, UserController.patchUser);
  *       500:
  *         description: Validation Error.
  */
-router.post('/v1/user/register/local', UserController.registerLocal);
+router.post(`/${API_VERSION}/user/register/local`, UserController.registerLocal);
 
 // Todo: Login date (in case of successful login should be saved) => goes to audit + one function is needed to get the last login date.
 // Todo: Login attempt (in case of failed login should be saved) => goes to audit + one function is needed to get the last login attempt.
@@ -152,7 +152,7 @@ router.post('/v1/user/register/local', UserController.registerLocal);
  *       401:
  *         description: Unauthorized, wrong user/password combination.
  */
-router.post('/v1/user/login', UserController.login);
+router.post(`/${API_VERSION}/user/login`, UserController.login);
 
 /**
  * @swagger
@@ -167,16 +167,16 @@ router.post('/v1/user/login', UserController.login);
  *     200:
  *       description: Successfully logged out.
  */
-router.post('/v1/user/logout', UserController.logout); // Todo: Decide whether to use post or another verb (?!)
+router.post(`/${API_VERSION}/user/logout`, UserController.logout); // Todo: Decide whether to use post or another verb (?!)
 
 // Todo: Implement this
-router.get('/v1/user/status', UserController.status);
+router.get(`/${API_VERSION}/user/status`, UserController.status);
 
 // Todo: Only possible to be fetched by the user himself or by the admin
-router.get('/v1/user/:id', UserController.getById);
+router.get(`/${API_VERSION}/user/:id`, UserController.getById);
 
 // Todo: Implement this
-router.get('/v1/user/password-reset-request', UserController.status);
+router.get(`/${API_VERSION}/user/password-reset-request`, UserController.status);
 
 // Todo: Questionable whether the endpoint should include "user", could also just be "/v1/verify-token"
 // Todo: Document 200 and 500 message in detail
@@ -205,7 +205,7 @@ router.get('/v1/user/password-reset-request', UserController.status);
  *     500:
  *       description: Server error, token could not be verified.
  */
-router.post('/v1/user/verify-token', UserController.verifyToken);
+router.post(`/${API_VERSION}/user/verify-token`, UserController.verifyToken);
 
 /**
  * @swagger
@@ -235,7 +235,7 @@ router.post('/v1/user/verify-token', UserController.verifyToken);
  *     401:
  *       description: Unauthorized
  */
-router.get('/v1/me', UserController.me);
+router.get(`/${API_VERSION}/me`, UserController.me);
 
 // Todo: Test
 // Todo: Document
@@ -256,16 +256,16 @@ router.get('/v1/me', UserController.me);
  *     500:
  *       description: Server error
  */
-router.delete('/v1/user/:id', UserController.delete);
+router.delete(`/${API_VERSION}/user/:id`, UserController.delete);
 
 // Todo: Test
 // Todo: Document
 // Todo: Should be a `PUT` as this needs to be idempotent
-router.post('/v1/user/:id/undelete', UserController.unDelete);
+router.post(`/${API_VERSION}/user/:id/undelete`, UserController.unDelete);
 
-router.put(`/v1/user/:userId/actions/verify-with-id/:code`, UserController.verifyByUserId);
+router.put(`/${API_VERSION}/user/:userId/actions/verify-with-id/:code`, UserController.verifyByUserId);
 
-router.put('/v1/user/:IdOrEmail/actions/verify/:code', UserController.verifyByUserIdentifiers);
+router.put(`/${API_VERSION}/user/:IdOrEmail/actions/verify/:code`, UserController.verifyByUserIdentifiers);
 
 /**
  * @swagger
@@ -286,6 +286,6 @@ router.put('/v1/user/:IdOrEmail/actions/verify/:code', UserController.verifyByUs
  *     500:
  *       description: Unhandled server error.
  */
-router.delete('/v1/user/:id/purge', passport.authenticate('jwt', {session: false}), UserController.purge);
+router.delete(`/${API_VERSION}/user/:id/purge`, passport.authenticate('jwt', {session: false}), UserController.purge);
 
 module.exports = router;
