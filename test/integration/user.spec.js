@@ -9,6 +9,7 @@ const defaultConfig = require('./../test-lib/default-config');
 const userAssertions = require('./../test-lib/user-assertions');
 
 const ENDPOINTS = {
+  GET: '/v1/users',
   REGISTER_LOCAL: '/v1/user/register/local',
   USER_LOGIN: '/v1/user/login',
   VERIFY_TOKEN: '/v1/user/verify-token',
@@ -127,6 +128,21 @@ describe('[integration] auth-service => user', () => {
 
       let newUser = await user.save();
       expect(newUser.verifyLocalPassword('baz')).to.be.true;
+    });
+
+  });
+
+  describe('GET `/users', () => {
+
+    xit('should return all users');
+    xit('should throw an error for an unauthorized request', async () => {
+      return server
+        .get(ENDPOINTS.GET)
+        //.expect(HttpStatus.UNAUTHORIZED)
+        .then(result => {
+          expect(result.body).to.exist;
+          console.log('result', result.body);
+        });
     });
 
   });

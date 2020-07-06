@@ -17,6 +17,12 @@ const auditLogActions = require('../../config/audit-log-actions');
 
 class UserController {
 
+  // static async get(req, res) {
+  //   let result = await UserModel.get();
+  //
+  //   return ExpressResult.ok(res, result);
+  // }
+
   // Todo: Standardize results
   static getById(req, res) {
     return UserModel
