@@ -1,7 +1,7 @@
 const HttpStatus = require('http-status-codes');
 const swaggerJsDocs = require('swagger-jsdoc');
 
-const swaggerConfig = require('./../../config/swagger-config');
+const swaggerConfig = require('../../config/swagger-config');
 
 class ApiDocsController {
 
@@ -15,10 +15,9 @@ class ApiDocsController {
   /**
    * /api-docs/raw
    */
-  static getRaw(req, res) {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(ApiDocsController.getDocs());
-    res.status(HttpStatus.OK);
+  static getRaw(ctx) {
+    ctx.status = HttpStatus.OK;
+    ctx.body = ApiDocsController.getDocs();
   }
 }
 

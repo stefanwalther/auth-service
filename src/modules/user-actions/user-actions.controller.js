@@ -4,16 +4,16 @@ const Email = require('email-templates');
 const nodemailer = require('nodemailer');
 const nodeMailerPostmarkTransport = require('nodemailer-postmark-transport');
 
-const UserModel = require('./../../modules/user/user.model').Model;
+const UserModel = require('../user/user.model').Model;
 const logger = require('winster').instance();
-const serverConfig = require('./../../config/server-config');
-const appSettings = require('./../../config/app-settings');
+const serverConfig = require('../../config/server-config');
+const appSettings = require('../../config/app-settings');
 
 class UserActionsController {
 
-  static async sendVerificationEmail(req, res) {
+  static async sendVerificationEmail(ctx) {
 
-    const email = req.body.email;
+    const email = ctx.request.body.email;
     const user = await UserModel.findOne({
       'local.email': email
     });
@@ -22,11 +22,12 @@ class UserActionsController {
         await _sendVerificationEmail(user);
       } catch (err) {
         logger.verbose('Error when sending the verification email', err);
-        return res.status(HttpStatus.UNPROCESSABLE_ENTITY).json(err);
+        ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ctx.body = err;
       }
     } else {
-      res.setHeader('Content-Type', 'application/json');
-      return res.status(HttpStatus.NOT_FOUND).json({message: 'No user could be found with the given email address.'});
+      ctx.status = HttpStatus.NOT_FOUND;
+      ctx.body = {message: 'No user could be found with the given email address.'};
     }
   }
 }

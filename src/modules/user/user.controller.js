@@ -1,36 +1,41 @@
 const HttpStatus = require('http-status-codes');
 const ExpressResult = require('express-result');
-const passport = require('passport');
+const koaPassport = require('koa-passport');
 const _ = require('lodash');
-const utils = require('./../../lib/utils');
+const utils = require('../../lib/utils');
 
 const UserModel = require('./user.model').Model;
 const logger = require('winster').instance();
-// Todo: Remove eslint disabler
-const guard = require('express-jwt-permissions'); // eslint-disable-line no-unused-vars
 
-const serverConfig = require('./../../config/server-config');
-const auditLogsConfig = require('./../../config/audit-logs-config');
+const serverConfig = require('../../config/server-config');
+const auditLogsConfig = require('../../config/audit-logs-config');
 
 const auditLogService = require('sammler-io-audit-logs').instance(auditLogsConfig.connectionOpts);
 const auditLogActions = require('../../config/audit-log-actions');
 
 class UserController {
 
-  // static async get(req, res) {
-  //   let result = await UserModel.get();
-  //
-  //   return ExpressResult.ok(res, result);
-  // }
+  static async get(ctx) {
+    try {
+      const result = await UserModel.find();
+      ctx.body = HttpStatus.OK;
+      ctx.result = result;
+    } catch (err) {
+      ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+    }
+  }
 
-  // Todo: Standardize results
-  static getById(req, res) {
+  static getById(ctx) {
     return UserModel
-      .getById(req.params.id)
+      .getById(ctx.params.id)
       .then(result => {
-        ExpressResult.ok(res, result);
+        ctx.status = HttpStatus.OK;
+        ctx.body = result;
       })
-      .catch(err => ExpressResult.error(res, err));
+      .catch(err => {
+        ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ctx.body = err;
+      });
   }
 
   // Todo: Validation could be generalized and probably broken out.
@@ -39,49 +44,43 @@ class UserController {
   // Todo: Refactor, don't like how the returned object is created, that's too error-prone if new props are added.
   // Todo: Standardize results
   // Todo: Send event
-  static registerLocal(req, res) {
+  static registerLocal(ctx) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
-    if (!_.has(req.body, 'local.username')) {
+    if (!_.has(ctx.request.body, 'local.username')) {
       validationErrors.add('Property <local.username> missing.');
     }
-    if (!_.has(req.body, 'local.password')) {
+    if (!_.has(ctx.request.body, 'local.password')) {
       validationErrors.add('Property <local.password> missing.');
     }
     // eslint-disable-next-line no-negated-condition
-    if (!_.has(req.body, 'local.email')) {
+    if (!_.has(ctx.request.body, 'local.email')) {
       validationErrors.add('Property <local.email> missing.');
     } else {
 
       // eslint-disable-next-line no-lonely-if,no-negated-condition
-      if (!utils.validateEmail(req.body.local.email)) {
+      if (!utils.validateEmail(ctx.request.body.local.email)) {
         validationErrors.add('<local.email> is an invalid email-address.');
       } else {
-        const domainFilter = req.app.settings.config.REGISTRATION__DOMAIN_FILTER || '*';
-        if (!utils.eMailInDomain(domainFilter, req.body.local.email)) {
+        const domainFilter = ctx.config.REGISTRATION__DOMAIN_FILTER || '*';
+        if (!utils.eMailInDomain(domainFilter, ctx.request.body.local.email)) {
           validationErrors.add('<local.email> is outside of one of the allowed domains (' + domainFilter + ').');
         }
       }
     }
 
     if (validationErrors.length > 0) {
-      res.setHeader('Content-Type', 'application/json');
-      res
-        .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .json(validationErrors)
-        .end();
+      ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+      ctx.body = validationErrors;
       return;
     }
 
     let user;
     try {
-      user = new UserModel(req.body);
+      user = new UserModel(ctx.request.body);
     } catch (err) {
-      res.setHeader('Content-Type', 'application/json');
-      res
-        .status(HttpStatus.UNPROCESSABLE_ENTITY)
-        .json(err)
-        .end();
+      ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+      ctx.body = err;
       return;
     }
 
@@ -99,15 +98,14 @@ class UserController {
         if (serverConfig.ENABLE_AUDIT_LOG === true) {
           auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getRegisterLocalEvent({user}));
         }
-        ExpressResult.created(res, result);
+        ctx.status = HttpStatus.CREATED;
+        ctx.body = result;
       })
       .catch(err => {
         logger.error('Err in registerLocal', err);
-        res.setHeader('Content-Type', 'application/json');
-        res
-          .status(HttpStatus.UNPROCESSABLE_ENTITY)
-          .json(err)
-          .end();
+
+        ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ctx.body = err;
       });
   }
 
@@ -115,48 +113,57 @@ class UserController {
   // Todo: Investigate how to properly use next() here
   // Todo: Standardize results
   // Todo: Break out validation
-  static login(req, res) {
+  static login(ctx, next) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
-    if (!req.body.emailOrUsername) {
+    if (!ctx.request.body || !ctx.request.body.emailOrUsername) {
       validationErrors.add('Property <emailOrUsername> missing.');
     }
 
-    if (!req.body.password) {
+    if (!ctx.request.body || !ctx.request.body.password) {
       validationErrors.add('Property <password> missing.');
     }
 
     if (validationErrors.length > 0) {
       logger.verbose('ValidationErrors', validationErrors);
-      return ExpressResult.error(res, validationErrors);
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = validationErrors;
+      return next();
     }
 
-    passport.authenticate('local', function (err, user, info) {
+    return koaPassport.authenticate('local', function (err, user, info /* , status */) {
 
       // If Passport throws/catches an error
       if (err) {
         // Todo: Trigger audit-log
         logger.verbose('Passport threw an error', err);
-        return ExpressResult.error(err);
+        ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ctx.body = err;
+        return next();
       }
 
       // If a user is found
       if (user) {
         const token = user.generateJwt();
         logger.verbose('OK, we have a token');
+
+        // Todo: get the serverConfig from the koa-context
         if (serverConfig.ENABLE_AUDIT_LOG === true) {
           auditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLoginEvent({user}));
         } else {
           logger.verbose(`We are not audit-logging here (${serverConfig.ENABLE_AUDIT_LOG}).`);
         }
-        return ExpressResult.ok(res, {token});
+        ctx.status = HttpStatus.OK;
+        ctx.body = {token};
+        return next();
       }
 
       // No user found
       logger.verbose('no user was found', info);
-      return ExpressResult.unauthorized(res, info);
-
-    })(req, res);
+      ctx.status = HttpStatus.UNAUTHORIZED;
+      ctx.body = info;
+      return next();
+    })(ctx, next);
   }
 
   /**
@@ -165,100 +172,98 @@ class UserController {
    * @Todo: Make configurable where to redirect to.
    * @Todo: Standardize results
    * @Todo: Send audit-log event
-   *
-   * @param req
-   * @param res
-   * @param next
    */
-  static logout(req, res, next) {
+  static async logout(/* ctx */) {
     // AuditLogService.log(auditLogActions.SUBJECT_AUDIT_LOGS, auditLogActions.cloudEvents.getLogoutEvent());
-    next();
+
   }
 
   /**
    * Returns application/json with the user details for the cookie/token passed in the request.
    *
-   * @param req
-   * @param res
-   * @param next
    */
-  static status(req, res, next) {
-    next();
+  static async status(/* ctx, next */) {
   }
 
   // Todo: Standardize results
   // Todo: Send event
-  static delete(req, res) {
+  static async delete(ctx) {
 
-    return UserModel
-      .markAsDeleted(req.params.id)
-      .then(result => {
-        return ExpressResult.ok(res, result);
-      })
-      .catch(err => {
-        return ExpressResult.error(res, err);
-      });
+    try {
+      let result = await UserModel.markAsDeleted(ctx.params.id);
+      ctx.status = HttpStatus.OK;
+      ctx.body = result;
+    } catch (err) {
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = err;
+    }
   }
 
   // Todo: Standardize results
   // Todo: Send event
-  static unDelete(req, res) {
+  static async unDelete(ctx) {
 
-    return UserModel
-      .unMarkAsDeleted(req.params.id)
-      .then(result => {
-        return ExpressResult.ok(res, result);
-      })
-      .catch(err => {
-        return ExpressResult.error(res, err);
-      });
+    try {
+      let result = await UserModel.unMarkAsDeleted(ctx.params.id);
+      ctx.response.status = HttpStatus.OK;
+      ctx.body = result;
+    } catch (err) {
+      ctx.response.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = err;
+    }
+
   }
 
-  static purge(req, res) {
+  static async purge(ctx) {
 
-    return UserModel
-      .remove({_id: req.params.id})
-      .exec()
-      .then(result => {
-        return ExpressResult.ok(res, result);
-      })
-      .catch(err => {
-        return ExpressResult.error(res, err);
-      });
+    try {
+      let result = await UserModel.remove({_id: ctx.params.id}).exec();
+      ctx.status = HttpStatus.OK;
+      ctx.body = result;
+    } catch (err) {
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = err;
+    }
+
   }
 
   // Todo: Standardize results
-  static verifyToken(req, res, next) {
+  static async verifyToken(ctx) {
 
     const validationErrors = new ExpressResult.ValidationErrors();
-    const token = (req.body && req.body.token) || req.headers['x-access-token'];
+    const token = (ctx.request.body && ctx.request.body.token) || ctx.request.headers['x-access-token'];
     if (!token) {
       validationErrors.add('Property <token> is missing. Put the <token> in either your body or use <x-access-token> in the Http-header.');
     }
     if (validationErrors.length > 0) {
-      return ExpressResult.error(res, validationErrors);
+      ctx.response.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = validationErrors;
+      return;
     }
 
     try {
-      const decoded = UserModel.verifyToken(token);
-      ExpressResult.ok(res, {message: 'Valid token.', details: decoded});
+      const decoded = await UserModel.verifyToken(token);
+      ctx.response.status = HttpStatus.OK;
+      ctx.body = {message: 'Valid token.', details: decoded};
     } catch (err) {
-      ExpressResult.error(res, {message: 'Invalid token.'});
+      ctx.response.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = {message: 'Invalid token.'};
     }
-    next();
   }
 
   // Todo: Nice idea, but figure out how this could be of help?
   // Reference: https://github.com/binocarlos/passport-service
-  static me(req, res, next) {
+  static me(ctx, next) {
 
-    const token = (req.body && req.body.token) || req.headers['x-access-token'];
+    const token = (ctx.request.body && ctx.request.body.token) || ctx.headers['x-access-token'];
     try {
       const props = UserModel.verifyToken(token);
       let ret = _.pick(props, ['_id', 'username', 'email']);
-      ExpressResult.ok(res, ret);
+      ctx.status = HttpStatus.OK;
+      ctx.body = ret;
     } catch (err) {
-      ExpressResult.unauthorized(res, {message: `Invalid request: ${err.message}`});
+      ctx.status = HttpStatus.UNAUTHORIZED;
+      ctx.body = {message: `Invalid request: ${err.message}`};
     }
     next();
   }
@@ -277,31 +282,40 @@ class UserController {
     next();
   }
 
-  static verifyByUserId(req, res) {
+  static async verifyByUserId(ctx) {
 
-    const {userId, code} = req.params;
+    const {userId, code} = ctx.params;
 
-    return UserModel.verifyByUserId(userId, code)
-      .then(() => {
-        return ExpressResult.ok(res);
-      })
-      .catch(err => {
-        return ExpressResult.error(res, err);
-      });
+    try {
+      let user = await UserModel.verifyByUserId(userId, code);
+      if (user && user.ok === 1) {
+        ctx.status = HttpStatus.OK;
+      } else {
+        ctx.status = HttpStatus.UNAUTHORIZED;
+      }
+    } catch (err) {
+        ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ctx.body = err;
+    }
+
   }
 
-  static verifyByUserIdentifiers(req, res) {
+  static async verifyByUserIdentifiers(ctx) {
 
-    const code = req.params.code;
-    const userIdentifier = req.params.IdOrEmail;
+    const code = ctx.params.code;
+    const userIdentifier = ctx.params.IdOrEmail;
 
-    return UserModel.verifyByUserIdentifiers(userIdentifier, code)
-      .then(() => {
-        return ExpressResult.ok(res);
-      })
-      .catch(err => {
-        return ExpressResult.error(res, err);
-      });
+    try {
+      let result = await UserModel.verifyByUserIdentifiers(userIdentifier, code);
+      if (result && result.ok === 1) {
+        ctx.status = HttpStatus.OK;
+        return;
+      }
+      ctx.status = HttpStatus.NOT_FOUND;
+    } catch (err) {
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = err;
+    }
   }
 
 }

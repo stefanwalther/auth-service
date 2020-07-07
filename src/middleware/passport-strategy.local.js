@@ -1,6 +1,6 @@
-const passport = require('passport');
+const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
-const UserModel = require('./../modules/user/user.model').Model;
+const UserModel = require('../modules/user/user.model').Model;
 const logger = require('winster').instance();
 
 const localStrategyOpts = {
@@ -28,13 +28,12 @@ passport.use(new LocalStrategy(localStrategyOpts, function (emailOrUsername, pas
       if (err) {
         return done(err);
       }
-      // Return if user not found in database
       if (!user) {
+        // Return if user not found in database
         return done(null, false, {
           message: 'User not found.'
         });
       }
-
       if (user && user.local.email_verified === false) {
         return done(null, false, {
           message: 'Email not verified.'
@@ -47,6 +46,7 @@ passport.use(new LocalStrategy(localStrategyOpts, function (emailOrUsername, pas
           message: 'Password is wrong.'
         });
       }
+
       // If credentials are correct, return the user object
       logger.verbose('passport.local: we have a user');
       return done(null, user);

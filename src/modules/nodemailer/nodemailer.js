@@ -1,9 +1,9 @@
-const nodeMailer = require('nodemailer');
+const nodeMailer = require('src/modules/nodemailer/nodemailer');
 const sgTransport = require('nodemailer-sendgrid-transport');
 const path = require('path');
 const emailTemplates = require('email-templates');
 
-const nodeMailerConfig = require('./../../config/nodemailer-config.js');
+const nodeMailerConfig = require('../../config/nodemailer-config.js');
 const templatesDir = path.join(__dirname, './../../mailtemplates');
 
 // Todo: Define the vertifcationUrl
@@ -19,6 +19,7 @@ const mailer = nodeMailer.createTransport(sgTransport(options));
 
 function sendVerificationMail(user, callback) {
 
+  // Todo: We need to throw an error if the verification_token is not available
   const verificationUrl = vertificationUrl.replace(':user_id', user._id).replace(':token', user.verification_token);
 
   emailTemplates(templatesDir, (err, template) => {

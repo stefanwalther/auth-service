@@ -1,6 +1,7 @@
-const express = require('express');
-const router = express.Router(); // eslint-disable-line new-cap
+const koaRouter = require('koa-router');
 const ApiDocsController = require('./api-docs.controller');
+
+const router = koaRouter();
 
 /**
  * @swagger

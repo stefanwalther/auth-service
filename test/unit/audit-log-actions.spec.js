@@ -1,4 +1,4 @@
-const AuditLogActions = require('./../../src/api/config/audit-log-actions');
+const AuditLogActions = require('../../src/config/audit-log-actions');
 
 const user = {
   _id: 1,
@@ -21,7 +21,7 @@ function validateProps(target, props) {
   expect(r).to.have.property('actor').to.be.equal(props[0].user._id);
 }
 
-describe('[unit] audit-log-actions', () => {
+describe('[unit] => audit-log-actions', () => {
 
   it('exposes `SUBJECT_AUDIT_LOGS`', () => {
     expect(AuditLogActions).to.have.a.property('SUBJECT_AUDIT_LOGS').to.be.equal('audit-logs');

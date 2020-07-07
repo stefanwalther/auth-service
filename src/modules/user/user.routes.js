@@ -1,7 +1,9 @@
-const express = require('express');
-const router = express.Router(); // eslint-disable-line new-cap
+const koaRouter = require('koa-router');
 const UserController = require('./user.controller.js');
 const passport = require('passport');
+const authRequired = require('./../../middleware/auth-required');
+
+let router = koaRouter();
 
 /**
  * @swagger
@@ -98,6 +100,8 @@ const passport = require('passport');
  */
 
 const API_VERSION = 'v1';
+
+router.get(`/${API_VERSION}/users`, authRequired, UserController.get);
 
 router.patch(`/${API_VERSION}/user/:id`, UserController.patchUser);
 

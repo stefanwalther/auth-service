@@ -1,6 +1,6 @@
-const AppServer = require('./../../src/api/app-server');
+const AppServer = require('../../src/app-server');
 
-describe('[integration] app-server', () => {
+describe('[integration] => app-server', () => {
 
   // Todo: should be moved to unit tests
   it('ctor => throws an error if the port is invalid', () => {

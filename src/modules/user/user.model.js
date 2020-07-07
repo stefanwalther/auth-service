@@ -7,12 +7,12 @@ const logger = require('winster').instance();
 const beautifyUnique = require('mongoose-beautiful-unique-validation');
 
 // Libs
-const utils = require('./../../lib/utils');
+const utils = require('../../lib/utils');
 
 // Configs
-const MongooseConfig = require('./../../config/mongoose-config');
-const jwtConfig = require('./../../config/jwt-config');
-const appSettings = require('./../../config/app-settings');
+const MongooseConfig = require('../../config/mongoose-config');
+const jwtConfig = require('../../config/jwt-config');
+const appSettings = require('../../config/app-settings');
 
 const Schema = mongoose.Schema;
 
