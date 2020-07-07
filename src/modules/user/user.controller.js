@@ -17,9 +17,12 @@ class UserController {
 
   static async get(ctx) {
     try {
-      const result = await UserModel.find();
-      ctx.body = HttpStatus.OK;
-      ctx.result = result;
+      const result = await UserModel.find().lean();
+      let resultCleaned = result.map(item => {
+        return _.omit(item, ['local.salt', 'local.password', 'local.email_verification_code']);
+      });
+      ctx.status = HttpStatus.OK;
+      ctx.body = resultCleaned;
     } catch (err) {
       ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
     }

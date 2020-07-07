@@ -141,6 +141,28 @@ describe('[integration] => user', () => {
         .expect(HttpStatus.OK);
     });
 
+    it('should not return sensitive data', async () => {
+
+      await testLib.addDummyUser();
+
+      return server
+        .get(ENDPOINTS.GET)
+        .set('x-access-token', testLib.getToken(testLib.DUMMY_TOKENS.alicia))
+        .expect(HttpStatus.OK)
+        .then(result => {
+          expect(result.body).to.exist;
+          expect(result.body).to.be.an('array').of.length(1);
+
+          console.log('result.body', result.body[0]);
+
+          expect(result.body[0]).to.not.have.property('password');
+          expect(result.body[0]).to.not.have.property('salt');
+          expect(result.body[0]).to.not.have.nested.property('local.salt');
+          expect(result.body[0]).to.not.have.nested.property('local.password');
+          expect(result.body[0]).to.not.have.nested.property('local.email_verification_code');
+        });
+    });
+
     it('should throw an error for an unauthorized request', async () => {
       return server
         .get(ENDPOINTS.GET)

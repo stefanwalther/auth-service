@@ -232,6 +232,11 @@ schema.pre('save', function (next) {
   return next();
 });
 
+// Ensure virtual fields are serialised.
+schema.set('toJSON', {
+  virtuals: true
+});
+
 module.exports = {
   Schema: schema,
   Model: mongoose.model(MongooseConfig.COLLECTION_USER, schema)

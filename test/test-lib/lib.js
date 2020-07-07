@@ -2,8 +2,54 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const cfg = require('./../../src/config/jwt-config');
 const moment = require('moment');
+const UserModel = require('./../../src/modules/user/user.model').Model;
 
 class TestLib {
+
+  // ---------------------------------------------------------------------------
+  // Users
+  // ---------------------------------------------------------------------------
+  static async addDummyUser() {
+    const u1 = {
+      tenant_id: mongoose.Types.ObjectId().toString(),
+      local: {
+        username: 'foo-1',
+        email: 'foo-1@bar.com',
+        password: 'baz-1'
+      }
+    };
+    let user1 = await new UserModel(u1).save();
+
+    return {
+      user1
+    };
+  }
+
+  static async addDummyUsers() {
+    const u1 = {
+      tenant_id: mongoose.Types.ObjectId().toString(),
+      local: {
+        username: 'foo-1',
+        email: 'foo-1@bar.com',
+        password: 'baz-1'
+      }
+    };
+    let user1 = await new UserModel(u1).save();
+    const u2 = {
+      tenant_id: mongoose.Types.ObjectId().toString(),
+      local: {
+        username: 'foo-2',
+        email: 'foo-2@bar.com',
+        password: 'baz-2'
+      }
+    };
+    let user2 = await new UserModel(u2).save();
+
+    return {
+      user1,
+      user2
+    };
+  }
 
   // ---------------------------------------------------------------------------
   // JWT Token Handle
