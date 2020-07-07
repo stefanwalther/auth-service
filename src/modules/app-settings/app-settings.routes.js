@@ -1,6 +1,7 @@
-const express = require('express');
-const router = express.Router(); // eslint-disable-line new-cap
+const koaRouter = require('koa-router');
 const AppSettingsController = require('./app-settings.controller');
+
+let router = koaRouter();
 
 router.get('/app-settings', AppSettingsController.get);
 
