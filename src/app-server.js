@@ -1,11 +1,13 @@
-const initializer = require('express-initializers');
 const _ = require('lodash');
-const express = require('express');
+const Koa = require('koa');
 const logger = require('winster').instance();
 const MongooseConnectionConfig = require('mongoose-connection-config');
 const mongoose = require('mongoose');
 const path = require('path');
 const mongooseConfig = require('./config/mongoose-config');
+
+const initializer = require('koa-initializer');
+const routes = require('./routes');
 
 const mongoUri = new MongooseConnectionConfig(mongooseConfig).getMongoUri();
 const defaultConfig = require('./config/server-config');
@@ -26,23 +28,16 @@ class AppServer {
       console.log(mongooseConfig);
     }
 
-    this._validateConfig();
+    // Todo(AAA): re-enable this
+    // this._validateConfig();
 
+    this.app = null;
     this.server = null;
     this.logger = logger;
 
-    this._initApp();
-  }
-
-  /**
-   * Initialize the express app.
-   *
-   * @private
-   */
-  _initApp() {
-    this.app = express();
-    this.app.set('config', this.config);
-    this.app.set('appSettings', this.appSettings);
+    this.app = new Koa();
+    this.app.context.config = this.config;
+    this.app.context.appSettings = this.appSettings;
   }
 
   /**
@@ -68,16 +63,40 @@ class AppServer {
    */
   async start() {
 
-    await initializer(this.app, {directory: path.join(__dirname, 'config/initializers')});
+    await initializer(this.app, path.join(__dirname, './initializers'));
 
-    // Do not use `await`, otherwise buffering will not be used by mongoose.
-    await mongoose.connect(mongoUri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+    this.app.use(routes());
 
+    // Start mongoose
+    try {
+      // Don't use `await`, otherwise buffering in mongoose does not work.
+      if (this.config.NODE_ENV === 'development') {
+        this.logger.verbose('connection string (development env): ', mongooseConfig.connection_string);
+      }
+      mongoose.connect(mongoUri, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
+
+    } catch (err) {
+      logger.fatal(`[app-server] Cannot connect to mongodb`, err);
+    }
+
+    // Start the AppServer
     try {
       this.server = await this.app.listen(this.config.PORT);
-      this.logger.info(`Express server listening on port ${this.config.PORT} in "${this.config.NODE_ENV}" mode`);
+
+      process.on('SIGTERM', function () {
+        this.server.close(function () {
+          process.exit(0);
+        });
+      });
+
+      this.logger.info(
+        `[app-server] Koa server listening on port ${this.config.PORT} in "${
+          this.config.NODE_ENV
+        }" mode`
+      );
     } catch (err) {
-      this.logger.error('Cannot start express server', err);
+      this.logger.fatal('[app-server] Cannot start koa server', err);
+      throw err;
     }
   }
 
@@ -87,28 +106,38 @@ class AppServer {
    */
   async stop() {
 
+    await this._stopMongoose();
+    await this._stopServer();
+  }
+
+  async _stopMongoose() {
     if (mongoose.connection) {
       try {
+        // Mongoose.models = {};
+        // mongoose.modelSchemas = {};
         await mongoose.connection.close(); // Using Moongoose >5.0.4 connection.close is preferred over mongoose.disconnect();
-
-        mongoose.models = {}; // eslint-disable-line require-atomic-updates
-        mongoose.modelSchemas = {}; // eslint-disable-line require-atomic-updates
-
-        this.logger.verbose('Closed mongoose connection');
+        this.logger.verbose('[app-server] Closed mongoose connection');
       } catch (e) {
-        this.logger.verbose('Could not close mongoose connection', e);
-      }
-    }
-
-    if (this.server) {
-      try {
-        await this.server.close();
-        this.logger.info('Server closed');
-      } catch (e) {
-        this.logger.verbose('Could not close server', e);
+        this.logger.verbose('[app-server] Could not close mongoose connection', e);
+        throw e;
       }
     }
   }
+
+  async _stopServer() {
+    if (this.server) {
+      try {
+        await this.server.close();
+        this.logger.info('[app-server] Server closed');
+      } catch (err) {
+        this.logger.error('[app-server] Could not close server', err);
+        throw err;
+      }
+    } else {
+      this.logger.trace('[app-server]  No server to close');
+    }
+  }
+
 }
 
 module.exports = AppServer;
