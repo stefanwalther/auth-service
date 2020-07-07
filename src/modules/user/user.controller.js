@@ -297,8 +297,8 @@ class UserController {
         ctx.status = HttpStatus.UNAUTHORIZED;
       }
     } catch (err) {
-        ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ctx.body = err;
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.body = err;
     }
 
   }

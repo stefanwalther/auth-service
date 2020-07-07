@@ -923,7 +923,7 @@ describe('[integration] => user', () => {
         })
         .expect(HttpStatus.UNAUTHORIZED)
         .then(result => {
-          // console.log('result', result.body);
+          // Console.log('result', result.body);
         });
 
       await server
