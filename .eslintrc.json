@@ -1,6 +1,7 @@
 {
   "extends": "eslint-config-space-single/esnext",
   "rules": {
+    "require-atomic-updates": "off",
     "no-warning-comments": "off"
   }
 }
