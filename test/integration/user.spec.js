@@ -2,15 +2,17 @@ const superTest = require('supertest');
 const HttpStatus = require('http-status-codes');
 const mongoose = require('mongoose');
 const _ = require('lodash');
+const testLib = require('./../test-lib/lib');
 
-const AppServer = require('./../../src/api/app-server');
-const UserModel = mongoose.models.User || require('./../../src/api/modules/user/user.model').Model;
+const AppServer = require('../../src/app-server');
+const UserModel = mongoose.models.User || require('../../src/modules/user/user.model').Model;
 const defaultConfig = require('./../test-lib/default-config');
 const userAssertions = require('./../test-lib/user-assertions');
 
 const ENDPOINTS = {
+  GET: '/v1/users',
   REGISTER_LOCAL: '/v1/user/register/local',
-  USER_LOGIN: '/v1/user/login',
+  POST_USER_LOGIN: '/v1/user/login',
   VERIFY_TOKEN: '/v1/user/verify-token',
   ME: '/v1/me',
   PATCH_USER: '/v1/user/:id',
@@ -18,7 +20,7 @@ const ENDPOINTS = {
   VERIFY_EMAIL_BY_USERIDENTIFIER: '/v1/user/:IdOrEmail/actions/verify/:code'
 };
 
-describe('[integration] auth-service => user', () => {
+describe('[integration] => user', () => {
 
   let server;
   let appServer;
@@ -80,7 +82,6 @@ describe('[integration] auth-service => user', () => {
       try {
         await user2.save();
       } catch (e) {
-        console.log(e);
         expect(e).to.exist;
         expect(e.name).to.be.equal('ValidationError');
       }
@@ -127,6 +128,45 @@ describe('[integration] auth-service => user', () => {
 
       let newUser = await user.save();
       expect(newUser.verifyLocalPassword('baz')).to.be.true;
+    });
+
+  });
+
+  describe('GET `/users', () => {
+
+    it('should return all users', async () => {
+      return server
+        .get(ENDPOINTS.GET)
+        .set('x-access-token', testLib.getToken(testLib.DUMMY_TOKENS.alicia))
+        .expect(HttpStatus.OK);
+    });
+
+    it('should not return sensitive data', async () => {
+
+      await testLib.addDummyUser();
+
+      return server
+        .get(ENDPOINTS.GET)
+        .set('x-access-token', testLib.getToken(testLib.DUMMY_TOKENS.alicia))
+        .expect(HttpStatus.OK)
+        .then(result => {
+          expect(result.body).to.exist;
+          expect(result.body).to.be.an('array').of.length(1);
+
+          console.log('result.body', result.body[0]);
+
+          expect(result.body[0]).to.not.have.property('password');
+          expect(result.body[0]).to.not.have.property('salt');
+          expect(result.body[0]).to.not.have.nested.property('local.salt');
+          expect(result.body[0]).to.not.have.nested.property('local.password');
+          expect(result.body[0]).to.not.have.nested.property('local.email_verification_code');
+        });
+    });
+
+    it('should throw an error for an unauthorized request', async () => {
+      return server
+        .get(ENDPOINTS.GET)
+        .expect(HttpStatus.UNAUTHORIZED);
     });
 
   });
@@ -206,9 +246,6 @@ describe('[integration] auth-service => user', () => {
         .post(ENDPOINTS.REGISTER_LOCAL)
         .send(doc)
         .expect(HttpStatus.CREATED)
-        // .then(result => {
-        //   console.log('result', result.body);
-        // })
         .expect(userAssertions.hasNoToken)
         .expect(userAssertions.hasNoVerfificationToken);
     });
@@ -251,6 +288,7 @@ describe('[integration] auth-service => user', () => {
         .expect(userAssertions.hasNoPassword);
     });
 
+    // Todo: such as ??
     it('does not allow to set sensitive information');
 
   });
@@ -261,7 +299,7 @@ describe('[integration] auth-service => user', () => {
 
       const doc = {};
       return server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send(doc)
         .expect(HttpStatus.INTERNAL_SERVER_ERROR)
         .then(result => {
@@ -271,13 +309,14 @@ describe('[integration] auth-service => user', () => {
         });
     });
 
+    // Todo(AA): Should be a NOT_FOUND
     it('returns 401/Unauthorized if login fails (no user found)', () => {
       const doc = {
         emailOrUsername: 'foo-user',
         password: 'passw0rd'
       };
       return server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send(doc)
         .expect(HttpStatus.UNAUTHORIZED);
     });
@@ -304,7 +343,7 @@ describe('[integration] auth-service => user', () => {
       return newUser.save()
         .then(() => {
           return server
-            .post(ENDPOINTS.USER_LOGIN)
+            .post(ENDPOINTS.POST_USER_LOGIN)
             .send(login)
             .expect(HttpStatus.UNAUTHORIZED);
         });
@@ -329,7 +368,7 @@ describe('[integration] auth-service => user', () => {
       return newUser.save()
         .then(() => {
           return server
-            .post(ENDPOINTS.USER_LOGIN)
+            .post(ENDPOINTS.POST_USER_LOGIN)
             .send({
               emailOrUsername: doc.local.username,
               password: doc.local.password
@@ -360,7 +399,7 @@ describe('[integration] auth-service => user', () => {
       return newUser.save()
         .then(() => {
           return server
-            .post(ENDPOINTS.USER_LOGIN)
+            .post(ENDPOINTS.POST_USER_LOGIN)
             .send({
               emailOrUsername: doc.local.email,
               password: doc.local.password
@@ -877,19 +916,22 @@ describe('[integration] auth-service => user', () => {
       let user = await new UserModel(doc).save();
 
       await server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send({
           emailOrUsername: doc.local.username,
           password: doc.local.password
         })
-        .expect(HttpStatus.UNAUTHORIZED);
+        .expect(HttpStatus.UNAUTHORIZED)
+        .then(result => {
+          // Console.log('result', result.body);
+        });
 
       await server
         .put(ENDPOINTS.VERIFY_EMAIL_BY_ID.replace(':userId', user._id).replace(':code', user.local.email_verification_code))
         .expect(HttpStatus.OK);
 
       await server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send({
           emailOrUsername: doc.local.username,
           password: doc.local.password
@@ -911,7 +953,7 @@ describe('[integration] auth-service => user', () => {
       let user = await new UserModel(doc).save();
 
       await server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send({
           emailOrUsername: doc.local.username,
           password: doc.local.password
@@ -923,7 +965,7 @@ describe('[integration] auth-service => user', () => {
         .expect(HttpStatus.OK);
 
       await server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send({
           emailOrUsername: doc.local.username,
           password: doc.local.password
@@ -946,7 +988,7 @@ describe('[integration] auth-service => user', () => {
       let user = await new UserModel(doc).save();
 
       await server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send({
           emailOrUsername: doc.local.username,
           password: doc.local.password
@@ -958,7 +1000,7 @@ describe('[integration] auth-service => user', () => {
         .expect(HttpStatus.OK);
 
       await server
-        .post(ENDPOINTS.USER_LOGIN)
+        .post(ENDPOINTS.POST_USER_LOGIN)
         .send({
           emailOrUsername: doc.local.username,
           password: doc.local.password
@@ -966,8 +1008,6 @@ describe('[integration] auth-service => user', () => {
         .expect(HttpStatus.OK);
 
     });
-
   });
-
 });
 

@@ -1,4 +1,4 @@
-const AppServer = require('./../../src/api/app-server');
+const AppServer = require('../../src/app-server');
 const _ = require('lodash');
 
 describe('[unit] AppServer', () => {

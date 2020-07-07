@@ -1,6 +1,6 @@
-const AppServer = require('./../../src/api/app-server');
+const AppServer = require('../../src/app-server');
 
-describe('[unit] app-server', () => {
+describe('[unit] => app-server', () => {
 
   let server = null;
 

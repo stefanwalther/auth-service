@@ -1,6 +1,6 @@
-const lib = require('./../../src/api/lib/utils');
+const lib = require('../../src/lib/utils');
 
-describe('[UNIT] => lib', () => {
+describe('[unit] => lib', () => {
 
   describe('eMailInDomain()', () => {
 
