@@ -1,14 +1,13 @@
 const _ = require('lodash');
 const Koa = require('koa');
 const logger = require('winster').instance();
-const MongooseConnectionConfig = require('mongoose-connection-config');
 const mongoose = require('mongoose');
 const path = require('path');
-const mongooseConfig = require('./config/mongoose-config');
-
 const initializer = require('koa-initializer');
-const routes = require('./routes');
 
+const MongooseConnectionConfig = require('mongoose-connection-config');
+const mongooseConfig = require('./config/mongoose-config');
+const routes = require('./routes');
 const mongoUri = new MongooseConnectionConfig(mongooseConfig).getMongoUri();
 const defaultConfig = require('./config/server-config');
 const defaultAppSettings = require('./config/app-settings');
@@ -29,7 +28,7 @@ class AppServer {
     }
 
     // Todo(AAA): re-enable this
-    // this._validateConfig();
+    this._validateConfig();
 
     this.app = null;
     this.server = null;
