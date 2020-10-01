@@ -44,7 +44,7 @@
     "koa-body": "^4.2.0",
     "koa-combine-routers": "^4.0.2",
     "koa-favicon": "^2.1.0",
-    "koa-helmet": "^5.2.0",
+    "koa-helmet": "^6.0.0",
     "koa-initializer": "^4.0.1",
     "koa-json-error": "^3.1.2",
     "koa-passport": "^4.1.3",
