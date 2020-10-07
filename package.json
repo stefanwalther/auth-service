@@ -79,7 +79,7 @@
     "mocha": "8.0.1",
     "moment": "^2.27.0",
     "nyc": "15.1.0",
-    "supertest": "4.0.2"
+    "supertest": "5.0.0"
   },
   "verb": {
     "run": true,
