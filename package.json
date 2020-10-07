@@ -75,7 +75,7 @@
     "eslint": "^7.4.0",
     "eslint-config-space-single": "0.3.11",
     "eslint-plugin-mocha": "7.0.1",
-    "husky": "4.2.5",
+    "husky": "4.3.0",
     "mocha": "8.0.1",
     "moment": "^2.27.0",
     "nyc": "15.1.0",
