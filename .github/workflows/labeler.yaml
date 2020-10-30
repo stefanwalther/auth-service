@@ -1,0 +1,22 @@
+name: Ensure GitHub Labels
+
+on: push
+
+jobs:
+  labeler:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run Labeler
+        if: success()
+        uses: crazy-max/ghaction-github-labeler@v2
+        with:
+          yaml_file: .github/labels.yaml
+          skip_delete: false
+          dry_run: false
+          exclude: |
+            help*
+            *issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
