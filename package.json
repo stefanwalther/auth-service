@@ -58,7 +58,7 @@
     "nodemailer": "6.4.13",
     "nodemailer-postmark-transport": "3.0.0",
     "nodemailer-sendgrid-transport": "^0.2.0",
-    "nodemon": "2.0.4",
+    "nodemon": "2.0.6",
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
     "passport-local": "^1.0.0",
