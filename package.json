@@ -66,7 +66,7 @@
     "sammler-io-audit-logs": "0.0.4",
     "sammler-nodelib-logger": "^0.2.4",
     "swagger-jsdoc": "4.2.0",
-    "swagger-ui-express": "4.1.4",
+    "swagger-ui-express": "4.1.5",
     "winster": "0.2.14"
   },
   "devDependencies": {
