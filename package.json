@@ -65,7 +65,7 @@
     "read-pkg-up": "7.0.1",
     "sammler-io-audit-logs": "0.0.4",
     "sammler-nodelib-logger": "^0.2.4",
-    "swagger-jsdoc": "6.0.7",
+    "swagger-jsdoc": "6.1.0",
     "swagger-ui-express": "4.1.6",
     "winster": "0.2.14"
   },
