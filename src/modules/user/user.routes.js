@@ -177,7 +177,7 @@ router.post(`/${API_VERSION}/user/logout`, UserController.logout); // Todo: Deci
 router.get(`/${API_VERSION}/user/status`, UserController.status);
 
 // Todo: Only possible to be fetched by the user himself or by the admin
-router.get(`/${API_VERSION}/user/:id`, UserController.getById);
+router.get(`/${API_VERSION}/users/:id`, UserController.getById);
 
 // Todo: Implement this
 router.get(`/${API_VERSION}/user/password-reset-request`, UserController.status);
@@ -291,5 +291,12 @@ router.put(`/${API_VERSION}/user/:IdOrEmail/actions/verify/:code`, UserControlle
  *       description: Unhandled server error.
  */
 router.delete(`/${API_VERSION}/user/:id/purge`, passport.authenticate('jwt', {session: false}), UserController.purge);
+
+router.post(`/${API_VERSION}/user/:id/activation`, authRequired, UserController.activate);
+router.delete(`/${API_VERSION}/user/:id/activation`, authRequired, UserController.deactivate);
+
+router.post(`/${API_VERSION}/user/:id/block`, authRequired, UserController.block);
+
+router.delete(`/${API_VERSION}/user/:id/block`, authRequired, UserController.unblock);
 
 module.exports = router;

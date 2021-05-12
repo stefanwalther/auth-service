@@ -15,12 +15,10 @@ passport.use(new LocalStrategy(localStrategyOpts, function (emailOrUsername, pas
       $or: [
         {
           'local.username': emailOrUsername,
-          is_active: true,
           is_deleted: false
         },
         {
           'local.email': emailOrUsername,
-          is_active: true,
           is_deleted: false
         }
       ]
@@ -34,6 +32,12 @@ passport.use(new LocalStrategy(localStrategyOpts, function (emailOrUsername, pas
           message: 'User not found.'
         });
       }
+      if (user && user.is_active === false) {
+        return done(null, false, {
+          message: 'User not active.'
+        });
+      }
+
       if (user && user.local.email_verified === false) {
         return done(null, false, {
           message: 'Email not verified.'

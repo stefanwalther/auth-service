@@ -65,6 +65,10 @@ const schema = new Schema({
     type: Boolean,
     default: appSettings.registration.isDeletedDefault
   },
+  is_blocked: {
+    type: Boolean,
+    default: appSettings.registration.isBlockedDefault
+  },
   local: localStrategySchema
 }, {
   collection: MongooseConfig.COLLECTION_PREFIX + MongooseConfig.COLLECTION_USER,

@@ -1,3 +1,8 @@
+v0.4.14:
+  date: 2021-05-12
+  features:
+    - Endpoints to activate/deactivate a user
+    - Endpoints to block/unblock a user
 v0.4.13:
   date: 2021-05-05
   changes:

@@ -7,6 +7,7 @@ module.exports = {
   registration: {
     isActiveDefault: true,
     isDeletedDefault: false,
+    isBlockedDefault: false,
     local: {
       isEmailVerifiedDefault: false,
       sendActivationMail: true
