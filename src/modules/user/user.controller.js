@@ -208,10 +208,10 @@ class UserController {
 
     try {
       let result = await UserModel.unMarkAsDeleted(ctx.params.id);
-      ctx.response.status = HttpStatus.OK;
+      ctx.status = HttpStatus.OK;
       ctx.body = result;
     } catch (err) {
-      ctx.response.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
       ctx.body = err;
     }
 
@@ -239,17 +239,17 @@ class UserController {
       validationErrors.add('Property <token> is missing. Put the <token> in either your body or use <x-access-token> in the Http-header.');
     }
     if (validationErrors.length > 0) {
-      ctx.response.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
       ctx.body = validationErrors;
       return;
     }
 
     try {
       const decoded = await UserModel.verifyToken(token);
-      ctx.response.status = HttpStatus.OK;
+      ctx.status = HttpStatus.OK;
       ctx.body = {message: 'Valid token.', details: decoded};
     } catch (err) {
-      ctx.response.status = HttpStatus.INTERNAL_SERVER_ERROR;
+      ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
       ctx.body = {message: 'Invalid token.'};
     }
   }
@@ -319,6 +319,197 @@ class UserController {
       ctx.status = HttpStatus.INTERNAL_SERVER_ERROR;
       ctx.body = err;
     }
+  }
+
+  // Todo: check permissions
+  // Todo: only allow admins to block
+  static async block(ctx) {
+    const {id} = ctx.params;
+
+    try {
+      let user = await UserModel.findById(id);
+      if (!user) {
+        ctx.status = HttpStatus.NOT_FOUND;
+        return;
+      }
+      if (user.is_blocked === true) {
+        ctx.status = HttpStatus.NOT_MODIFIED;
+        return;
+      }
+      user.is_blocked = true;
+      try {
+        await user.save();
+        ctx.status = HttpStatus.NO_CONTENT;
+      } catch (err) {
+        ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ctx.body = err;
+      }
+
+    } catch (err) {
+      ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+      ctx.body = err;
+    }
+
+  }
+
+  static async unblock(ctx) {
+    const {id} = ctx.params;
+    try {
+      let user = await UserModel.findById(id);
+      if (!user) {
+        ctx.status = HttpStatus.NOT_FOUND;
+        return;
+      }
+      if (user.is_blocked === false) {
+        ctx.status = HttpStatus.NOT_MODIFIED;
+        return;
+      }
+      user.is_blocked = false;
+      try {
+        await user.save();
+        ctx.status = HttpStatus.NO_CONTENT;
+      } catch (err) {
+        ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ctx.body = err;
+      }
+    } catch (err) {
+      ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+      ctx.body = err;
+    }
+  }
+
+  static async activate(ctx) {
+
+    return UserController.activateDeactivate(ctx, 'activate');
+
+    // eslint-disable-next-line capitalized-comments
+    // const {id} = ctx.params;
+    //
+    // try {
+    //   let user = await UserModel.findById(id);
+    //   if (!user) {
+    //     ctx.status = HttpStatus.NOT_FOUND;
+    //     return;
+    //   }
+    //   if (user.is_deleted === true) {
+    //     ctx.status = HttpStatus.CONFLICT;
+    //     ctx.body = {
+    //       message: 'A deleted user cannot be set to active.'
+    //     };
+    //     return;
+    //   }
+    //   if (user.is_active === true) {
+    //     ctx.status = HttpStatus.NOT_MODIFIED;
+    //     return;
+    //   }
+    //   user.is_active = true;
+    //   try {
+    //     await user.save();
+    //     ctx.status = HttpStatus.NO_CONTENT;
+    //   } catch (err) {
+    //     ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+    //     ctx.body = err;
+    //   }
+    // } catch (err) {
+    //   ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+    //   ctx.body = err;
+    // }
+
+  }
+
+  static async deactivate(ctx) {
+
+    return UserController.activateDeactivate(ctx, 'deactivate');
+
+    // eslint-disable-next-line capitalized-comments
+    // const {id} = ctx.params;
+    //
+    // try {
+    //   let user = await UserModel.findById(id);
+    //   if (!user) {
+    //     ctx.status = HttpStatus.NOT_FOUND;
+    //     return;
+    //   }
+    //   if (user.is_deleted === true) {
+    //     ctx.status = HttpStatus.CONFLICT;
+    //     ctx.body = {
+    //       message: 'A deleted user cannot be set to inactive.'
+    //     };
+    //     return;
+    //   }
+    //   if (user.is_active === false) {
+    //     ctx.status = HttpStatus.NOT_MODIFIED;
+    //     return;
+    //   }
+    //   user.is_active = false;
+    //   try {
+    //     await user.save();
+    //     ctx.status = HttpStatus.NO_CONTENT;
+    //   } catch (err) {
+    //     ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+    //     ctx.body = err;
+    //   }
+    // } catch (err) {
+    //   ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+    //   ctx.body = err;
+    // }
+  }
+
+  static async activateDeactivate(ctx, action) {
+    const {id} = ctx.params;
+
+    let deletedUserViolationMsg = '';
+    let noActionState = false; // State indicating where we shouldn't do anything
+    let newState = null;
+
+    switch (action) {
+      case 'activate':
+        deletedUserViolationMsg = 'A deleted user cannot be set to active.';
+        noActionState = true;
+        newState = true;
+        break;
+      case 'deactivate':
+        deletedUserViolationMsg = 'A deleted user cannot be set to inactive.';
+        noActionState = false;
+        newState = false;
+        break;
+      default:
+        ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ctx.body = {
+          message: 'Unknown action.'
+        };
+    }
+
+    try {
+      let user = await UserModel.findById(id);
+      if (!user) {
+        ctx.status = HttpStatus.NOT_FOUND;
+        return;
+      }
+      if (user.is_deleted === true) {
+        ctx.status = HttpStatus.CONFLICT;
+        ctx.body = {
+          message: deletedUserViolationMsg
+        };
+        return;
+      }
+      if (user.is_active === noActionState) {
+        ctx.status = HttpStatus.NOT_MODIFIED;
+        return;
+      }
+      user.is_active = newState;
+      try {
+        await user.save();
+        ctx.status = HttpStatus.NO_CONTENT;
+      } catch (err) {
+        ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ctx.body = err;
+      }
+    } catch (err) {
+      ctx.status = HttpStatus.UNPROCESSABLE_ENTITY;
+      ctx.body = err;
+    }
+
   }
 
 }

@@ -11,13 +11,18 @@ const userAssertions = require('./../test-lib/user-assertions');
 
 const ENDPOINTS = {
   GET: '/v1/users',
+  GET_BY_ID: '/v1/users/:id',
   REGISTER_LOCAL: '/v1/user/register/local',
   POST_USER_LOGIN: '/v1/user/login',
   VERIFY_TOKEN: '/v1/user/verify-token',
   ME: '/v1/me',
   PATCH_USER: '/v1/user/:id',
   VERIFY_EMAIL_BY_ID: '/v1/user/:userId/actions/verify-with-id/:code',
-  VERIFY_EMAIL_BY_USERIDENTIFIER: '/v1/user/:IdOrEmail/actions/verify/:code'
+  VERIFY_EMAIL_BY_USERIDENTIFIER: '/v1/user/:IdOrEmail/actions/verify/:code',
+  POST_BLOCK_USER: '/v1/user/:id/block',
+  DELETE_BLOCK_USER: '/v1/user/:id/block',
+  POST_ACTIVATION_USER: '/v1/user/:id/activation',
+  DELETE_ACTIVATION_USER: '/v1/user/:id/activation'
 };
 
 describe('[integration] => user', () => {
@@ -309,7 +314,6 @@ describe('[integration] => user', () => {
         });
     });
 
-    // Todo(AA): Should be a NOT_FOUND
     it('returns 401/Unauthorized if login fails (no user found)', () => {
       const doc = {
         emailOrUsername: 'foo-user',
@@ -433,7 +437,7 @@ describe('[integration] => user', () => {
           password: doc.local.password
         })
         .expect(HttpStatus.UNAUTHORIZED)
-        .expect(userAssertions.userNotFound);
+        .expect(userAssertions.userDeactivated);
     });
 
     it('should not allow non-verified users to login', async () => {
@@ -722,7 +726,7 @@ describe('[integration] => user', () => {
         });
 
       await server
-        .get(`/v1/user/${newUser._id}`)
+        .get(`/v1/users/${newUser._id}`)
         .expect(HttpStatus.OK)
         .then(result => {
           expect(result.body).to.have.a.property('is_deleted').to.be.false;
@@ -940,6 +944,7 @@ describe('[integration] => user', () => {
     });
 
     it('should verify a user by `username` and allow login', async () => {
+
       const doc = {
         tenant_id: mongoose.Types.ObjectId().toString(),
         is_deleted: false,
@@ -1009,5 +1014,299 @@ describe('[integration] => user', () => {
 
     });
   });
+
+  describe('blocking/unblocking a user', () => {
+
+    describe('POST /v1/user/:id/block', () => {
+
+      it('should allow to block an unblocked user', async () => {
+
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_active: true,
+          is_blocked: false, // <= unblocked user
+          is_deleted: false,
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_blocked').to.be.false;
+        expect(user).to.have.property('_id').to.exist;
+
+        let url = ENDPOINTS.POST_BLOCK_USER.replace(':id', user._id.toString());
+
+        await server
+          .post(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NO_CONTENT)
+          .then(result => {
+            expect(result.body).to.be.empty;
+          });
+
+        await server
+          .get(ENDPOINTS.GET_BY_ID.replace(':id', user._id))
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.OK)
+          .then(result => {
+            expect(result).to.have.property('body');
+            expect(result.body).to.have.property('is_blocked').to.be.true;
+          });
+
+      });
+
+      it('should not allow to block a blocked user', async () => {
+
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_active: false,
+          is_blocked: true, // <== unblocked user
+          is_deleted: false,
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_blocked').to.be.true;
+        expect(user).to.have.property('_id').to.exist;
+
+        let url = ENDPOINTS.POST_BLOCK_USER.replace(':id', user._id.toString());
+
+        await server
+          .post(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NOT_MODIFIED);
+
+      });
+
+    });
+
+    describe('DELETE /v1/user/:id/block', () => {
+
+      it('should allow to unblock a blocked user', async () => {
+
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_active: false,
+          is_blocked: true, // <== blocked user
+          is_deleted: false,
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_blocked').to.be.true;
+        expect(user).to.have.property('_id').to.exist;
+
+        let url = ENDPOINTS.DELETE_BLOCK_USER.replace(':id', user._id.toString());
+
+        await server
+          .delete(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NO_CONTENT);
+
+        await server
+          .get(ENDPOINTS.GET_BY_ID.replace(':id', user._id))
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.OK)
+          .then(result => {
+            expect(result).to.have.property('body');
+            expect(result.body).to.have.property('is_blocked').to.be.false;
+          });
+      });
+
+    });
+
+  });
+
+  describe('activating/deactivating a user', () => {
+
+    describe('POST /v1/user/:id/activation', () => {
+
+      it('returns NOT_FOUND if the user does not exist', async () => {
+
+        const url = ENDPOINTS.POST_ACTIVATION_USER.replace(':id', testLib.getDummyUid().toString());
+        const userToken = testLib.getToken(testLib.DUMMY_TOKENS.alicia);
+
+        await server
+          .post(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NOT_FOUND);
+        // .then(result => {
+        //   console.log(result.body);
+        // })
+      });
+
+      it('returns NO_CONTENT when activating an inactive user', async () => {
+
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_deleted: false,
+          is_active: false, // <== inactive user
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_active').to.be.false;
+        expect(user).to.have.property('_id').to.exist;
+
+        let url = ENDPOINTS.POST_ACTIVATION_USER.replace(':id', user._id.toString());
+
+        await server
+          .post(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NO_CONTENT);
+
+      });
+
+      it('returns NOT_MODIFIED when trying to activate an active user', async () => {
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_deleted: false,
+          is_active: true, // <== active user
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_active').to.be.true;
+
+        let url = ENDPOINTS.POST_ACTIVATION_USER.replace(':id', user._id.toString());
+
+        await server
+          .post(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NOT_MODIFIED);
+      });
+
+      it('returns CONFLICT when trying to activate a deleted user', async () => {
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_deleted: true, // <== deleted user
+          is_active: false, // <== inactive user
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_active').to.be.false;
+        expect(user).to.have.property('is_deleted').to.be.true;
+
+        let url = ENDPOINTS.POST_ACTIVATION_USER.replace(':id', user._id.toString());
+
+        await server
+          .post(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.CONFLICT)
+          .expect(userAssertions.userDeletedCannotBeActivated);
+      });
+
+    });
+
+    describe('DELETE /v1/user/:id/activation', () => {
+
+      it('returns NO_CONTENT when trying to deactivate an active user', async () => {
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_deleted: false,
+          is_active: true, // <== active user
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_active').to.be.true;
+
+        let url = ENDPOINTS.DELETE_ACTIVATION_USER.replace(':id', user._id.toString());
+
+        await server
+          .delete(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NO_CONTENT);
+      });
+
+      it('returns NOT_MODIFIED when trying to deactivate an inactive user', async () => {
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_deleted: false,
+          is_active: false, // <== inactive user
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_active').to.be.false;
+
+        let url = ENDPOINTS.DELETE_ACTIVATION_USER.replace(':id', user._id.toString());
+
+        await server
+          .delete(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.NOT_MODIFIED);
+      });
+
+      it('returns CONFLICT when trying to deactivate a deleted user', async () => {
+        const doc = {
+          tenant_id: mongoose.Types.ObjectId().toString(),
+          is_deleted: true, // <== deleted user
+          is_active: true, // <== active user
+          is_verified: true,
+          local: {
+            password: 'passw0rd',
+            username: 'foo-user',
+            email: 'foo@bar.com'
+          }
+        };
+        let user = await new UserModel(doc).save();
+        let userToken = user.generateJwt();
+        expect(user).to.have.property('is_active').to.be.true;
+        expect(user).to.have.property('is_deleted').to.be.true;
+
+        let url = ENDPOINTS.DELETE_ACTIVATION_USER.replace(':id', user._id.toString());
+
+        await server
+          .delete(url)
+          .set('x-access-token', userToken)
+          .expect(HttpStatus.CONFLICT)
+          .expect(userAssertions.userDeletedCannotBeDeactivated);
+      });
+
+    });
+
+  });
+
 });
 
