@@ -292,6 +292,26 @@ router.put(`/${API_VERSION}/user/:IdOrEmail/actions/verify/:code`, UserControlle
  */
 router.delete(`/${API_VERSION}/user/:id/purge`, passport.authenticate('jwt', {session: false}), UserController.purge);
 
+
+/**
+ * @swagger
+ * /v1/user/:id/activation:
+ *  post:
+ *    description: Activate a user
+ *    tags:
+ *      - user
+ *  security:
+ *    - JWT: [admin]
+ *  produces:
+ *    - application/json
+ *  responses:
+ *    204:
+ *      description: Successful execution. No content returned.
+ *    403:
+ *      description: Permission denied.
+ *    500:
+ *      description: Unhandled server error.
+ */
 router.post(`/${API_VERSION}/user/:id/activation`, authRequired, UserController.activate);
 router.delete(`/${API_VERSION}/user/:id/activation`, authRequired, UserController.deactivate);
 

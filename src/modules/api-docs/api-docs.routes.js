@@ -3,6 +3,8 @@ const ApiDocsController = require('./api-docs.controller');
 
 const router = koaRouter();
 
+router.get('/api-docs', ApiDocsController.getDocs);
+
 /**
  * @swagger
  * /api-docs/raw:
