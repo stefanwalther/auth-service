@@ -12,6 +12,7 @@
   "license": "MIT",
   "author": "Stefan Walther",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "coverage": "nyc report",
     "lint": "npm run lint:src && npm run lint:test",
@@ -62,7 +63,7 @@
     "passport": "0.4.1",
     "passport-jwt": "4.0.0",
     "passport-local": "^1.0.0",
-    "read-pkg-up": "7.0.1",
+    "read-pkg-up": "^8.0.0",
     "sammler-io-audit-logs": "0.0.4",
     "sammler-nodelib-logger": "^0.2.4",
     "swagger-jsdoc": "6.1.0",

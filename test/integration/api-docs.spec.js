@@ -1,10 +1,10 @@
-const superTest = require('supertest');
-const HttpStatus = require('http-status-codes');
-const AppServer = require('../../src/app-server');
+import superTest from 'supertest';
+import HttpStatus from 'http-status-codes';
+const AppServer from './../../src/app-server';
 const mongoose = require('mongoose');
 
 const defaultConfig = require('./../test-lib/default-config');
-const pkg = require('read-pkg-up').sync().packageJson;
+const readPackageUpSync = require('read-pkg-up').readPackageUpSync;
 
 describe('[integration] => api-docs', () => {
 
@@ -32,8 +32,8 @@ describe('[integration] => api-docs', () => {
         expect(result).to.have.a.property('body').to.exist;
         expect(result.body).to.deep.include({swagger: '2.0'});
         expect(result.body).to.have.a.property('info');
-        expect(result.body.info).to.include({title: pkg.name});
-        expect(result.body.info).to.include({version: pkg.version});
+        expect(result.body.info).to.include({title: readPackageUpSync.packageJson.name});
+        expect(result.body.info).to.include({version: readPackageUpSync.packageJson.version});
       });
   });
 
