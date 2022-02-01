@@ -73,7 +73,7 @@
     "chai": "4.3.4",
     "codeclimate-test-reporter": "0.5.1",
     "codecov": "3.8.1",
-    "eslint": "^7.4.0",
+    "eslint": "^8.8.0",
     "eslint-config-space-single": "0.3.11",
     "eslint-plugin-mocha": "8.1.0",
     "husky": "6.0.0",
