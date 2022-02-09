@@ -5,5 +5,6 @@ process.env.WINSTER_SUPRESS_LOGGING = 'true';
 //
 // }
 
-global.expect = require('chai').expect;
+import chai from 'chai';
+global.expect = chai.expect;
 

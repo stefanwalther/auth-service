@@ -1,11 +1,11 @@
-const pkg = require('read-pkg-up').sync().packageJson;
+const readPackageUpSync = require('read-pkg-up').readPackageUpSync;
 
 const swaggerConfig = {
   swaggerDefinition: {
     info: {
-      title: pkg.name,
-      version: pkg.version,
-      description: pkg.description
+      title: readPackageUpSync.packageJson.name,
+      version: readPackageUpSync.packageJson.version,
+      description: readPackageUpSync.packageJson.description
     },
     basePath: '/',
     produces: [
