@@ -37,7 +37,7 @@
     "email-templates": "^8.0.3",
     "express": "^4.17.1",
     "express-result": "0.1.6",
-    "glob": "^7.1.6",
+    "glob": "^8.0.1",
     "http-status-codes": "^2.1.4",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
