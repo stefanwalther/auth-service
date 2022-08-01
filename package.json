@@ -34,7 +34,7 @@
     }
   },
   "dependencies": {
-    "email-templates": "^8.0.3",
+    "email-templates": "^10.0.1",
     "express": "^4.17.1",
     "express-result": "0.1.6",
     "glob": "^7.1.6",
