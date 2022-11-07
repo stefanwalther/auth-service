@@ -41,7 +41,7 @@
     "http-status-codes": "^2.1.4",
     "jsonwebtoken": "^8.5.1",
     "koa": "^2.13.0",
-    "koa-body": "^4.2.0",
+    "koa-body": "^6.0.1",
     "koa-combine-routers": "^4.0.2",
     "koa-favicon": "^2.1.0",
     "koa-helmet": "^6.0.0",
