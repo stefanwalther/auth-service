@@ -55,7 +55,7 @@
     "mongoose": "^5.9.22",
     "mongoose-beautiful-unique-validation": "^7.1.1",
     "mongoose-connection-config": "0.2.5",
-    "nodemailer": "6.7.2",
+    "nodemailer": "6.9.1",
     "nodemailer-postmark-transport": "5.2.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "nodemon": "2.0.15",
